@@ -1,0 +1,132 @@
+<nav class="bg-white shadow-lg fixed w-full z-50 top-0">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center">
+        <a
+          routerLink="/"
+          class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition duration-300 flex items-center gap-1"
+        >
+          <img
+            src="/assets/icons/logo_white.png"
+            alt=""
+            class="w-[50px] h-[50px]"
+          />
+          Lexis IA
+        </a>
+      </div>
+
+      <!-- Liens de navigation (visible sur desktop) -->
+      <div class="hidden md:flex space-x-8 items-center">
+        <a
+          routerLink="/"
+          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-gray-700 hover:text-blue-600 transition duration-300"
+        >
+          Accueil
+        </a>
+        <a
+          routerLink="/projects"
+          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition duration-300"
+        >
+          Projets
+        </a>
+        <a
+          routerLink="/analysis"
+          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition duration-300"
+        >
+          Analyse
+        </a>
+        <a
+          routerLink="/profile"
+          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition duration-300"
+        >
+          Profil
+        </a>
+      </div>
+
+      <!-- Bouton de connexion (visible sur desktop) -->
+      <div class="hidden md:flex items-center">
+        <a
+          routerLink="/login"
+          class="outer-button"
+        >
+          Connexion
+        </a>
+      </div>
+
+      <!-- Menu mobile (visible sur mobile) -->
+      <div class="flex items-center md:hidden">
+        <button
+          (click)="toggleMenu()"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 focus:outline-none transition duration-300"
+        >
+          <svg
+            class="h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu mobile (ouvert/fermé) -->
+  @if (isMenuOpen) {
+  <div
+    class="md:hidden bg-white shadow-lg"
+    [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
+  >
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a
+        routerLink="/"
+        routerLinkActive="text-blue-600 bg-blue-50"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition duration-300"
+      >
+        Accueil
+      </a>
+      <a
+        routerLink="/projects"
+        routerLinkActive="text-blue-600 bg-blue-50"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition duration-300"
+      >
+        Projets
+      </a>
+      <a
+        routerLink="/analysis"
+        routerLinkActive="text-blue-600 bg-blue-50"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition duration-300"
+      >
+        Analyse
+      </a>
+      <a
+        routerLink="/profile"
+        routerLinkActive="text-blue-600 bg-blue-50"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition duration-300"
+      >
+        Profil
+      </a>
+      <a
+        routerLink="/login"
+        class="block px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-300"
+      >
+        Connexion
+      </a>
+    </div>
+  </div>
+  }
+</nav>

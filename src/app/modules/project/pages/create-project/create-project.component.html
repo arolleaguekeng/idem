@@ -1,0 +1,162 @@
+
+<div class="min-h-screen p-8">
+   
+  <!-- Titre de la page -->
+  <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">
+    Créer un Nouveau Projet
+  </h1>
+
+  <!-- Formulaire de création de projet -->
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Détails du Projet</h2>
+
+    <!-- Champ : Nom du projet -->
+    <div class="mb-4">
+      <label for="projectName" class="block text-sm font-medium text-gray-700"
+        >Nom du Projet</label
+      >
+      <input
+        type="text"
+        id="projectName"
+        [(ngModel)]="projectName"
+        class="input"
+        placeholder="Entrez le nom du projet"
+      />
+    </div>
+
+    <!-- Champ : Description du projet -->
+    <div class="mb-4">
+      <label
+        for="projectDescription"
+        class="block text-sm font-medium text-gray-700"
+        >Description du Projet</label
+      >
+      <textarea
+        id="projectDescription"
+        [(ngModel)]="projectDescription"
+        rows="4"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+        placeholder="Décrivez votre projet"
+      ></textarea>
+    </div>
+
+    <!-- Champ : Type de projet -->
+    <div class="mb-4">
+      <label for="projectType" class="block text-sm font-medium text-gray-700"
+        >Type de Projet</label
+      >
+      <select
+        id="projectType"
+        [(ngModel)]="projectType"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+      >
+        <option value="web">Application Web</option>
+        <option value="mobile">Application Mobile</option>
+        <option value="iot">IoT</option>
+        <option value="desktop">Application Desktop</option>
+      </select>
+    </div>
+
+    <!-- Champ : Contraintes techniques -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-700"
+        >Contraintes Techniques</label
+      >
+      <div class="mt-2 space-y-2">
+        <label class="inline-flex items-center">
+          <input
+            type="checkbox"
+            [(ngModel)]="scalability"
+            class="form-checkbox h-4 w-4 text-blue-600"
+          />
+          <span class="ml-2 text-gray-700">Scalabilité</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input
+            type="checkbox"
+            [(ngModel)]="security"
+            class="form-checkbox h-4 w-4 text-blue-600"
+          />
+          <span class="ml-2 text-gray-700">Sécurité</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input
+            type="checkbox"
+            [(ngModel)]="budget"
+            class="form-checkbox h-4 w-4 text-blue-600"
+          />
+          <span class="ml-2 text-gray-700">Budget Limité</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Bouton : Analyser le projet -->
+    <button (click)="analyzeProject()" class="outer-button">
+      Analyser le Projet
+    </button>
+  </div>
+
+  <!-- Résultats de l'analyse -->
+  @if (showResults) {
+  <div class="max-w-3xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+      Résultats de l'Analyse
+    </h2>
+
+    <!-- Architecture Basique -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <h3 class="text-lg font-medium text-blue-600 mb-2">
+        Architecture Basique
+      </h3>
+      <p class="text-gray-700 mb-2">
+        Description : Une architecture simple pour les petits projets.
+      </p>
+      <p class="text-gray-700 mb-2">
+        Technologies : HTML, CSS, JavaScript, Node.js, SQLite.
+      </p>
+      <button (click)="generateScripts('basic')" class="bg-secondary inner-button">
+        Générer les Scripts
+      </button>
+    </div>
+
+    <!-- Architecture Recommandée -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <h3 class="text-lg font-medium text-blue-600 mb-2">
+        Architecture Recommandée
+      </h3>
+      <p class="text-gray-700 mb-2">
+        Description : Une architecture équilibrée pour la plupart des projets.
+      </p>
+      <p class="text-gray-700 mb-2">
+        Technologies : React, Express.js, MongoDB, Docker.
+      </p>
+      <button
+        (click)="generateScripts('recommended')"
+        class="bg-secondary inner-button"
+      >
+        Générer les Scripts
+      </button>
+    </div>
+
+    <!-- Architecture Complexe -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <h3 class="text-lg font-medium text-blue-600 mb-2">
+        Architecture Complexe
+      </h3>
+      <p class="text-gray-700 mb-2">
+        Description : Une architecture avancée pour les projets à grande
+        échelle.
+      </p>
+      <p class="text-gray-700 mb-2">
+        Technologies : Microservices, Kubernetes, Kafka, PostgreSQL.
+      </p>
+      <button
+        (click)="generateScripts('complex')"
+        class="bg-primary  inner-button"
+      >
+        Générer les Scripts
+      </button>
+    </div>
+  </div>
+  }
+</div>
