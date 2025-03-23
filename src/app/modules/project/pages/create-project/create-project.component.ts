@@ -1,29 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HeaderComponent } from "../../../landing/components/header/header.component";  // <<<< import it here
+import { ProjectModel } from '../../models/project.model';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-create-project',
-  imports: [FormsModule, HeaderComponent],
+  imports: [FormsModule, Dialog],
   templateUrl: './create-project.component.html',
   styleUrl: './create-project.component.scss',
 })
 export class CreateProjectComponent {
-  projectName: string = '';
-  projectDescription: string = '';
-  projectType: string = 'web';
-  scalability: boolean = false;
-  security: boolean = false;
-  budget: boolean = false;
-  showResults: boolean = false;
+  project: ProjectModel = {
+    name: '',
+    description: '',
+    type: 'web',
+    constraints: [],
+    teamSize: [],
+    budgetIntervals: [{ start: 1000, end: 5000 }],
+    targets: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    userId: 'user123',
+    scope: '',
+  };
 
-  // Fonction pour analyser le projet
+  showResults = false;
+  constraints = ['Scalability', 'Security', 'Performance'];
+  teamSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  targets = ['Entreprises', 'Étudiants', 'Grand public'];
+  scopes = ['Locale', 'Departementale', 'Regionale'];
+
+  ngOnInit(): void {}
+
   analyzeProject() {
-    // Simuler une analyse (à remplacer par une logique réelle)
     this.showResults = true;
   }
+  visible: boolean = false;
+  showDialog() {
+    this.analyzeProject();
+    this.visible = true;
+  }
 
-  // Fonction pour générer les scripts
   generateScripts(architecture: string) {
     alert(`Scripts générés pour l'architecture ${architecture}`);
   }
