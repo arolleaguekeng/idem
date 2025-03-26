@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import OpenAI from 'openai';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiGenericPromptService {
   protected openai: OpenAI;
+  apiKey = 'environment.deepSeekApiKey;';
 
   constructor() {
     this.openai = new OpenAI({
       baseURL: 'https://api.deepseek.com',
-      apiKey: '<DeepSeek API Key>', // Remplacez par votre clé API
+      apiKey: this.apiKey,
+      dangerouslyAllowBrowser: true,
     });
   }
 
@@ -22,7 +25,7 @@ export class AiGenericPromptService {
   protected async callDeepSeekAPI(prompt: string): Promise<string> {
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'deepseek-chat', // Modèle DeepSeek
+        model: 'deepseek-reasoner',
         messages: [{ role: 'user', content: prompt }],
       });
       const content = response.choices[0].message.content;

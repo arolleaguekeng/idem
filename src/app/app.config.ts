@@ -23,14 +23,22 @@ import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { MyPreset } from './my-preset';
 
+import { environment } from '../environments/environment';
+
+const firebaseConfig = {
+  apiKey: environment.firebase.apiKey,
+  authDomain: environment.firebase.authDomain,
+  projectId: environment.firebase.projectId,
+  storageBucket: environment.firebase.storageBucket,
+  messagingSenderId: environment.firebase.messagingSenderId,
+  appId: environment.firebase.appId,
+};
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideFirebaseApp(() =>
-      initializeApp()
-    ),
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
     ScreenTrackingService,

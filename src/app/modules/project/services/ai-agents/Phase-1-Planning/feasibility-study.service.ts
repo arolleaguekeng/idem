@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { FAISABILITY_PROMPT } from './prompts/faisability.prompt';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class FeasibilityStudyService extends AiGenericPromptService {
    * @returns La réponse de l'API DeepSeek.
    */
   async analyzeFeasibility(projectDescription: string): Promise<string> {
-    const prompt = `Analyse la faisabilité du projet suivant : ${projectDescription}.`;
+    const prompt = ` ${FAISABILITY_PROMPT} ${projectDescription}.`;
     return this.callDeepSeekAPI(prompt);
   }
 }

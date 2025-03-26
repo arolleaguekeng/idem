@@ -5,6 +5,7 @@ import { RiskAnalysisService } from './risk-analysis.service';
 import { SmartObjectivesService } from './smart-objectives.service';
 import { StakeholderMeetingsService } from './stakeholder-meetings.service';
 import { UseCaseModelingService } from './use-case-modeling.service';
+import { ProjectModel } from '../../../models/project.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,53 +25,103 @@ export class FirstPhaseMainService {
    * @param projectDescription Project description.
    * @returns An object containing the results of each step.
    */
-  async executeFirstPhase(projectDescription: string): Promise<{
-    feasibility: string;
-    risks: string;
-    smartObjectives: string;
-    requirements: string;
-    stakeholderMeetings: string;
-    useCases: string;
+  async executeFirstPhase(project: ProjectModel): Promise<{
+    feasibility?: string;
+    risks?: string;
+    smartObjectives?: string;
+    requirements?: string;
+    stakeholderMeetings?: string;
+    useCases?: string;
+    error?: string;
+    step?: string;
   }> {
     try {
+      const literralProject = `
+        Description: ${project.description}
+        Type: ${project.type}
+        Constraints: ${project.constraints.join(', ')}
+        Team Size: ${project.teamSize}
+        Scope: ${project.scope}
+        Budget Intervals: ${
+          project.budgetIntervals
+        }
+        Targets: ${project.targets}
+      `;
       // 1. Feasibility Study
-      const feasibility = await this.feasibilityStudyService.analyzeFeasibility(
-        projectDescription
-      );
-      console.log('Feasibility Study completed:', feasibility);
+      let feasibility: string;
+      try {
+        feasibility = await this.feasibilityStudyService.analyzeFeasibility(
+          literralProject
+        );
+        console.log('Feasibility Study completed:', feasibility);
+      } catch (error) {
+        console.error('Feasibility Study failed:', error);
+        return { error: 'Feasibility Study failed', step: 'feasibility' };
+      }
 
       // 2. Risk Analysis
-      const risks = await this.riskAnalysisService.analyzeRisks(
-        projectDescription
-      );
-      console.log('Risk Analysis completed:', risks);
+      let risks;
+      try {
+        // risks = await this.riskAnalysisService.analyzeRisks(literralProject);
+        console.log('Risk Analysis completed:', risks);
+      } catch (error) {
+        console.error('Risk Analysis failed:', error);
+        return { error: 'Risk Analysis failed', step: 'risks' };
+      }
 
       // 3. SMART Objectives
-      const smartObjectives =
-        await this.smartObjectivesService.defineSmartObjectives(
-          projectDescription
-        );
-      console.log('SMART Objectives defined:', smartObjectives);
+      let smartObjectives;
+      try {
+        // smartObjectives =
+        //   await this.smartObjectivesService.defineSmartObjectives(
+        //     literralProject
+        //   );
+        console.log('SMART Objectives defined:', smartObjectives);
+      } catch (error) {
+        console.error('SMART Objectives failed:', error);
+        return { error: 'SMART Objectives failed', step: 'smartObjectives' };
+      }
 
       // 4. Requirements Gathering
-      const requirements =
-        await this.requirementsGatheringService.gatherRequirements(
-          projectDescription
-        );
-      console.log('Requirements Gathering completed:', requirements);
+      let requirements;
+      try {
+        // requirements =
+        // await this.requirementsGatheringService.gatherRequirements(
+        //   literralProject
+        // );
+        console.log('Requirements Gathering completed:', requirements);
+      } catch (error) {
+        console.error('Requirements Gathering failed:', error);
+        return { error: 'Requirements Gathering failed', step: 'requirements' };
+      }
 
       // 5. Stakeholder Meetings
-      const stakeholderMeetings =
-        await this.stakeholderMeetingsService.organizeStakeholderMeetings(
-          projectDescription
-        );
-      console.log('Stakeholder Meetings organized:', stakeholderMeetings);
+      let stakeholderMeetings;
+      try {
+        // stakeholderMeetings =
+        //   await this.stakeholderMeetingsService.organizeStakeholderMeetings(
+        //     literralProject
+        //   );
+        console.log('Stakeholder Meetings organized:', stakeholderMeetings);
+      } catch (error) {
+        console.error('Stakeholder Meetings failed:', error);
+        return {
+          error: 'Stakeholder Meetings failed',
+          step: 'stakeholderMeetings',
+        };
+      }
 
       // 6. Use Case Modeling
-      const useCases = await this.useCaseModelingService.modelUseCases(
-        projectDescription
-      );
-      console.log('Use Case Modeling completed:', useCases);
+      let useCases;
+      try {
+        useCases = await this.useCaseModelingService.modelUseCases(
+          literralProject
+        );
+        console.log('Use Case Modeling completed:', useCases);
+      } catch (error) {
+        console.error('Use Case Modeling failed:', error);
+        return { error: 'Use Case Modeling failed', step: 'useCases' };
+      }
 
       // Return the results of all steps
       return {
