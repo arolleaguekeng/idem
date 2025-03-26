@@ -1,40 +1,35 @@
-import { Injectable } from '@angular/core';
-import OpenAI from 'openai';
-import { environment } from '../../../../../environments/environment';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Auth } from '@angular/fire/auth'; // Firebase Auth
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiGenericPromptService {
-  protected openai: OpenAI;
-  apiKey = 'environment.deepSeekApiKey;';
+  private apiUrl = 'https://lexis.pharaon.me/api/prompt'; // Remplace par ton URL backend
 
-  constructor() {
-    this.openai = new OpenAI({
-      baseURL: 'https://api.deepseek.com',
-      apiKey: this.apiKey,
-      dangerouslyAllowBrowser: true,
-    });
-  }
-
-  /**
-   * Méthode générique pour interagir avec l'API DeepSeek.
-   * @param prompt Le prompt à envoyer à l'API.
-   * @returns La réponse de l'API.
-   */
-  protected async callDeepSeekAPI(prompt: string): Promise<string> {
+  http = inject(HttpClient);
+  auth = inject(Auth);
+  async sendPrompt(history: any[], prompt: string): Promise<any> {
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'deepseek-reasoner',
-        messages: [{ role: 'user', content: prompt }],
+      const user = this.auth.currentUser;
+      if (!user) throw new Error('User not authenticated');
+
+      const idToken = await user.getIdToken(); // Récupérer le token Firebase
+
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${idToken}`,
+        'Content-Type': 'application/json',
       });
-      const content = response.choices[0].message.content;
-      if (content === null) {
-        throw new Error('API response content is null');
-      }
-      return content;
+
+      const body = { history, prompt };
+
+      return await firstValueFrom(
+        this.http.post(this.apiUrl, body, { headers })
+      );
     } catch (error) {
-      console.error("Erreur lors de l'appel à l'API DeepSeek :", error);
+      console.error('Error sending prompt:', error);
       throw error;
     }
   }

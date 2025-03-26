@@ -15,8 +15,11 @@ export class FeasibilityStudyService extends AiGenericPromptService {
    * @param projectDescription Description du projet.
    * @returns La réponse de l'API DeepSeek.
    */
-  async analyzeFeasibility(projectDescription: string): Promise<string> {
+  async analyzeFeasibility(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
     const prompt = ` ${FAISABILITY_PROMPT} ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

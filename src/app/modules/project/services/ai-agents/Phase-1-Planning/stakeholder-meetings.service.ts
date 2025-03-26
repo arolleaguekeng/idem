@@ -15,9 +15,10 @@ export class StakeholderMeetingsService extends AiGenericPromptService {
    * @returns La réponse de l'API DeepSeek.
    */
   async organizeStakeholderMeetings(
+    history: any[],
     projectDescription: string
   ): Promise<string> {
     const prompt = `Planifie les réunions avec les parties prenantes pour le projet suivant : ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history,prompt);
   }
 }

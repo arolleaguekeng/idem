@@ -14,8 +14,11 @@ export class UseCaseModelingService extends AiGenericPromptService {
    * @param projectDescription Description du projet.
    * @returns La réponse de l'API DeepSeek.
    */
-  async modelUseCases(projectDescription: string): Promise<string> {
+  async modelUseCases(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
     const prompt = `Modélise les cas d'utilisation pour le projet suivant : ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

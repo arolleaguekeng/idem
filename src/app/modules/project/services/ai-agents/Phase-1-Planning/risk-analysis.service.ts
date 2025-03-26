@@ -14,8 +14,11 @@ export class RiskAnalysisService extends AiGenericPromptService {
    * @param projectDescription Description du projet.
    * @returns La réponse de l'API DeepSeek.
    */
-  async analyzeRisks(projectDescription: string): Promise<string> {
+  async analyzeRisks(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
     const prompt = `Identifie les risques potentiels du projet suivant : ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

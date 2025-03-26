@@ -14,8 +14,11 @@ export class SmartObjectivesService extends AiGenericPromptService {
    * @param projectDescription Description du projet.
    * @returns La réponse de l'API DeepSeek.
    */
-  async defineSmartObjectives(projectDescription: string): Promise<string> {
+  async defineSmartObjectives(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
     const prompt = `Définis des objectifs SMART pour le projet suivant : ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

@@ -14,8 +14,11 @@ export class RequirementsGatheringService extends AiGenericPromptService {
    * @param projectDescription Description du projet.
    * @returns La réponse de l'API DeepSeek.
    */
-  async gatherRequirements(projectDescription: string): Promise<string> {
+  async gatherRequirements(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
     const prompt = `Recueille les besoins fonctionnels et non fonctionnels pour le projet suivant : ${projectDescription}.`;
-    return this.callDeepSeekAPI(prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

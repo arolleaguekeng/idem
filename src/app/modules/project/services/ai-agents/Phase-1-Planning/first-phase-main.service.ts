@@ -42,15 +42,14 @@ export class FirstPhaseMainService {
         Constraints: ${project.constraints.join(', ')}
         Team Size: ${project.teamSize}
         Scope: ${project.scope}
-        Budget Intervals: ${
-          project.budgetIntervals
-        }
+        Budget Intervals: ${project.budgetIntervals}
         Targets: ${project.targets}
       `;
       // 1. Feasibility Study
       let feasibility: string;
       try {
         feasibility = await this.feasibilityStudyService.analyzeFeasibility(
+          [],
           literralProject
         );
         console.log('Feasibility Study completed:', feasibility);
@@ -114,10 +113,10 @@ export class FirstPhaseMainService {
       // 6. Use Case Modeling
       let useCases;
       try {
-        useCases = await this.useCaseModelingService.modelUseCases(
-          literralProject
-        );
-        console.log('Use Case Modeling completed:', useCases);
+        // useCases = await this.useCaseModelingService.modelUseCases(
+        //   literralProject
+        // );
+        // console.log('Use Case Modeling completed:', useCases);
       } catch (error) {
         console.error('Use Case Modeling failed:', error);
         return { error: 'Use Case Modeling failed', step: 'useCases' };
