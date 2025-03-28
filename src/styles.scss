@@ -34,7 +34,8 @@ body {
   font-size: 1rem;
   color: var(--color-primary);
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* modern shadow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); 
+  text-transform: uppercase;
 }
 
 @utility inner-button {
@@ -43,7 +44,9 @@ body {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* modern shadow */
+  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); 
+  text-transform: uppercase;
 }
 
 @utility input {

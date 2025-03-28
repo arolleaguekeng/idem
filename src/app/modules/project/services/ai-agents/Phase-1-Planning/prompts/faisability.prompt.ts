@@ -1,36 +1,73 @@
-export const FAISABILITY_PROMPT = `Tu es un consultant expert en analyse de faisabilité de projets. Ta mission est d'évaluer la viabilité d'un projet en analysant les aspects métier, financier, organisationnel et juridique, sans inclure la faisabilité technique.  
+export const FAISABILITY_PROMPT = `
+En tant qu'expert en analyse de faisabilité, génère immédiatement une étude complète selon le format suivant, sans demander de précisions supplémentaires. L'analyse doit être exhaustive et directement exploitable.
 
+# Analyse de Faisabilité - [Nom du Projet]
 
-### **Sortie attendue** :  
-Une analyse détaillée comprenant les points suivants :  
+## 1. Faisabilité Métier
+### Besin & Objectifs SMART
+- **Spécifique** : [Analyse]
+- **Mesurable** : [Indicateurs]
+- **Atteignable** : [Évaluation]
+- **Réaliste** : [Justification]
+- **Temporel** : [Échéancier]
 
-#### **1. Faisabilité Métier**  
-- Analyse du besoin et des objectifs selon la méthode **SMART**.  
-- Identification des facteurs différenciateurs par rapport à la concurrence.  
-- Étude du marché et du positionnement stratégique.  
-- Identification des risques et opportunités.  
+### Différenciation Concurrentielle
+- [Avantages clés]
+- [Gap analysis vs concurrence]
 
-#### **2. Faisabilité Financière**  
-- Estimation des coûts de développement, d’exploitation et de maintenance.  
-- Évaluation des sources de financement potentielles (fonds propres, investisseurs, prêts).  
-- Estimation du retour sur investissement (**ROI**) et du seuil de rentabilité.  
+### Marché & Positionnement
+- [Taille marché]
+- [Positionnement stratégique proposé]
 
-#### **3. Faisabilité Organisationnelle**  
-- Évaluation des compétences et ressources humaines disponibles.  
-- Proposition d’une méthodologie de gestion de projet adaptée (Agile, Waterfall, Lean).  
-- Planification préliminaire du projet avec estimation des délais et jalons clés.  
+### Risques & Opportunités
+- [Principaux risques]
+- [Opportunités identifiées]
 
-#### **4. Faisabilité Juridique**  
-- Identification des régulations applicables au secteur du projet.  
-- Analyse des contraintes légales et des obligations en matière de protection des données (RGPD, CCPA).  
-- Évaluation des risques liés à la propriété intellectuelle et aux brevets.  
+## 2. Faisabilité Financière
+### Budget Prévisionnel
+- Développement : [Estimation]
+- Exploitation : [Coûts annuels]
+- Maintenance : [Coûts récurrents]
 
-### **Instructions Supplémentaires** :  
-- La réponse doit être claire, détaillée et argumentée avec des recommandations précises.  
-- Si certaines informations sont manquantes, demander des précisions avant d’effectuer l’analyse.  
-- Prioriser la sécurité des données sensibles en évitant toute divulgation d’informations confidentielles.  
+### Financement
+- [Sources identifiées]
+- [Mix recommandé]
 
-Génère maintenant l’étude de faisabilité en respectant ces directives.
-### **Entrées fournies par l'utilisateur** :  
+### ROI
+- [Projection sur 3 ans]
+- [Seuil de rentabilité]
+
+## 3. Faisabilité Organisationnelle
+### Ressources Humaines
+- [Compétences disponibles]
+- [Gaps à combler]
+
+### Méthodologie
+- [Méthode recommandée]
+- [Justification]
+
+### Planning
+- [Jalons clés]
+- [Timeline estimée]
+
+## 4. Faisabilité Juridique
+### Conformité
+- [Régulations applicables]
+- [Exigences sectorielles]
+
+### Protection des Données
+- [Mesures RGPD/CCPA]
+- [Processus à implémenter]
+
+### Propriété Intellectuelle
+- [Brevets existants]
+- [Stratégie IP recommandée]
+
+**Consignes :** 
+1. Remplir toutes les sections avec des analyses concrètes
+2. Éviter tout message d'introduction/transition
+3. Prioriser les listes à puces et tableaux synthétiques
+4. Maintenir un ton professionnel et factuel
+5. Inclure des recommandations actionnables dans chaque section 
 
 `;

@@ -7,12 +7,14 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class AiGenericPromptService {
-  private apiUrl = 'https://lexis.pharaon.me/api/prompt'; // Remplace par ton URL backend
+  private apiUrl = 'http://localhost:3000/api/prompt'; // Remplace par ton URL backend
+  // private apiUrl = 'https://lexis-api.vercel.app/api/prompt'; // Remplace par ton URL backend
 
   http = inject(HttpClient);
   auth = inject(Auth);
   async sendPrompt(history: any[], prompt: string): Promise<any> {
     try {
+      console.log('----------send prompt------');
       const user = this.auth.currentUser;
       if (!user) throw new Error('User not authenticated');
 

@@ -166,71 +166,54 @@
         @if (showResults) {
         <div class="card flex justify-center">
           <p-dialog
-            header="Résultats de l'Analyse"
+            header="Génération des Artéfacts de Projet"
             [(visible)]="visible"
             [modal]="true"
             [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-            [style]="{ width: '50vw', backgroundColor: 'white' }"
-            [draggable]="false"
-            [resizable]="false"
+            [style]="{ width: '50vw' }"
           >
-            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md">
-              <!-- Architecture Basique -->
-              <div class="mb-6 p-4 border border-gray-200 rounded-lg">
-                <h3 class="text-lg font-medium text-primary mb-2">
-                  Architecture Basique
-                </h3>
-                <p class="text-gray-700 mb-2">
-                  Description : Une architecture simple pour les petits projets.
-                </p>
-                <p class="text-gray-700 mb-2">
-                  Technologies : HTML, CSS, JavaScript, Node.js, SQLite.
-                </p>
-                <button
-                  (click)="generateScripts('basic')"
-                  class="hover:bg-primary hover:text-white outer-button"
+            <div class="max-w-3xl mx-auto p-4">
+              <h3 class="text-lg font-medium text-primary mb-4">
+                Sélectionnez les phases à générer :
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (phase of phases; track $index) {
+                <div
+                  class="p-4 border rounded-lg hover:shadow-lg transition-all cursor-pointer"
+                  [class.border-primary]="selectedPhases.includes(phase.id)"
+                  (click)="
+                    togglePhase(phase.id, !selectedPhases.includes(phase.id))
+                  "
                 >
-                  Générer les Scripts
-                </button>
+                  <div class="flex items-center">
+                    <p-checkbox
+                      [value]="phase.id"
+                      [(ngModel)]="selectedPhases"
+                      inputId="{{ phase.id }}"
+                      (onChange)="onCheckboxChange(phase.id, $event)"
+                    ></p-checkbox>
+                    <span class="ml-2 font-medium">{{ phase.label }}</span>
+                  </div>
+
+                  <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
+                    @for (item of phase.subItems; track $index) {
+                    <li>{{ item }}</li>
+
+                    }
+                  </ul>
+                </div>
+                }
               </div>
 
-              <!-- Architecture Recommandée -->
-              <div class="mb-6 p-4 border border-gray-200 rounded-lg">
-                <h3 class="text-lg font-medium text-primary mb-2">
-                  Architecture Recommandée
-                </h3>
-                <p class="text-gray-700 mb-2">
-                  Description : Une architecture équilibrée pour la plupart des
-                  projets.
-                </p>
-                <p class="text-gray-700 mb-2">
-                  Technologies : React, Express.js, MongoDB, Docker.
-                </p>
+              <div class="flex justify-end mt-6">
                 <button
-                  (click)="generateScripts('recommended')"
-                  class="hover:bg-primary hover:text-white outer-button"
+                  label="Générer les Artéfacts"
+                  class="inner-button"
+                  (click)="generateSelectedPhases()"
+                  [disabled]="selectedPhases.length === 0"
                 >
-                  Générer les Scripts
-                </button>
-              </div>
-
-              <!-- Architecture Complexe -->
-              <div class="mb-6 p-4 border border-gray-200 rounded-lg">
-                <h3 class="text-lg font-medium text-primary mb-2">
-                  Architecture Complexe
-                </h3>
-                <p class="text-gray-700 mb-2">
-                  Description : Une architecture avancée pour les projets à
-                  grande échelle.
-                </p>
-                <p class="text-gray-700 mb-2">
-                  Technologies : Microservices, Kubernetes, Kafka, PostgreSQL.
-                </p>
-                <button
-                  (click)="generateScripts('complex')"
-                  class="bg-primary inner-button"
-                >
-                  Générer les Scripts
+                 GENERER LES ARTEFACTS
                 </button>
               </div>
             </div>

@@ -24,6 +24,13 @@ export class LoginComponent {
 
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(this.auth, provider);
+    signInWithPopup(this.auth, provider).then((result) => {
+      console.log(result);
+      if (result.user) {
+        console.log('success');
+      } else {
+        console.log('errorr');
+      }
+    });
   }
 }

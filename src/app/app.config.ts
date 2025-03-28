@@ -21,9 +21,9 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { getStorage, provideStorage } from '@angular/fire/storage';
-import { MyPreset } from './my-preset';
 
 import { environment } from '../environments/environment';
+import { provideHttpClient } from '@angular/common/http';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     providePrimeNG({
       theme: {
-        preset: MyPreset,
+        preset: Aura,
         options: {
           prefix: 'p',
           darkModeSelector: 'user',
@@ -58,5 +58,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAnimations(),
+    provideHttpClient(),
   ],
 };
