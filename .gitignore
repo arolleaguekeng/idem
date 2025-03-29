@@ -37,7 +37,7 @@ yarn-error.log
 testem.log
 /typings
 
-
+.env
 # System files
 .DS_Store
 Thumbs.db
