@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const successColor = '\x1b[32m%s\x1b[0m';
-const checkSign = '\u{2705}';
-require('dotenv').config({ path: 'src/.env' });;
+require('dotenv').config({ path: 'src/.env' });
+
 const envFile = `export const environment = {
   environment: 'prod',
   firebase: {
@@ -11,16 +10,22 @@ const envFile = `export const environment = {
     projectId: '${process.env.FIREBASE_PROJECT_ID}',
     storageBucket: '${process.env.FIREBASE_STORAGE_BUCKET}',
     messagingSenderId: '${process.env.FIREBASE_MESSAGING_SENDER_ID}',
-    appId: '${process.env.VARIABLE_NAME}',},
-  };
-`;
+    appId: '${process.env.VARIABLE_NAME}',
+  },
+};`;
 
+// Définir le chemin du dossier
+const envDir = path.join(__dirname, './src/environments');
 
+// Vérifier et créer le dossier s'il n'existe pas
+if (!fs.existsSync(envDir)) {
+    fs.mkdirSync(envDir, { recursive: true });
+    console.log(`📁 Created directory: ${envDir}`);
+}
 
-
-
-const targetPath = path.join(__dirname, './src/environments/environment.ts');
-const targetDevPath = path.join(__dirname, './src/environments/environment.development.ts');
+// Définir les chemins des fichiers
+const targetPath = path.join(envDir, 'environment.ts');
+const targetDevPath = path.join(envDir, 'environment.development.ts');
 
 function createFileIfNotExists(filePath, content) {
     if (!fs.existsSync(filePath)) {
@@ -31,6 +36,6 @@ function createFileIfNotExists(filePath, content) {
     }
 }
 
-// Création des fichiers seulement s'ils n'existent pas
+// Créer les fichiers uniquement s'ils n'existent pas
 createFileIfNotExists(targetPath, envFile);
 createFileIfNotExists(targetDevPath, envFile);
