@@ -8,18 +8,18 @@
   >
     @if (isLoaded == false) {
     <div class="w-full">
-      <!-- Titre de la page -->
+
       <h1 class="text-3xl font-bold text-center text-primary mb-8">
         Parlez nous de votre projet
       </h1>
 
-      <!-- Formulaire de création de projet -->
+
       <div class="max-w-3xl mx-auto p-6 w-full">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
           Détails du Projet
         </h2>
 
-        <!-- Champ : Description du projet -->
+
         <div class="mb-4">
           <label
             for="projectDescription"
@@ -44,12 +44,16 @@
           >
             Type de Projet
           </label>
-          <select id="projectType" [(ngModel)]="project.type" class="input">
-            <option value="web">Application Web</option>
-            <option value="mobile">Application Mobile</option>
-            <option value="iot">IoT</option>
-            <option value="desktop">Application Desktop</option>
-          </select>
+          <div class="card flex justify-start w-full">
+            <p-select
+              [options]="groupedProjectTypes"
+              [(ngModel)]="project.type"
+              placeholder="Selectioner un type"
+              [editable]="false"
+              optionLabel="name"
+              styleClass=" w-full input"
+            />
+          </div>
         </div>
 
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
@@ -63,13 +67,16 @@
             >
               Taille de l'Équipe
             </label>
-            <select id="teamSize" [(ngModel)]="project.teamSize" class="input">
-              <option value="1-5">1 - 5</option>
-              <option value="6-10">6 - 10</option>
-              <option value="11-20">11 - 20</option>
-              <option value="21-50">21 - 50</option>
-              <option value="50+">50 et plus</option>
-            </select>
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedTeamSizes"
+                [(ngModel)]="project.teamSize"
+                placeholder="Select a City"
+                [editable]="true"
+                optionLabel="name"
+                styleClass=" w-full input"
+              />
+            </div>
           </div>
 
           <div class="mb-4">
@@ -79,13 +86,17 @@
             >
               Portée du Projet
             </label>
-            <select id="projectScope" [(ngModel)]="project.scope" class="input">
-              @for (scope of scopes; track $index) {
-              <option [value]="scope">
-                {{ scope }}
-              </option>
-              }
-            </select>
+
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedScopes"
+                [(ngModel)]="project.scope"
+                placeholder="Choisir une portée"
+                [editable]="true"
+                optionLabel="name"
+                styleClass=" w-full input"
+              />
+            </div>
           </div>
         </div>
 
@@ -97,18 +108,15 @@
             >
               Budget du Projet
             </label>
-            <div class="relative mt-1 rounded-md shadow-sm">
-              <select
-                id="projectBudget"
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedBudgets"
                 [(ngModel)]="project.budgetIntervals"
-                class="input"
-              >
-                <option value="0-1000">0 - 1,000 $</option>
-                <option value="1000-5000">1,000 - 5,000 $</option>
-                <option value="5000-10000">5,000 - 10,000 $</option>
-                <option value="10000-50000">10,000 - 50,000 $</option>
-                <option value="50000+">50,000 $ et plus</option>
-              </select>
+                placeholder="Choisir une budget"
+                [editable]="true"
+                optionLabel="name"
+                styleClass=" w-full input"
+              />
             </div>
           </div>
           <div class="mb-4">
@@ -116,53 +124,60 @@
               for="projectTargets"
               class="block text-sm font-medium text-gray-700"
             >
-              Cibles du Projet
+              Cible principale du Projet
             </label>
             <div class="relative mt-1 rounded-md shadow-sm">
-              <select
-                id="projectTargets"
-                [(ngModel)]="project.targets"
-                class="input"
-              >
-                @for (target of targets; track $index) {
-                <option [value]="target">
-                  {{ target }}
-                </option>
-                }
-              </select>
+              <div class="card flex justify-start w-full">
+                <p-select
+                  [options]="groupedTargets"
+                  [(ngModel)]="project.targets"
+                  placeholder="Choisir une cible"
+                  [editable]="true"
+                  optionLabel="name"
+                  styleClass=" w-full input"
+                />
+              </div>
             </div>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Contraintes Techniques
+            </label>
+            <div class="flex justify-start w-full">
+              <div class="card flex justify-center w-full">
+                <p-multiselect
+                  [options]="groupedConstraints"
+                  [group]="true"
+                  [(ngModel)]="selectedConstraints"
+                  placeholder="Choisir des Contraintes"
+                  scrollHeight="350px"
+                  display="chip"
+                  styleClass=" w-full input"
+                >
+                  <ng-template let-group #group>
+                    <div class="flex items-center">
+                      <img
+                        src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                        [class]="'mr-2 flag flag-' + group.value"
+                        style="width: 20px"
+                      />
+                      <span class="font-bold">{{ group.label }}</span>
+                    </div>
+                  </ng-template>
+                </p-multiselect>
+              </div>
+            </div>
+
+            <!-- Bouton : Analyser le projet -->
+          </div>
+        </div>
+        <div class="flex w-full justify-end">
+          <button (click)="showDialog()" class="outer-button">
+            Analyser le Projet
+          </button>
         </div>
 
-        <!-- Champ : Contraintes techniques -->
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700">
-            Contraintes Techniques
-          </label>
-          <div class="mt-2 space-y-2 gap-4">
-            @for (constraint of constraints; track $index) {
-            <ng-container>
-              <label class="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="project.constraints[$index]"
-                  class="form-checkbox h-4 w-4 text-primary"
-                />
-                <span class="ml-2 text-gray-700">{{ constraint }}</span>
-              </label>
-            </ng-container>
-            }
-          </div>
 
-          <!-- Bouton : Analyser le projet -->
-          <div class="flex w-full justify-end">
-            <button (click)="showDialog()" class="outer-button">
-              Analyser le Projet
-            </button>
-          </div>
-        </div>
-
-        <!-- Résultats de l'analyse -->
         @if (showResults) {
         <div class="card flex justify-center">
           <p-dialog
@@ -186,20 +201,44 @@
                     togglePhase(phase.id, !selectedPhases.includes(phase.id))
                   "
                 >
-                  <div class="flex items-center">
-                    <p-checkbox
-                      [value]="phase.id"
-                      [(ngModel)]="selectedPhases"
-                      inputId="{{ phase.id }}"
-                      (onChange)="onCheckboxChange(phase.id, $event)"
-                    ></p-checkbox>
-                    <span class="ml-2 font-medium">{{ phase.label }}</span>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <p-checkbox
+                        [value]="phase.id"
+                        [(ngModel)]="selectedPhases"
+                        inputId="{{ phase.id }}"
+                        (onChange)="onCheckboxChange(phase.id, $event)"
+                      ></p-checkbox>
+                      <span class="ml-2 font-medium">{{ phase.label }}</span>
+                    </div>
+                    <span
+                      class="text-xs px-2 py-1 rounded-full ml-2"
+                      [ngClass]="{
+                        'bg-gray-600 font-semibold text-white':
+                          phase.tier === 'free',
+                        'bg-gray-300 font-medium': phase.tier === 'standard',
+                        'bg-gray-100 ': phase.tier === 'premium'
+                      }"
+                    >
+                      {{ phase.tier | uppercase }}
+                    </span>
                   </div>
 
                   <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
                     @for (item of phase.subItems; track $index) {
-                    <li>{{ item }}</li>
-
+                    <li class="flex items-center">
+                      {{ item.label }}
+                      <!-- <span 
+                        class="text-[10px] px-1.5 py-0.5 rounded-full ml-2 bg-green-100"
+                        [ngClass]="{
+                          'bg-green-100 text-green-800': item.tier === 'free',
+                          'bg-blue-100 text-blue-800': item.tier === 'standard',
+                          'bg-purple-100 text-purple-800': item.tier === 'premium'
+                        }"
+                      >
+                        {{ item.tier.charAt(0) | uppercase }}
+                      </span> -->
+                    </li>
                     }
                   </ul>
                 </div>
@@ -213,7 +252,7 @@
                   (click)="generateSelectedPhases()"
                   [disabled]="selectedPhases.length === 0"
                 >
-                 GENERER LES ARTEFACTS
+                  GENERER LES ARTEFACTS
                 </button>
               </div>
             </div>
