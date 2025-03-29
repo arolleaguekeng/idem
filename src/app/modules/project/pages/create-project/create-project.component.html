@@ -186,79 +186,74 @@
             <div class="w-full flex items-center justify-center h-[400px]">
               <app-loader />
             </div>
+            } @else { @if (markdown != '') {
+            <markdown class="variable-binding" [data]="markdown"></markdown>
             } @else {
-              @if (markdown != '') {
-                <markdown class="variable-binding" [data]="markdown"></markdown>
-              }
-            @else {
-              <div class="max-w-3xl mx-auto p-4">
-                <h3 class="text-lg font-medium text-primary mb-4">
-                  Sélectionnez les phases à générer :
-                </h3>
-  
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  @for (phase of phases; track $index) {
-                  <div
-                    class="p-4 border rounded-lg hover:shadow-lg transition-all cursor-pointer"
-                    [class.border-primary]="selectedPhases.includes(phase.id)"
-                    (click)="
-                      togglePhase(phase.id, !selectedPhases.includes(phase.id))
-                    "
-                  >
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center">
-                        <p-checkbox
-                          [value]="phase.id"
-                          [(ngModel)]="selectedPhases"
-                          inputId="{{ phase.id }}"
-                          styleClass="bg-red h-[200px] accent-pink-500"
-                          class="accent-pink-500"
-                          (onChange)="onCheckboxChange(phase.id, $event)"
-                        ></p-checkbox>
-                        <span class="ml-2 font-medium">{{ phase.label }}</span>
-                      </div>
-                      <span
-                        class="text-xs px-2 py-1 rounded-full ml-2"
-                        [ngClass]="{
-                          'bg-gray-600 font-semibold text-white':
-                            phase.tier === 'free',
-                          'bg-gray-300 font-medium': phase.tier === 'standard',
-                          'bg-gray-100 ': phase.tier === 'premium'
-                        }"
-                      >
-                        {{ phase.tier | uppercase }}
-                      </span>
+            <div class="max-w-3xl mx-auto p-4">
+              <h3 class="text-lg font-medium text-primary mb-4">
+                Sélectionnez les phases à générer :
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (phase of phases; track $index) {
+                <div
+                  class="p-4 border rounded-lg hover:shadow-lg transition-all cursor-pointer"
+                  [class.border-primary]="selectedPhases.includes(phase.id)"
+                  (click)="
+                    togglePhase(phase.id, !selectedPhases.includes(phase.id))
+                  "
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <p-checkbox
+                        [value]="phase.id"
+                        [(ngModel)]="selectedPhases"
+                        inputId="{{ phase.id }}"
+                        styleClass="bg-red h-[200px] accent-pink-500"
+                        class="accent-pink-500"
+                        (onChange)="onCheckboxChange(phase.id, $event)"
+                      ></p-checkbox>
+                      <span class="ml-2 font-medium">{{ phase.label }}</span>
                     </div>
-  
-                    <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
-                      @for (item of phase.subItems; track $index) {
-                      <li class="flex items-center">
-                        {{ item.label }}
-                      </li>
-                      }
-                    </ul>
+                    <span
+                      class="text-xs px-2 py-1 rounded-full ml-2"
+                      [ngClass]="{
+                        'bg-gray-600 font-semibold text-white':
+                          phase.tier === 'free',
+                        'bg-gray-300 font-medium': phase.tier === 'standard',
+                        'bg-gray-100 ': phase.tier === 'premium'
+                      }"
+                    >
+                      {{ phase.tier | uppercase }}
+                    </span>
                   </div>
-                  }
+
+                  <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
+                    @for (item of phase.subItems; track $index) {
+                    <li class="flex items-center">
+                      {{ item.label }}
+                    </li>
+                    }
+                  </ul>
                 </div>
-  
-                <div class="flex justify-end mt-6">
-                  <button
-                    label="Générer les Artéfacts"
-                    class="inner-button"
-                    (click)="generateSelectedPhases()"
-                    [disabled]="selectedPhases.length === 0"
-                  >
-                    GENERER LES ARTEFACTS
-                  </button>
-                </div>
+                }
               </div>
-            }
-            }
+
+              <div class="flex justify-end mt-6">
+                <button
+                  label="Générer les Artéfacts"
+                  class="inner-button"
+                  (click)="generateSelectedPhases()"
+                  [disabled]="selectedPhases.length === 0"
+                >
+                  GENERER LES ARTEFACTS
+                </button>
+              </div>
+            </div>
+            } }
           </p-dialog>
         </div>
         }
-
-        
       </div>
     </div>
   </div>
