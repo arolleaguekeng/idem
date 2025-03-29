@@ -6,19 +6,15 @@
   <div
     class="w-full md:w-[50%] bg-white shadow-md flex flex-col items-center justify-center"
   >
-    @if (isLoaded == false) {
     <div class="w-full">
-
       <h1 class="text-3xl font-bold text-center text-primary mb-8">
         Parlez nous de votre projet
       </h1>
-
 
       <div class="max-w-3xl mx-auto p-6 w-full">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
           Détails du Projet
         </h2>
-
 
         <div class="mb-4">
           <label
@@ -177,7 +173,6 @@
           </button>
         </div>
 
-
         @if (showResults) {
         <div class="card flex justify-center">
           <p-dialog
@@ -187,84 +182,84 @@
             [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
             [style]="{ width: '50vw' }"
           >
-            <div class="max-w-3xl mx-auto p-4">
-              <h3 class="text-lg font-medium text-primary mb-4">
-                Sélectionnez les phases à générer :
-              </h3>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                @for (phase of phases; track $index) {
-                <div
-                  class="p-4 border rounded-lg hover:shadow-lg transition-all cursor-pointer"
-                  [class.border-primary]="selectedPhases.includes(phase.id)"
-                  (click)="
-                    togglePhase(phase.id, !selectedPhases.includes(phase.id))
-                  "
-                >
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                      <p-checkbox
-                        [value]="phase.id"
-                        [(ngModel)]="selectedPhases"
-                        inputId="{{ phase.id }}"
-                        (onChange)="onCheckboxChange(phase.id, $event)"
-                      ></p-checkbox>
-                      <span class="ml-2 font-medium">{{ phase.label }}</span>
-                    </div>
-                    <span
-                      class="text-xs px-2 py-1 rounded-full ml-2"
-                      [ngClass]="{
-                        'bg-gray-600 font-semibold text-white':
-                          phase.tier === 'free',
-                        'bg-gray-300 font-medium': phase.tier === 'standard',
-                        'bg-gray-100 ': phase.tier === 'premium'
-                      }"
-                    >
-                      {{ phase.tier | uppercase }}
-                    </span>
-                  </div>
-
-                  <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
-                    @for (item of phase.subItems; track $index) {
-                    <li class="flex items-center">
-                      {{ item.label }}
-                      <!-- <span 
-                        class="text-[10px] px-1.5 py-0.5 rounded-full ml-2 bg-green-100"
+            @if (isLoaded == true) {
+            <div class="w-full flex items-center justify-center h-[400px]">
+              <app-loader />
+            </div>
+            } @else {
+              @if (markdown != '') {
+                <markdown class="variable-binding" [data]="markdown"></markdown>
+              }
+            @else {
+              <div class="max-w-3xl mx-auto p-4">
+                <h3 class="text-lg font-medium text-primary mb-4">
+                  Sélectionnez les phases à générer :
+                </h3>
+  
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  @for (phase of phases; track $index) {
+                  <div
+                    class="p-4 border rounded-lg hover:shadow-lg transition-all cursor-pointer"
+                    [class.border-primary]="selectedPhases.includes(phase.id)"
+                    (click)="
+                      togglePhase(phase.id, !selectedPhases.includes(phase.id))
+                    "
+                  >
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center">
+                        <p-checkbox
+                          [value]="phase.id"
+                          [(ngModel)]="selectedPhases"
+                          inputId="{{ phase.id }}"
+                          styleClass="bg-red h-[200px] accent-pink-500"
+                          class="accent-pink-500"
+                          (onChange)="onCheckboxChange(phase.id, $event)"
+                        ></p-checkbox>
+                        <span class="ml-2 font-medium">{{ phase.label }}</span>
+                      </div>
+                      <span
+                        class="text-xs px-2 py-1 rounded-full ml-2"
                         [ngClass]="{
-                          'bg-green-100 text-green-800': item.tier === 'free',
-                          'bg-blue-100 text-blue-800': item.tier === 'standard',
-                          'bg-purple-100 text-purple-800': item.tier === 'premium'
+                          'bg-gray-600 font-semibold text-white':
+                            phase.tier === 'free',
+                          'bg-gray-300 font-medium': phase.tier === 'standard',
+                          'bg-gray-100 ': phase.tier === 'premium'
                         }"
                       >
-                        {{ item.tier.charAt(0) | uppercase }}
-                      </span> -->
-                    </li>
-                    }
-                  </ul>
+                        {{ phase.tier | uppercase }}
+                      </span>
+                    </div>
+  
+                    <ul class="mt-2 text-sm text-gray-600 pl-6 list-disc">
+                      @for (item of phase.subItems; track $index) {
+                      <li class="flex items-center">
+                        {{ item.label }}
+                      </li>
+                      }
+                    </ul>
+                  </div>
+                  }
                 </div>
-                }
+  
+                <div class="flex justify-end mt-6">
+                  <button
+                    label="Générer les Artéfacts"
+                    class="inner-button"
+                    (click)="generateSelectedPhases()"
+                    [disabled]="selectedPhases.length === 0"
+                  >
+                    GENERER LES ARTEFACTS
+                  </button>
+                </div>
               </div>
-
-              <div class="flex justify-end mt-6">
-                <button
-                  label="Générer les Artéfacts"
-                  class="inner-button"
-                  (click)="generateSelectedPhases()"
-                  [disabled]="selectedPhases.length === 0"
-                >
-                  GENERER LES ARTEFACTS
-                </button>
-              </div>
-            </div>
+            }
+            }
           </p-dialog>
         </div>
         }
+
+        
       </div>
     </div>
-    } @else {
-    <div class="w-full md:w-[50%] flex items-center justify-center">
-      <app-loader />
-    </div>
-    }
   </div>
 </div>

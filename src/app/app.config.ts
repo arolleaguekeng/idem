@@ -24,6 +24,12 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
+import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
+
+import 'prismjs';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -59,5 +65,14 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAnimations(),
     provideHttpClient(),
+    provideMarkdown({
+      mermaidOptions: {
+        provide: MERMAID_OPTIONS,
+        useValue: {
+          darkMode: false,
+          look: 'handDrawn',
+        },
+      },
+    }),
   ],
 };

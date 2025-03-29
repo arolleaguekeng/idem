@@ -14,25 +14,26 @@ export class AiGenericPromptService {
   auth = inject(Auth);
   async sendPrompt(history: any[], prompt: string): Promise<any> {
     try {
-      console.log('----------send prompt------');
       const user = this.auth.currentUser;
       if (!user) throw new Error('User not authenticated');
 
-      const idToken = await user.getIdToken(); // Récupérer le token Firebase
-
       const headers = new HttpHeaders({
-        Authorization: `Bearer ${idToken}`,
+        Authorization: `Bearer ${await user.getIdToken()}`,
         'Content-Type': 'application/json',
       });
 
-      const body = { history, prompt };
-
       return await firstValueFrom(
-        this.http.post(this.apiUrl, body, { headers })
+        this.http.post(
+          this.apiUrl,
+          { history, prompt },
+          {
+            headers,
+            responseType: 'text', // Crucial pour recevoir du texte brut
+          }
+        )
       );
     } catch (error) {
-      console.error('Error sending prompt:', error);
-      throw error;
+      console.error('Error:', error);
     }
   }
 }

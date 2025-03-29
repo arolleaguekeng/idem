@@ -10,23 +10,9 @@ import { CommonModule } from '@angular/common';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectItemGroup } from 'primeng/api';
 import { Select } from 'primeng/select';
-interface PhaseItem {
-  label: string;
-  tier: 'free' | 'standard' | 'premium'; // f, s, p
-}
+import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
+import { MarkdownComponent } from 'ngx-markdown';
 
-
-
-interface DevelopmentPhase {
-  id: string;
-  label: string;
-  tier: 'free' | 'standard' | 'premium'; // Niveau global de la phase
-  subItems: PhaseItem[];
-}
-interface SelectElement {
-  name: string;
-  code: string;
-}
 @Component({
   selector: 'app-create-project',
   imports: [
@@ -36,7 +22,8 @@ interface SelectElement {
     Checkbox,
     CommonModule,
     MultiSelectModule,
-    Select
+    Select,
+    MarkdownComponent,
   ],
   templateUrl: './create-project.component.html',
   styleUrl: './create-project.component.scss',
@@ -64,51 +51,16 @@ export class CreateProjectComponent {
   selectedTarget: SelectElement | undefined;
   selectedScope: SelectElement | undefined;
 
-  teamSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  targets = ['Entreprises', 'Étudiants', 'Grand public'];
-  scopes = ['Locale', 'Departementale', 'Regionale'];
-  groupedTeamSizes: SelectElement[] = [
-    { name: '1 personne', code: '1' },
-    { name: '2-3 personnes', code: '2-3' },
-    { name: '4-5 personnes', code: '4-5' },
-    { name: '6-10 personnes', code: '6-10' },
-    { name: '10+ personnes', code: '10+' },
-  ];
-  groupedProjectTypes: SelectElement[] = [
-    { name: 'Application Web', code: 'web' },
-    { name: 'Application Mobile', code: 'mobile' },
-    { name: 'IoT', code: 'iot' },
-    { name: 'Application Desktop', code: 'desktop' },
-    { name: 'API/Backend', code: 'api' },
-    { name: 'IA/ML', code: 'ai' },
-    { name: 'Blockchain', code: 'blockchain' }
-  ];
+  groupedTeamSizes: SelectElement[] = CreateProjectDatas.groupedTeamSizes;
+  groupedProjectTypes: SelectElement[] = CreateProjectDatas.groupedProjectTypes;
 
-  groupedTargets: SelectElement[] = [
-    { name: 'Entreprises', code: 'business' },
-    { name: 'Étudiants', code: 'students' },
-    { name: 'Grand public', code: 'general-public' },
-    { name: 'Administrations', code: 'government' },
-    { name: 'Professionnels de santé', code: 'healthcare' },
-  ];
+  groupedTargets: SelectElement[] = CreateProjectDatas.groupedTargets;
 
-  groupedScopes: SelectElement[] = [
-    { name: 'Locale', code: 'local' },
-    { name: 'Départementale', code: 'departmental' },
-    { name: 'Régionale', code: 'regional' },
-    { name: 'Nationale', code: 'national' },
-    { name: 'Internationale', code: 'international' },
-  ];
-  groupedBudgets: SelectElement[] = [
-    { name: '< $5K', code: '0-5000' },
-    { name: '$5K-$10K', code: '5000-10000' }, 
-    { name: '$10K-$20K', code: '10000-20000' },
-    { name: '$20K-$50K', code: '20000-50000' },
-    { name: '$50K-$100K', code: '50000-100000' },
-    { name: '> $100K', code: '100000+' }
-  ];
+  groupedScopes: SelectElement[] = CreateProjectDatas.groupedScopes;
+  groupedBudgets: SelectElement[] = CreateProjectDatas.groupedBudgets;
   groupedConstraints!: SelectItemGroup[];
-
+  phases: DevelopmentPhase[] = CreateProjectDatas.phases;
+  markdown = '';
   constructor() {
     this.groupedConstraints = [
       {
@@ -186,27 +138,52 @@ export class CreateProjectComponent {
 
   ngOnInit(): void {}
 
-  analyzeProject() {
-    this.showResults = true;
+  generateSelectedPhases() {
+    this.isLoaded = true;
+    for (let phase in this.selectedPhases) {
+      console.log('Phase:', phase);
+      switch (phase) {
+        case '0': {
+          this.firstPhaseMainService
+            .executeFirstPhase(this.project)
+
+            .then((results) => {
+              console.log('Results:', results);
+              this.markdown = results.feasibility!;
+            })
+            .catch((error) =>
+              console.error('Error while executing first phase:', error)
+            )
+            .finally(() => (this.isLoaded = false));
+          break;
+        }
+        case 'design': {
+          break;
+        }
+        case 'development': {
+          break;
+        }
+        case 'charte': {
+          break;
+        }
+        case 'landing': {
+          break;
+        }
+        case 'testing': {
+          break;
+        }
+        default: {
+          this.isLoaded = false;
+        }
+      }
+    }
   }
   visible: boolean = false;
   showDialog() {
     console.log('Project: ', this.project);
     this.visible = true;
     this.isLoaded = false;
-    this.analyzeProject();
-    // this.firstPhaseMainService
-    //   .executeFirstPhase(this.project)
-
-    //   .then((results) => {
-    //     console.log('Results:', results);
-    //     this.analyzeProject();
-    //     this.visible = true;
-    //   })
-    //   .catch((error) =>
-    //     console.error('Error while executing first phase:', error)
-    //   )
-    //   .finally(() => (this.isLoaded = false));
+    this.showResults = true;
   }
 
   generateScripts(architecture: string) {
@@ -215,113 +192,13 @@ export class CreateProjectComponent {
 
   selectedPhases: string[] = [];
 
-  phases: DevelopmentPhase[] = [
-    {
-      id: 'planning',
-      label: 'Phase 1 - Planning',
-      tier: 'free', // "s"
-      subItems: [
-        { label: 'Étude de faisabilité', tier: 'free' },
-        { label: 'Analyse des risques', tier: 'standard' },
-        { label: 'Objectifs SMART', tier: 'premium' },
-      ],
-    },
-    {
-      id: 'design',
-      label: 'Phase 2 - Design',
-      tier: 'standard', // "s"
-      subItems: [
-        { label: "Choix d'architecture", tier: 'free' },
-        { label: 'Modélisation UML', tier: 'standard' },
-        { label: 'Sélection technologique', tier: 'premium' },
-      ],
-    },
-    {
-      id: 'development',
-      label: 'Phase 3 - Development',
-      tier: 'premium', // "p"
-      subItems: [
-        { label: 'Setup projet', tier: 'standard' },
-        { label: 'Développement backend/frontend', tier: 'premium' },
-        { label: 'Base de données', tier: 'premium' },
-      ],
-    },
-    {
-      id: 'charte',
-      label: 'Identité visuelle',
-      tier: 'premium',
-      subItems: [
-        {
-          label: 'Palette de couleurs',
-          tier: 'free',
-        },
-        {
-          label: 'Pack typographie',
-          tier: 'standard',
-        },
-        {
-          label: 'Kit UI complet (logos, icônes, thème front)',
-          tier: 'premium',
-        },
-      ],
-    },
-    {
-      id: 'landing',
-      label: 'Landing Page',
-      tier: 'standard',
-      subItems: [
-        {
-          label: 'Template statique',
-          tier: 'free',
-        },
-        {
-          label: 'LP dynamique (React/Angular)',
-          tier: 'standard',
-        },
-        {
-          label: 'LP animée + analytics',
-          tier: 'premium',
-        },
-      ],
-    },
-    {
-      id: 'testing',
-      label: 'Tests',
-      tier: 'premium',
-      subItems: [
-        {
-          label: 'Tests unitaires',
-          tier: 'free',
-        },
-        {
-          label: 'Tests d‘intégration',
-          tier: 'standard',
-        },
-        {
-          label: 'Benchmark performance',
-          tier: 'premium',
-        },
-      ],
-    },
-  ];
-
   togglePhase(phaseId: string, isChecked: boolean): void {
     this.selectedPhases = isChecked
       ? [...this.selectedPhases, phaseId]
       : this.selectedPhases.filter((id) => id !== phaseId);
   }
 
-  generateSelectedPhases(): void {
-    this.selectedPhases.forEach((phaseId) => {
-      const phase = this.phases.find((p) => p.id === phaseId);
-      console.log(`Génération de la phase: ${phase?.label}`);
-      // Implémentez votre logique de génération ici
-    });
-  }
-
-  // Nouvelle méthode optimisée
   onCheckboxChange(phaseId: string, event: any): void {
-    this.generateSelectedPhases();
     if (event.checked) {
       if (!this.selectedPhases.includes(phaseId)) {
         this.selectedPhases = [...this.selectedPhases, phaseId];
