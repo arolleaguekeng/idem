@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CreateProjectComponent } from '../../../project/pages/create-project/create-project.component';
 import { ViewportScroller } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { RouterLink } from '@angular/router';
@@ -7,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [CreateProjectComponent, RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   animations: [
