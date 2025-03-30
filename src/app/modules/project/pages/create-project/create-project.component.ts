@@ -137,6 +137,14 @@ export class CreateProjectComponent {
   }
 
   ngOnInit(): void {}
+  autoResize(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto'; // Réinitialise la hauteur
+
+    // Vérifie si la hauteur dépasse 400px
+    const newHeight = Math.min(textarea.scrollHeight, 400);
+    textarea.style.height = newHeight + 'px';
+  }
 
   generateSelectedPhases() {
     this.isLoaded = true;

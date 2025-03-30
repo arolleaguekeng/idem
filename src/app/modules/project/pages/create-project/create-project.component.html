@@ -1,25 +1,58 @@
-<section class="md:h-screen flex flex-col items-center justify-center w-full">
+<section class="h-[93vh] p-4 flex flex-col items-center justify-center w-full">
   <h1
     class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
   >
     DESCRIBE YOUR PROJECT
   </h1>
-  <textarea
-    id="projectDescription"
-    [(ngModel)]="project.description"
-    rows="4"
-    class="mt-1 block max-w-[900px] min-w-[400px] w-[50%] p-2 border border-gray-300 rounded-md shadow-sm"
-    placeholder="Décrivez votre projet"
-  ></textarea>
+  <div
+    class="bg-gray-700 rounded-2xl px-4 py-2 w-full sm:min-w-[500px] sm:max-w-[750px]"
+  >
+    <!-- Zone de saisie -->
+    <textarea
+      id="projectDescription"
+      [(ngModel)]="project.description"
+      rows="1"
+      class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-lg resize-none overflow-y-auto max-h-[400px]"
+      placeholder="Message DeepSeek"
+      (input)="autoResize($event)"
+    ></textarea>
+
+    <!-- Boutons en bas -->
+    <div class="flex justify-between items-center mt-2">
+      <!-- Boutons à gauche -->
+      <div class="flex space-x-2">
+        <button
+          class="flex items-center bg-gray-600 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-500"
+        >
+          <i class="pi pi-brain mr-2"></i> DeepThink (R1)
+        </button>
+        <button
+          class="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500"
+        >
+          <i class="pi pi-globe mr-2"></i> Search
+        </button>
+      </div>
+
+      <!-- Icônes à droite -->
+      <div class="flex items-center space-x-3">
+        <i class="pi pi-paperclip text-gray-400 text-xl cursor-pointer"></i>
+        <button
+          class="flex items-center justify-center w-8 h-8 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400"
+        >
+          <i class="pi pi-arrow-up"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section
   class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
 >
   <h1
-    class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
+    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
   >
-    DESCRIBE YOUR PROJECT
+    Before continues, we need more informations of your project
   </h1>
   <div class="max-w-3xl mx-auto p-6 w-full">
     <h2 class="text-xl font-semibold text-gray-800 mb-4">Détails du Projet</h2>
@@ -151,7 +184,7 @@
 @if (showResults) {
 <section class="md:h-screen flex flex-col items-center justify-center w-full">
   <h1
-    class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
+    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
   >
     Nice ! Now Select what you need yo generate !
   </h1>
