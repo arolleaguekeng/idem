@@ -1,11 +1,13 @@
-<nav class="bg-white shadow-lg fixed w-full z-50 top-0">
+<nav
+  class="bg-gradient-to-r from-gray-900 to-gray-800 text-white overflow-hidden shadow-lg fixed w-full z-50 top-0"
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
         <a
           routerLink="/"
-          class="text-2xl font-bold text-primary hover:text-blue-700 transition duration-300 flex items-center gap-1"
+          class="text-2xl font-bold hover:text-blue-700 transition duration-300 flex items-center gap-1"
         >
           <img
             src="/assets/icons/logo_white.png"
@@ -28,21 +30,21 @@
         <a
           routerLink="/projects"
           routerLinkActive="text-primary border-b-2 border-primary"
-          class="text-gray-700 hover:text-primary transition duration-300"
+          class="hover:text-primary transition duration-300"
         >
           Projets
         </a>
         <a
           routerLink="/analysis"
           routerLinkActive="text-primary border-b-2 border-primary"
-          class="text-gray-700 hover:text-primary transition duration-300"
+          class="hover:text-primary transition duration-300"
         >
           Analyse
         </a>
         <a
           routerLink="/profile"
           routerLinkActive="text-primary border-b-2 border-primary"
-          class="text-gray-700 hover:text-primary transition duration-300"
+          class="hover:text-primary transition duration-300"
         >
           Profil
         </a>
@@ -57,7 +59,7 @@
       <div class="flex items-center md:hidden">
         <button
           (click)="toggleMenu()"
-          class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-300"
+          class="inline-flex items-center justify-center p-2 rounded-md hover:text-primary focus:outline-none transition duration-300"
         >
           <svg
             class="h-6 w-6"
@@ -81,7 +83,7 @@
   <!-- Menu mobile (ouvert/fermé) -->
   @if (isMenuOpen) {
   <div
-    class="md:hidden bg-white shadow-lg"
+    class="md:hidden shadow-xl  bg-gradient-to-t from-gray-800 to-gray-700"
     [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -89,34 +91,34 @@
         routerLink="/"
         routerLinkActive="text-primary bg-blue-50"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-blue-50 transition duration-300"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
         Accueil
       </a>
       <a
         routerLink="/projects"
         routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-blue-50 transition duration-300"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
         Projets
       </a>
       <a
         routerLink="/analysis"
         routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-blue-50 transition duration-300"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
         Analyse
       </a>
       <a
         routerLink="/profile"
         routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-blue-50 transition duration-300"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
         Profil
       </a>
       <a
         routerLink="/login"
-        class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary hover:bg-blue-700 transition duration-300"
+        class="block outer-button rounded-md transition duration-300"
       >
         Connexion
       </a>
