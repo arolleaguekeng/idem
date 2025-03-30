@@ -1,6 +1,6 @@
 @use "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
-
+@import "primeicons/primeicons.css";
 * {
   font-family: "Jura", sans-serif;
 }
@@ -9,7 +9,7 @@ body {
 }
 
 @theme {
-  --color-primary: #1447E6;
+  --color-primary: #1447e6;
   --color-secondary: #2563eb; /* blue 600 */
   --color-light-text: #f5f5f5;
   --color-success: #219653;
@@ -28,27 +28,28 @@ body {
   font-size: 1rem;
   color: white;
   cursor: pointer;
-  border-radius: 40px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   text-transform: uppercase;
 }
 
 @utility inner-button {
-  background-color: white;
-  color: black;
+  background-color: var(--color-primary);
+  color: white;
   padding: 0.8rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  border-radius: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(60, 164, 250, 0.718), 0 1px 3px rgba(0, 0, 0, 0.08);
   text-transform: uppercase;
 }
 
-.outer-button {
+.outer-button, .inner-button {
   &:hover {
     background-color: #1e1c1c;
     transition: all ease-in-out 0.4s;
     color: white;
+    box-shadow: 0 4px 6px rgba(60, 164, 250, 0.718), 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 }
 
