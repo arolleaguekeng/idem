@@ -21,14 +21,14 @@
       <!-- Liens de navigation (visible sur desktop) -->
       <div class="hidden md:flex space-x-8 items-center">
         <a
-          routerLink="/"
+          routerLink="/home"
           routerLinkActive="text-primary border-b-2 border-primary"
-          class="text-gray-700 hover:text-primary transition duration-300"
+          class="hover:text-primary transition duration-300"
         >
           Accueil
         </a>
         <a
-          routerLink="/projects"
+          routerLink="/project/create"
           routerLinkActive="text-primary border-b-2 border-primary"
           class="hover:text-primary transition duration-300"
         >
@@ -52,7 +52,13 @@
 
       <!-- Bouton de connexion (visible sur desktop) -->
       <div class="hidden md:flex items-center">
+        @if (auth.currentUser) {
+        <a routerLink="/login" class="outer-button"> User </a>
+
+        } @else{
         <a routerLink="/login" class="outer-button"> Connexion </a>
+
+        }
       </div>
 
       <!-- Menu mobile (visible sur mobile) -->
@@ -84,19 +90,21 @@
   @if (isMenuOpen) {
   <div
     class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
+    #menu
     [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a
-        routerLink="/"
+        routerLink="/home"
+        (click)="toggleMenu()"
         routerLinkActive="text-primary bg-blue-50"
-        [routerLinkActiveOptions]="{ exact: true }"
         class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
         Accueil
       </a>
       <a
-        routerLink="/projects"
+        routerLink="/project/create"
+        (click)="toggleMenu()"
         routerLinkActive="text-primary bg-blue-50"
         class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
@@ -104,6 +112,7 @@
       </a>
       <a
         routerLink="/analysis"
+        (click)="toggleMenu()"
         routerLinkActive="text-primary bg-blue-50"
         class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
@@ -111,6 +120,7 @@
       </a>
       <a
         routerLink="/profile"
+        (click)="toggleMenu()"
         routerLinkActive="text-primary bg-blue-50"
         class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
       >
@@ -118,6 +128,7 @@
       </a>
       <a
         routerLink="/login"
+        (click)="toggleMenu()"
         class="block outer-button rounded-md transition duration-300"
       >
         Connexion

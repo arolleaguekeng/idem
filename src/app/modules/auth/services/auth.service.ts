@@ -18,22 +18,22 @@ export class AuthService {
   constructor() {}
 
   async loginWithGithub() {
-    // const provider = new GithubAuthProvider();
-    // await signInWithPopup(this.auth, provider);
+    const provider = new GithubAuthProvider();
+    await signInWithPopup(this.auth, provider);
   }
 
   auth = inject(Auth);
 
   async loginWithGoogle() {
-    // const provider = new GoogleAuthProvider();
-    // signInWithPopup(this.auth, provider).then((result) => {
-    //   console.log(result);
-    //   if (result.user) {
-    //     this.createUserDocument(result.user);
-    //   } else {
-    //     console.log('errorr');
-    //   }
-    // });
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(this.auth, provider).then((result) => {
+      console.log(result);
+      if (result.user) {
+        this.createUserDocument(result.user);
+      } else {
+        console.log('errorr');
+      }
+    });
   }
 
   createUserDocument(user: User) {
@@ -63,4 +63,6 @@ export class AuthService {
         console.error('Erreur lors de la déconnexion', error);
       });
   }
+
+  currentUser = this.auth.currentUser;
 }
