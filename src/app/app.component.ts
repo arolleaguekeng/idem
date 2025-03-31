@@ -10,5 +10,8 @@ import { FooterComponent } from './modules/landing/components/footer/footer.comp
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  resetPosition() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   title = 'lexi';
 }
