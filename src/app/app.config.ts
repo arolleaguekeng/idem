@@ -25,8 +25,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
-
-
+import { AuthService } from './modules/auth/services/auth.service';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
   authDomain: environment.firebase.authDomain,
@@ -56,7 +56,6 @@ export const appConfig: ApplicationConfig = {
           prefix: 'p',
           darkModeSelector: 'system',
           cssLayer: false,
-          
         },
       },
     }),
@@ -71,5 +70,7 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    AuthService,
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
   ],
 };

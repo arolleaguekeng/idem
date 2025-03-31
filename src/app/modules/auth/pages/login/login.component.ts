@@ -1,11 +1,6 @@
 import { Component, inject } from '@angular/core';
-import {
-  Auth,
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from '@angular/fire/auth';
-import { Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +9,12 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  async loginWithGithub() {
-    const provider = new GithubAuthProvider();
-    await signInWithPopup(this.auth, provider);
+  authService = inject(AuthService);
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle();
   }
-
-  auth = inject(Auth);
-  router = inject(Router);
-
-  async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(this.auth, provider).then((result) => {
-      console.log(result);
-      if (result.user) {
-        console.log('success');
-      } else {
-        console.log('errorr');
-      }
-    });
+  loginWithGithub() {
+    this.authService.loginWithGithub();
   }
 }
