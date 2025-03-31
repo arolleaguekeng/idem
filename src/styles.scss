@@ -44,12 +44,20 @@ body {
   text-transform: uppercase;
 }
 
-.outer-button, .inner-button {
+.outer-button,
+.inner-button {
   &:hover {
     background-color: #1e1c1c;
-    transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.3s;
     color: white;
-    box-shadow: 0 4px 6px rgba(60, 164, 250, 0.718), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 6px rgba(60, 164, 250, 0.718),
+      0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.outer-button {
+  &:hover {
+    background-color: var(--color-primary);
   }
 }
 
