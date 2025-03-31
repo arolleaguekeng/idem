@@ -1,19 +1,25 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './modules/landing/pages/home/home.component';
-import { CreateProjectComponent } from './modules/project/pages/create-project/create-project.component';
-import { LoginComponent } from './modules/auth/pages/login/login.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    loadComponent: () =>
+      import('./modules/landing/pages/home/home.component').then(
+        (m) => m.HomeComponent
+      ),
   },
   {
     path: 'project/create',
-    component: CreateProjectComponent,
+    loadComponent: () =>
+      import(
+        './modules/project/pages/create-project/create-project.component'
+      ).then((m) => m.CreateProjectComponent),
   },
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./modules/auth/pages/login/login.component').then(
+        (m) => m.LoginComponent
+      ),
   },
 ];
