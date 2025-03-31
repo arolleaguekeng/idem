@@ -29,4 +29,12 @@ export const routes: Routes = [
         (m) => m.LoginComponent
       ),
   },
+
+  {
+    path: 'project/editor/:id',
+    loadComponent: () =>
+      import(
+        './modules/project/pages/project-editor/project-editor.component'
+      ).then((m) => m.ProjectEditorComponent),
+  },
 ];

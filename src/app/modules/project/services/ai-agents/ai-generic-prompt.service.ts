@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Auth } from '@angular/fire/auth'; // Firebase Auth
+import { Auth, User } from '@angular/fire/auth'; // Firebase Auth
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 export class AiGenericPromptService {
   private apiUrl = 'http://localhost:3000/api/prompt'; // Remplace par ton URL backend
   // private apiUrl = 'https://lexis-api.vercel.app/api/prompt'; // Remplace par ton URL backend
+  constructor() {}
 
   http = inject(HttpClient);
   auth = inject(Auth);
@@ -28,7 +29,7 @@ export class AiGenericPromptService {
           { history, prompt },
           {
             headers,
-            responseType: 'text', // Crucial pour recevoir du texte brut
+            responseType: 'text',
           }
         )
       );

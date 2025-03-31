@@ -1,3 +1,8 @@
+@if (isLoaded) {
+<div class="h-screen w-full flex items-center justify-center">
+  <app-loader />
+</div>
+} @else {
 <section class="h-[93vh] p-4 flex flex-col items-center justify-center w-full">
   <h1
     class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
@@ -24,12 +29,12 @@
         <button
           class="flex items-center bg-gray-600 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-500"
         >
-          <i class="pi pi-brain mr-2"></i> DeepThink (R1)
+          <i class="pi pi-brain mr-2"></i> Reformuler
         </button>
         <button
           class="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500"
         >
-          <i class="pi pi-globe mr-2"></i> Search
+          <i class="pi pi-globe mr-2"></i> Corriger
         </button>
       </div>
 
@@ -155,6 +160,7 @@
               [group]="true"
               [(ngModel)]="selectedConstraints"
               placeholder="Choisir des Contraintes"
+              (onChange)="onConstraintsChange()"
               scrollHeight="350px"
               display="chip"
               styleClass=" w-full input"
@@ -249,4 +255,4 @@
     </div>
   </div>
 </section>
-}
+} }

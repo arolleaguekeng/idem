@@ -39,7 +39,7 @@ export class FirstPhaseMainService {
       const literralProject = `
         Description: ${project.description}
         Type: ${project.type}
-        Constraints: ${project.constraints.join(', ')}
+        Constraints: ${project.constraints.join(',')}
         Team Size: ${project.teamSize}
         Scope: ${project.scope}
         Budget Intervals: ${project.budgetIntervals}

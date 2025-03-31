@@ -1,14 +1,18 @@
+import { AnalysisResultModel } from './analysisResult.model';
+
 export interface ProjectModel {
-  id?: string; // ID généré par Firestore
-  name: string; // Nom du projet
-  description: string; // Description du projet
-  type: 'web' | 'mobile' | 'iot' | 'desktop'; // Type de projet
+  id?: string;
+  name: string;
+  description: string;
+  type: 'web' | 'mobile' | 'iot' | 'desktop';
   constraints: string[];
   teamSize: string;
   scope: string;
   budgetIntervals?: string;
   targets: string;
-  createdAt: Date; // Date de création
-  updatedAt: Date; // Date de mise à jour
-  userId: string; // ID de l'utilisateur propriétaire
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  selectedPhases: string[];
+  analysisResultModel: AnalysisResultModel;
 }

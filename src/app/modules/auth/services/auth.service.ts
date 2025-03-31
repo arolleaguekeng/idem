@@ -45,7 +45,6 @@ export class AuthService {
   async createUserDocument(user: User) {
     if (!user) return;
 
-    // Référence au document utilisateur dans Firestore
     const userRef = doc(collection(this.firestore, 'users'), user.uid);
 
     const userData = {
@@ -79,5 +78,9 @@ export class AuthService {
       });
   }
 
-  currentUser = this.auth.currentUser;
+  getCurrentUser() {
+    const currentUser = this.auth.currentUser;
+    // console.log("Current",currentUser);
+    return currentUser;
+  }
 }

@@ -52,7 +52,7 @@
 
       <!-- Bouton de connexion (visible sur desktop) -->
       <div class="hidden md:flex items-center">
-        @if (auth.currentUser) {
+        @if (auth.getCurrentUser()) {
         <a routerLink="/login" class="outer-button"> User </a>
 
         } @else{
