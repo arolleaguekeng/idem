@@ -13,7 +13,6 @@ import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
-import { Ripple } from 'primeng/ripple';
 import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'app-header',
@@ -23,7 +22,6 @@ import { MenuItem } from 'primeng/api';
     BadgeModule,
     AvatarModule,
     InputTextModule,
-    Ripple,
     CommonModule,
   ],
   templateUrl: './header.component.html',

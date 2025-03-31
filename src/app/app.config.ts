@@ -65,7 +65,7 @@ export const appConfig: ApplicationConfig = {
       mermaidOptions: {
         provide: MERMAID_OPTIONS,
         useValue: {
-          darkMode: false,
+          darkMode: true,
           look: 'handDrawn',
         },
       },

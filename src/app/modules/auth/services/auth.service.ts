@@ -1,7 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  addDoc,
+  doc,
+  setDoc,
+} from '@angular/fire/firestore';
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -13,9 +20,8 @@ import {
   providedIn: 'root',
 })
 export class AuthService {
-  firestore = inject(AngularFirestore);
   afAuth = inject(AngularFireAuth);
-  constructor() {}
+  constructor(private firestore: Firestore) {}
 
   async loginWithGithub() {
     const provider = new GithubAuthProvider();
@@ -36,10 +42,11 @@ export class AuthService {
     });
   }
 
-  createUserDocument(user: User) {
+  async createUserDocument(user: User) {
     if (!user) return;
 
-    const userRef = this.firestore.collection('users').doc(user.uid);
+    // Référence au document utilisateur dans Firestore
+    const userRef = doc(collection(this.firestore, 'users'), user.uid);
 
     const userData = {
       uid: user.uid,
@@ -50,7 +57,15 @@ export class AuthService {
       createdAt: new Date(),
     };
 
-    return userRef.set(userData, { merge: true });
+    try {
+      await setDoc(userRef, userData, { merge: true });
+      console.log('Utilisateur ajouté à Firestore avec succès');
+    } catch (error) {
+      console.error(
+        'Erreur lors de l’ajout de l’utilisateur à Firestore :',
+        error
+      );
+    }
   }
 
   async logout() {
