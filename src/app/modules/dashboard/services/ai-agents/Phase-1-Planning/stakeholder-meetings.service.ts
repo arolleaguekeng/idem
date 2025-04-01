@@ -12,13 +12,13 @@ export class StakeholderMeetingsService extends AiGenericPromptService {
   /**
    * Planifie et organise les réunions avec les parties prenantes.
    * @param projectDescription Description du projet.
-   * @returns La réponse de l'API DeepSeek.
+   * @returns La réponse de l'API Lexi.
    */
   async organizeStakeholderMeetings(
     history: any[],
     projectDescription: string
   ): Promise<string> {
     const prompt = `Planifie les réunions avec les parties prenantes pour le projet suivant : ${projectDescription}.`;
-    return this.sendPrompt(history,prompt);
+    return this.sendPrompt(history, prompt);
   }
 }

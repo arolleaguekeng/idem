@@ -12,7 +12,7 @@ export class RiskAnalysisService extends AiGenericPromptService {
   /**
    * Analyse les risques d'un projet.
    * @param projectDescription Description du projet.
-   * @returns La réponse de l'API DeepSeek.
+   * @returns La réponse de l'API Lexi.
    */
   async analyzeRisks(
     history: any[],

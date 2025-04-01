@@ -10,6 +10,7 @@ import {
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../../auth/services/auth.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header-dashboard',
@@ -77,6 +78,31 @@ export class HeaderDashboardComponent implements OnInit {
       !this.menuRef.nativeElement.contains(event.target)
     ) {
       this.isMenuOpen = false;
+    }
+  }
+  isDropdownOpen = false;
+  router = inject(Router);
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  navigateTo(path: string) {
+    this.isDropdownOpen = false;
+    this.router.navigate([`/${path}`]);
+  }
+
+  logout() {
+    this.isDropdownOpen = false;
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+
+  // Ferme le dropdown quand on clique en dehors
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: Event) {
+    if (!(event.target as HTMLElement).closest('.relative')) {
+      this.isDropdownOpen = false;
     }
   }
 }

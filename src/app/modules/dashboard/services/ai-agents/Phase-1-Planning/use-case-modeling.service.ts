@@ -12,7 +12,7 @@ export class UseCaseModelingService extends AiGenericPromptService {
   /**
    * Modélise les cas d'utilisation pour un projet.
    * @param projectDescription Description du projet.
-   * @returns La réponse de l'API DeepSeek.
+   * @returns La réponse de l'API Lexi.
    */
   async modelUseCases(
     history: any[],

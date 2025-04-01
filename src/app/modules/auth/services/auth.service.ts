@@ -79,8 +79,6 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    const currentUser = this.auth.currentUser;
-    // console.log("Current",currentUser);
-    return currentUser;
+    return this.auth.currentUser;
   }
 }

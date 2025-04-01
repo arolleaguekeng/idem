@@ -12,7 +12,7 @@ export class RequirementsGatheringService extends AiGenericPromptService {
   /**
    * Recueille les besoins pour un projet.
    * @param projectDescription Description du projet.
-   * @returns La réponse de l'API DeepSeek.
+   * @returns La réponse de l'API Lexi.
    */
   async gatherRequirements(
     history: any[],

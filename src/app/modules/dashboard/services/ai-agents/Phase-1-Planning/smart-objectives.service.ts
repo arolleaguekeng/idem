@@ -12,7 +12,7 @@ export class SmartObjectivesService extends AiGenericPromptService {
   /**
    * Définit les objectifs SMART pour un projet.
    * @param projectDescription Description du projet.
-   * @returns La réponse de l'API DeepSeek.
+   * @returns La réponse de l'API Lexi.
    */
   async defineSmartObjectives(
     history: any[],
