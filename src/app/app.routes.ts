@@ -43,14 +43,14 @@ export const routes: Routes = [
         path: 'project/create',
         loadComponent: () =>
           import(
-            './modules/project/pages/create-project/create-project.component'
+            './modules/dashboard/pages/create-project/create-project.component'
           ).then((m) => m.CreateProjectComponent),
       },
       {
         path: 'project/editor/:id',
         loadComponent: () =>
           import(
-            './modules/project/pages/project-editor/project-editor.component'
+            './modules/dashboard/pages/project-editor/project-editor.component'
           ).then((m) => m.ProjectEditorComponent),
       },
     ],
