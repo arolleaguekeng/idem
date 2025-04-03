@@ -52,12 +52,12 @@
 
       <!-- Bouton de connexion (visible sur desktop) -->
       <div class="hidden md:flex items-center relative z-50">
-        @if (auth.getCurrentUser()) {
+        @if (user$ | async) {
         <div class="relative">
           <!-- Avatar -->
           <button (click)="toggleDropdown()" class="flex items-center">
             <img
-              [src]="auth.getCurrentUser()?.photoURL"
+              [src]="(user$ | async)!.photoURL"
               alt="Avatar"
               class="w-10 h-10 rounded-full cursor-pointer"
             />

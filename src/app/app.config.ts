@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  REQUEST,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -26,7 +30,13 @@ import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './modules/auth/services/auth.service';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { FIREBASE_OPTIONS, FirebaseApp } from '@angular/fire/compat';
+
+import { PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { initializeServerApp } from '@angular/fire/app';
+import { ProjectService } from './modules/dashboard/services/project.service';
+
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
   authDomain: environment.firebase.authDomain,
@@ -40,7 +50,23 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+
+    provideFirebaseApp(() => {
+      if (isPlatformBrowser(inject(PLATFORM_ID))) {
+        return initializeApp(firebaseConfig);
+      }
+      // Optional, since it's null in dev-mode and SSG
+      const request = inject(REQUEST, { optional: true });
+      const authHeader = request?.headers?.get('authorization');
+
+      const authIdToken = authHeader?.startsWith('Bearer ')
+        ? authHeader.split('Bearer ')[1]
+        : undefined;
+      return initializeServerApp(firebaseConfig, {
+        authIdToken,
+        releaseOnDeref: request || undefined,
+      });
+    }),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
     ScreenTrackingService,
@@ -71,6 +97,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     AuthService,
+    ProjectService,
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
   ],
 };

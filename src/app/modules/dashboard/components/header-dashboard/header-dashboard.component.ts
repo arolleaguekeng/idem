@@ -11,10 +11,11 @@ import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../../auth/services/auth.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Router } from '@angular/router';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header-dashboard',
-  imports: [],
+  imports: [AsyncPipe, CommonModule],
   templateUrl: './header-dashboard.component.html',
   styleUrl: './header-dashboard.component.css',
   animations: [
@@ -65,6 +66,7 @@ export class HeaderDashboardComponent implements OnInit {
   auth = inject(AuthService);
   ngOnInit(): void {}
   isMenuOpen = false;
+  user$ = this.auth.user$;
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

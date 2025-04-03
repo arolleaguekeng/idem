@@ -1,8 +1,8 @@
 import { Injectable, OnInit, inject } from '@angular/core';
-import { collection } from 'firebase/firestore';
 
 import {
   addDoc,
+  collection,
   deleteDoc,
   doc,
   Firestore,
@@ -14,6 +14,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import { ProjectModel } from '../models/project.model';
 import { Auth, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +22,17 @@ import { Router } from '@angular/router';
 export class ProjectService implements OnInit {
   authService = inject(AuthService);
   currentUser?: User | null;
-  auth = inject(Auth);
+  auth = inject(AuthService);
+  user$ = this.auth.user$;
+  userSubscription: Subscription;
   router = inject(Router);
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) {
+    this.userSubscription = this.user$.subscribe((user: User | null) => {
+      //handle idToken changes here. Note, that user will be null if there is no currently logged in user.
+      this.currentUser = user;
+      console.log('subssssss', user);
+    });
+  }
   ngOnInit(): void {
     this.authService.getCurrentUser();
   }
@@ -31,7 +40,7 @@ export class ProjectService implements OnInit {
   async createUserProject(
     projectData: ProjectModel
   ): Promise<string | undefined> {
-    if (!this.auth.currentUser) {
+    if (!this.currentUser ) {
       console.log('user is null');
 
       return undefined;
@@ -40,7 +49,7 @@ export class ProjectService implements OnInit {
     try {
       const projectsCollectionRef = collection(
         this.firestore,
-        `users/${this.auth.currentUser.uid}/projects`
+        `users/${this.currentUser!.uid}/projects`
       );
 
       const projectRef = await addDoc(projectsCollectionRef, {
@@ -78,23 +87,22 @@ export class ProjectService implements OnInit {
   }
 
   async getUserProjectById(projectId: string): Promise<ProjectModel | null> {
-    this.currentUser = this.authService.getCurrentUser();
-    if (!this.authService.getCurrentUser()) {
-      console.log('currentUseerIs null');
-      // this.router.navigate(['/login']);
-      return null;
-    }
-
     try {
+      if (!this.currentUser) {
+        console.log('currentUser is null');
+        return null;
+      }
+
       const projectDocRef = doc(
         this.firestore,
-        `users/${await this.authService.getCurrentUser()!}/projects/${projectId}`
+        `users/${this.currentUser.uid}/projects/${projectId}`
       );
 
       const projectDoc = await getDoc(projectDocRef);
-      console.log('projectDoc', projectDoc);
 
-      if (!projectDoc.exists()) return null;
+      if (!projectDoc.exists()) {
+        return null;
+      }
 
       return { id: projectDoc.id, ...projectDoc.data() } as ProjectModel;
     } catch (error) {

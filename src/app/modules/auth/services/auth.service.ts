@@ -1,32 +1,53 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {
+  Auth,
+  browserSessionPersistence,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  user,
+  User,
+} from '@angular/fire/auth';
 import {
   Firestore,
   collection,
-  collectionData,
-  addDoc,
+
   doc,
   setDoc,
 } from '@angular/fire/firestore';
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-  User,
-} from 'firebase/auth';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  afAuth = inject(AngularFireAuth);
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) {
+    this.setSessionStoragePersistence();
+    this.user$ = user(this.auth);
+  }
+
+  private setSessionStoragePersistence(): void {
+    setPersistence(this.auth, browserSessionPersistence);
+  }
+
+  login(email: string, password: string): Observable<void> {
+    const promise = signInWithEmailAndPassword(this.auth, email, password).then(
+      () => {
+        //
+      }
+    );
+    return from(promise);
+  }
 
   async loginWithGithub() {
     const provider = new GithubAuthProvider();
     await signInWithPopup(this.auth, provider);
   }
+
+  user$: Observable<User | null>;
 
   auth = inject(Auth);
 
@@ -67,15 +88,11 @@ export class AuthService {
     }
   }
 
-  async logout() {
-    return this.afAuth
-      .signOut()
-      .then(() => {
-        console.log('Utilisateur déconnecté avec succès');
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la déconnexion', error);
-      });
+  logout(): Observable<void> {
+    const promise = signOut(this.auth).then(() => {
+      sessionStorage.clear();
+    });
+    return from(promise);
   }
 
   getCurrentUser() {
