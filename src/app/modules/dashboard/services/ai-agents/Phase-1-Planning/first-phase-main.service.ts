@@ -6,6 +6,7 @@ import { SmartObjectivesService } from './smart-objectives.service';
 import { StakeholderMeetingsService } from './stakeholder-meetings.service';
 import { UseCaseModelingService } from './use-case-modeling.service';
 import { ProjectModel } from '../../../models/project.model';
+import { AnalysisResultModel } from '../../../models/analysisResult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,16 +26,9 @@ export class FirstPhaseMainService {
    * @param projectDescription Project description.
    * @returns An object containing the results of each step.
    */
-  async executeFirstPhase(project: ProjectModel): Promise<{
-    feasibility?: string;
-    risks?: string;
-    smartObjectives?: string;
-    requirements?: string;
-    stakeholderMeetings?: string;
-    useCases?: string;
-    error?: string;
-    step?: string;
-  }> {
+  async executeFirstPhase(
+    project: ProjectModel
+  ): Promise<AnalysisResultModel | { error: string; step: string }> {
     try {
       const literralProject = `
         Description: ${project.description}
@@ -121,16 +115,18 @@ export class FirstPhaseMainService {
         console.error('Use Case Modeling failed:', error);
         return { error: 'Use Case Modeling failed', step: 'useCases' };
       }
-
-      // Return the results of all steps
-      return {
-        feasibility,
-        risks,
-        smartObjectives,
-        requirements,
-        stakeholderMeetings,
-        useCases,
+      const analysisResult: AnalysisResultModel = {
+        planning: feasibility,
+        architectures: [],
+        design: '',
+        development: '',
+        charte: '',
+        landing: '',
+        testing: '',
+        createdAt: new Date(Date.now()),
       };
+      // Return the results of all steps
+      return analysisResult;
     } catch (error) {
       console.error('Error during Phase 1 execution:', error);
       throw error;
