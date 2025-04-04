@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { ProjectModel } from '../../models/project.model';
@@ -8,10 +14,9 @@ import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning
 import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { MarkdownComponent } from 'ngx-markdown';
-import { Auth, User } from '@angular/fire/auth';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { User } from '@angular/fire/auth';
 import { AuthService } from '../../../auth/services/auth.service';
-import { Subscription } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-project-editor',
@@ -20,51 +25,70 @@ import { Subscription } from 'rxjs';
   styleUrl: './project-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectEditorComponent {
+export class ProjectEditorComponent implements OnInit {
   id = '';
   project!: ProjectModel;
   route = inject(ActivatedRoute);
   firstPhaseService = inject(FirstPhaseMainService);
-  isLoaded = false;
+  isLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
-  userSubscription: Subscription;
+  // userSubscription: Subscription;
   projectService = inject(ProjectService);
-  constructor() {
-    this.userSubscription = this.user$.subscribe((user: User | null) => {
-      this.currentUser = user;
-      this.isLoaded = true; // Activation du loader
-      this.id = this.route.snapshot.paramMap.get('id')!;
-      console.log('suUserrr', this.currentUser);
-      try {
-        const currentProject = this.projectService
+  ngOnInit() {
+    this.auth.user$.pipe(first()).subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        if (!this.currentUser) {
+          console.log('Utilisateur non connecté');
+          return;
+        }
+
+        this.id = this.route.snapshot.paramMap.get('id')!;
+        if (!this.id) {
+          console.log('ID du projet introuvable');
+          return;
+        }
+
+        this.projectService
           .getUserProjectById(this.id)
           .then((project) => {
-            if (project) {
-              this.project = project;
-              // Vérifier si l'analyse doit être exécutée
-              if (!this.project.analysisResultModel?.planning) {
-                const analysis = this.firstPhaseService
-                  .executeFirstPhase(this.project)
-                  .then((analysis) => {
-                    this.project.analysisResultModel =
-                      analysis as AnalysisResultModel;
-                    this.projectService
-                      .editUserProject(this.id, this.project)
-                      .then(() => {
-                        this.isLoaded = false;
-                      });
-                  });
-              }
+            if (!project) {
+              console.log('Projet non trouvé');
+              return;
             }
+            this.project = project;
+
+            if (!this.project.analysisResultModel?.planning) {
+              console.log('Exécution de la première phase...');
+              this.firstPhaseService
+                .executeFirstPhase(this.project)
+                .then((analysis) => {
+                  this.project.analysisResultModel =
+                    analysis as AnalysisResultModel;
+
+                  this.projectService
+                    .editUserProject(this.id, this.project)
+                    .then(() => {
+                      this.isLoaded.set(false);
+                    });
+                });
+            } else {
+              console.log('Analyse déjà existante.');
+              this.isLoaded.set(false);
+            }
+          })
+          .catch((error) => {
+            console.error('Erreur lors du chargement du projet', error);
           });
-        console.log('project', currentProject);
-      } catch (error) {
-        console.error('Erreur lors du chargement du projet', error);
-      } finally {
-        this.isLoaded = false; // Désactivation du loader après toutes les opérations
-      }
+      },
+      error: (error) => {
+        console.error(
+          'Erreur lors de la récupération de l’utilisateur:',
+          error
+        );
+      },
     });
   }
 
