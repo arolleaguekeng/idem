@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@use 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'primeicons/primeicons.css';
 * {
@@ -25,7 +24,7 @@ body {
   --font-size-subtitle: 1.7rem;
   --font-size-light-text: 1rem;
 }
-
+  
 @utility outer-button {
   border: 1px solid white;
   padding: 0.8rem 1rem;
