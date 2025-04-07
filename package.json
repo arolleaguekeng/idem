@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
+  "type": "module",
+  "target": "esnext",
+  "module": "esnext",
   "private": true,
   "dependencies": {
+    "@angular-architects/module-federation": "^19.0.3",
     "@angular/common": "~19.2.0",
     "@angular/compiler": "~19.2.0",
     "@angular/core": "~19.2.0",
@@ -15,9 +19,11 @@
     "@angular/platform-server": "~19.2.0",
     "@angular/router": "~19.2.0",
     "@angular/ssr": "~19.2.0",
+    "@nx/angular": "20.7.1",
     "@primeng/themes": "^19.0.10",
-    "@tailwindcss/postcss": "^4.0.15",
+    "@zklogic/draw.io": "^15.7.2-rc1",
     "dotenv": "^16.4.7",
+    "draw.io-angular-new": "^4.5.0",
     "express": "^4.21.2",
     "marked": "^15.0.7",
     "ngx-markdown": "^19.1.1",
@@ -26,9 +32,8 @@
     "primeng": "^19.0.10",
     "prismjs": "^1.30.0",
     "rxjs": "~7.8.0",
-    "tailwindcss": "^4.0.15",
-    "zone.js": "~0.15.0",
-    "@nx/angular": "20.7.1"
+    "tailwindcss": "^3.4.17",
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~19.2.0",

@@ -1,30 +1,31 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
+import { SvelteWrapperComponent } from "./components/wrappers/svelte.wrapper.component";
 
 export const routes: Routes = [
   // Layout public (avec header et footer)
   {
-    path: '',
+    path: "",
     loadComponent: () =>
-      import('./layouts/public-layout/public-layout.component').then(
+      import("./layouts/public-layout/public-layout.component").then(
         (m) => m.PublicLayoutComponent
       ),
     children: [
       {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'home',
+        path: "",
+        pathMatch: "full",
+        redirectTo: "home",
       },
       {
-        path: 'home',
+        path: "home",
         loadComponent: () =>
-          import('./modules/landing/pages/home/home.component').then(
+          import("./modules/landing/pages/home/home.component").then(
             (m) => m.HomeComponent
           ),
       },
       {
-        path: 'login',
+        path: "login",
         loadComponent: () =>
-          import('./modules/auth/pages/login/login.component').then(
+          import("./modules/auth/pages/login/login.component").then(
             (m) => m.LoginComponent
           ),
       },
@@ -33,29 +34,34 @@ export const routes: Routes = [
 
   // Layout dashboard (avec navbar spécifique)
   {
-    path: '',
+    path: "",
     loadComponent: () =>
-      import('./layouts/dashboard-layout/dashboard-layout.component').then(
+      import("./layouts/dashboard-layout/dashboard-layout.component").then(
         (m) => m.DashboardLayoutComponent
       ),
     children: [
       {
-        path: 'project/create',
+        path: "project/create",
         loadComponent: () =>
           import(
-            './modules/dashboard/pages/create-project/create-project.component'
+            "./modules/dashboard/pages/create-project/create-project.component"
           ).then((m) => m.CreateProjectComponent),
       },
       {
-        path: 'project/editor/:id',
+        path: "project/editor/:id",
         loadComponent: () =>
           import(
-            './modules/dashboard/pages/project-editor/project-editor.component'
+            "./modules/dashboard/pages/project-editor/project-editor.component"
           ).then((m) => m.ProjectEditorComponent),
       },
     ],
   },
+  {
+    path: "mermaid",
+    component: SvelteWrapperComponent,
+    pathMatch: 'full' 
+  },
 
   // Redirection par défaut
-  { path: '**', redirectTo: 'home' },
+  { path: "**", redirectTo: "home" },
 ];
