@@ -1,10 +1,11 @@
 import { ArchitectureModel } from './architecture.model';
 import { DiagramModel } from './diagram.model';
+import { PlanningModel } from './planning.model';
 
 export interface AnalysisResultModel {
   id?: string;
   architectures: ArchitectureModel[];
-  planning: string;
+  planning: PlanningModel;
   design: DiagramModel[];
   development: string;
   charte: string;
