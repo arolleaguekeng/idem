@@ -1,13 +1,13 @@
 export interface ArchitectureModel {
-  id?: string; // ID généré par Firestore
-  projectId: string; // ID du projet associé
-  type: 'basic' | 'recommended' | 'complex'; // Type d'architecture
-  description: string; // Description de l'architecture
+  id?: string; 
+  projectId: string; 
+  type: 'basic' | 'recommended' | 'complex'; 
+  description: string; 
   technologies: {
-    backend: string[]; // Technologies backend recommandées
-    frontend: string[]; // Technologies frontend recommandées
-    database: string[]; // Bases de données recommandées
-    cloud: string[]; // Services cloud recommandés
+    backend: string[]; 
+    frontend: string[]; 
+    database: string[]; 
+    cloud: string[]; 
   };
-  createdAt: Date; // Date de création
+  createdAt: Date; 
 }

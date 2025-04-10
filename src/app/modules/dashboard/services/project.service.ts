@@ -40,7 +40,7 @@ export class ProjectService implements OnInit {
   async createUserProject(
     projectData: ProjectModel
   ): Promise<string | undefined> {
-    if (!this.currentUser ) {
+    if (!this.currentUser) {
       console.log('user is null');
 
       return undefined;

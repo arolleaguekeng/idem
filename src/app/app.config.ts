@@ -30,7 +30,7 @@ import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './modules/auth/services/auth.service';
-import { FIREBASE_OPTIONS, FirebaseApp } from '@angular/fire/compat';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 import { PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -55,7 +55,6 @@ export const appConfig: ApplicationConfig = {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(firebaseConfig);
       }
-      // Optional, since it's null in dev-mode and SSG
       const request = inject(REQUEST, { optional: true });
       const authHeader = request?.headers?.get('authorization');
 
@@ -83,7 +82,7 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'system',
           cssLayer: false,
         },
-      },
+      },  
     }),
     provideAnimations(),
     provideHttpClient(),

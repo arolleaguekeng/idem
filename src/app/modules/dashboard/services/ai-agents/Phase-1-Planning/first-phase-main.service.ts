@@ -118,7 +118,7 @@ export class FirstPhaseMainService {
       const analysisResult: AnalysisResultModel = {
         planning: feasibility,
         architectures: [],
-        design: '',
+        design: [],
         development: '',
         charte: '',
         landing: '',
