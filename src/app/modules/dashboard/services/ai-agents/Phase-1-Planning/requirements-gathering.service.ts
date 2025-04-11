@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { REQUIREMENTS_PROMPT } from './prompts/requirements.prompt';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class RequirementsGatheringService extends AiGenericPromptService {
     history: any[],
     projectDescription: string
   ): Promise<string> {
-    const prompt = `Recueille les besoins fonctionnels et non fonctionnels pour le projet suivant : ${projectDescription}.`;
+    const prompt = `${REQUIREMENTS_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
 }

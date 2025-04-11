@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { USE_CASE_MODELING_PROMPT } from './prompts/use-case-modeling.prompt';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class UseCaseModelingService extends AiGenericPromptService {
     history: any[],
     projectDescription: string
   ): Promise<string> {
-    const prompt = `Modélise les cas d'utilisation pour le projet suivant : ${projectDescription}.`;
+    const prompt = `${USE_CASE_MODELING_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
 }

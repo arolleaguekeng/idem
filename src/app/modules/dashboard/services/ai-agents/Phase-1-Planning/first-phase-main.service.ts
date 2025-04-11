@@ -7,6 +7,7 @@ import { StakeholderMeetingsService } from './stakeholder-meetings.service';
 import { UseCaseModelingService } from './use-case-modeling.service';
 import { ProjectModel } from '../../../models/project.model';
 import { AnalysisResultModel } from '../../../models/analysisResult.model';
+import { PlanningModel } from '../../../models/planning.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,8 @@ export class FirstPhaseMainService {
       `;
       // 1. Feasibility Study
       let feasibility: string;
+
+      console.log('Litteral project', literralProject);
       try {
         feasibility = await this.feasibilityStudyService.analyzeFeasibility(
           [],
@@ -55,7 +58,10 @@ export class FirstPhaseMainService {
       // 2. Risk Analysis
       let risks;
       try {
-        // risks = await this.riskAnalysisService.analyzeRisks(literralProject);
+        risks = await this.riskAnalysisService.analyzeRisks(
+          [feasibility],
+          literralProject
+        );
         console.log('Risk Analysis completed:', risks);
       } catch (error) {
         console.error('Risk Analysis failed:', error);
@@ -65,10 +71,11 @@ export class FirstPhaseMainService {
       // 3. SMART Objectives
       let smartObjectives;
       try {
-        // smartObjectives =
-        //   await this.smartObjectivesService.defineSmartObjectives(
-        //     literralProject
-        //   );
+        smartObjectives =
+          await this.smartObjectivesService.defineSmartObjectives(
+            [feasibility, risks],
+            literralProject
+          );
         console.log('SMART Objectives defined:', smartObjectives);
       } catch (error) {
         console.error('SMART Objectives failed:', error);
@@ -78,10 +85,11 @@ export class FirstPhaseMainService {
       // 4. Requirements Gathering
       let requirements;
       try {
-        // requirements =
-        // await this.requirementsGatheringService.gatherRequirements(
-        //   literralProject
-        // );
+        requirements =
+          await this.requirementsGatheringService.gatherRequirements(
+            [feasibility, risks, smartObjectives],
+            literralProject
+          );
         console.log('Requirements Gathering completed:', requirements);
       } catch (error) {
         console.error('Requirements Gathering failed:', error);
@@ -91,10 +99,11 @@ export class FirstPhaseMainService {
       // 5. Stakeholder Meetings
       let stakeholderMeetings;
       try {
-        // stakeholderMeetings =
-        //   await this.stakeholderMeetingsService.organizeStakeholderMeetings(
-        //     literralProject
-        //   );
+        stakeholderMeetings =
+          await this.stakeholderMeetingsService.organizeStakeholderMeetings(
+            [feasibility, risks, smartObjectives, requirements],
+            literralProject
+          );
         console.log('Stakeholder Meetings organized:', stakeholderMeetings);
       } catch (error) {
         console.error('Stakeholder Meetings failed:', error);
@@ -107,16 +116,31 @@ export class FirstPhaseMainService {
       // 6. Use Case Modeling
       let useCases;
       try {
-        // useCases = await this.useCaseModelingService.modelUseCases(
-        //   literralProject
-        // );
-        // console.log('Use Case Modeling completed:', useCases);
+        useCases = await this.useCaseModelingService.modelUseCases(
+          [
+            feasibility,
+            risks,
+            smartObjectives,
+            requirements,
+            stakeholderMeetings,
+          ],
+          literralProject
+        );
+        console.log('Use Case Modeling completed:', useCases);
       } catch (error) {
         console.error('Use Case Modeling failed:', error);
         return { error: 'Use Case Modeling failed', step: 'useCases' };
       }
+      const planningResult: PlanningModel = {
+        feasibilityStudy: feasibility,
+        riskanalysis: risks,
+        requirementsGathering: requirements,
+        smartObjectives: smartObjectives,
+        stakeholdersMeeting: stakeholderMeetings,
+        useCaseModeling: useCases,
+      };
       const analysisResult: AnalysisResultModel = {
-        planning: feasibility,
+        planning: planningResult,
         architectures: [],
         design: [],
         development: '',

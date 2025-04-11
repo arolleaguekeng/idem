@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { RISK_ANALYSIS_PROMPT } from './prompts/risk-analylsis.prompt';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class RiskAnalysisService extends AiGenericPromptService {
     history: any[],
     projectDescription: string
   ): Promise<string> {
-    const prompt = `Identifie les risques potentiels du projet suivant : ${projectDescription}.`;
+    const prompt = `${RISK_ANALYSIS_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
 }

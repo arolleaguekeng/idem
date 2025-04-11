@@ -16,11 +16,22 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 import { MarkdownComponent } from 'ngx-markdown';
 import { User } from '@angular/fire/auth';
 import { AuthService } from '../../../auth/services/auth.service';
-import { first, Subscription } from 'rxjs';
+import { first } from 'rxjs';
+import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-project-editor',
-  imports: [TabsModule, FormsModule, LoaderComponent, MarkdownComponent],
+  imports: [
+    TabsModule,
+    FormsModule,
+    LoaderComponent,
+    MarkdownComponent,
+    AccordionModule,
+    AvatarModule,
+    BadgeModule,
+  ],
   templateUrl: './project-editor.component.html',
   styleUrl: './project-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

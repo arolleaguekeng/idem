@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { STAKEHOLDER_MEETINGS_PROMPT } from './prompts/stakeholder-meetings.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class StakeholderMeetingsService extends AiGenericPromptService {
     history: any[],
     projectDescription: string
   ): Promise<string> {
-    const prompt = `Planifie les réunions avec les parties prenantes pour le projet suivant : ${projectDescription}.`;
+    const prompt = `${STAKEHOLDER_MEETINGS_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
 }

@@ -16,12 +16,179 @@
         </p-tablist>
         <p-tabpanels>
           <p-tabpanel value="0">
-            <p class="m-0">
-              <markdown
-                class="variable-binding"
-                [data]="project.analysisResultModel.planning"
-              ></markdown>
-            </p>
+            <div class="card flex justify-content-center">
+              <p-accordion value="0">
+                <p-accordion-panel value="0">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Amy Elsner</span
+                      >
+                      <p-badge value="3" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <p class="m-0">
+                      <markdown
+                        class="variable-binding"
+                        [data]="
+                          project.analysisResultModel.planning.feasibilityStudy
+                        "
+                      ></markdown>
+                    </p>
+                  </p-accordion-content>
+                </p-accordion-panel>
+                <p-accordion-panel value="1">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Onyama Limba</span
+                      >
+                      <p-badge value="4" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <markdown
+                      class="variable-binding"
+                      [data]="
+                        project.analysisResultModel.planning
+                          .requirementsGathering
+                      "
+                    ></markdown>
+                  </p-accordion-content>
+                </p-accordion-panel>
+                <p-accordion-panel value="2">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Ioni Bowcher</span
+                      >
+                      <p-badge value="2" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <markdown
+                      class="variable-binding"
+                      [data]="project.analysisResultModel.planning.riskanalysis"
+                    ></markdown>
+                  </p-accordion-content>
+                </p-accordion-panel>
+                <p-accordion-panel value="3">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Ioni Bowcher</span
+                      >
+                      <p-badge value="2" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <markdown
+                      class="variable-binding"
+                      [data]="project.analysisResultModel.planning.smartObjectives"
+                    ></markdown>
+                  </p-accordion-content>
+                </p-accordion-panel>
+                <p-accordion-panel value="4">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Ioni Bowcher</span
+                      >
+                      <p-badge value="2" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <markdown
+                      class="variable-binding"
+                      [data]="project.analysisResultModel.planning.stakeholdersMeeting"
+                    ></markdown>
+                  </p-accordion-content>
+                </p-accordion-panel>
+                <p-accordion-panel value="5">
+                  <p-accordion-header>
+                    <ng-template #toggleicon let-active="active">
+                      @if (active) {
+                      <i class="pi pi-minus"></i>
+                      } @else {
+                      <i class="pi pi-plus"></i>
+                      }
+                    </ng-template>
+                    <span class="flex items-center gap-2 w-full">
+                      <p-avatar
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                        shape="circle"
+                      />
+                      <span class="font-bold whitespace-nowrap"
+                        >Ioni Bowcher</span
+                      >
+                      <p-badge value="2" class="ml-auto mr-2" />
+                    </span>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <markdown
+                      class="variable-binding"
+                      [data]="project.analysisResultModel.planning.useCaseModeling"
+                    ></markdown>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              </p-accordion>
+            </div>
           </p-tabpanel>
           <p-tabpanel value="1">
             <p class="m-0">

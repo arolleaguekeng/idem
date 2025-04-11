@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { SMART_OBJECTIVES_PROMPT } from './prompts/smart-objectives.prompt';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class SmartObjectivesService extends AiGenericPromptService {
     history: any[],
     projectDescription: string
   ): Promise<string> {
-    const prompt = `Définis des objectifs SMART pour le projet suivant : ${projectDescription}.`;
+    const prompt = `${SMART_OBJECTIVES_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
 }
