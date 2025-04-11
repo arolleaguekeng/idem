@@ -14,205 +14,221 @@
           <p-tab disabled>Landing Page</p-tab>
           <p-tab disabled>Tests</p-tab>
         </p-tablist>
-        <p-tabpanels>
-          <p-tabpanel value="0">
-            <div class="card flex justify-content-center">
-              <p-accordion value="0">
-                <p-accordion-panel value="0">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Amy Elsner</span
-                      >
-                      <p-badge value="3" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <p class="m-0">
+        <div class="w-full">
+          <p-tabpanels class="w-full">
+            <p-tabpanel value="0">
+              <div class="card flex justify-content-center w-full">
+                <p-accordion value="0" class="w-full">
+                  <p-accordion-panel value="0">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >Feasibility Study</span
+                        >
+                        <p-badge value="3" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
+                      <p class="m-0">
+                        <markdown
+                          class="variable-binding"
+                          [data]="
+                            project.analysisResultModel.planning
+                              .feasibilityStudy
+                          "
+                        ></markdown>
+                      </p>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                  <p-accordion-panel value="1">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >
+                          Requirements Gathering
+                          </span
+                        >
+                        <p-badge value="4" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
                       <markdown
                         class="variable-binding"
                         [data]="
-                          project.analysisResultModel.planning.feasibilityStudy
+                          project.analysisResultModel.planning
+                            .requirementsGathering
                         "
                       ></markdown>
-                    </p>
-                  </p-accordion-content>
-                </p-accordion-panel>
-                <p-accordion-panel value="1">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Onyama Limba</span
-                      >
-                      <p-badge value="4" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <markdown
-                      class="variable-binding"
-                      [data]="
-                        project.analysisResultModel.planning
-                          .requirementsGathering
-                      "
-                    ></markdown>
-                  </p-accordion-content>
-                </p-accordion-panel>
-                <p-accordion-panel value="2">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Ioni Bowcher</span
-                      >
-                      <p-badge value="2" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <markdown
-                      class="variable-binding"
-                      [data]="project.analysisResultModel.planning.riskanalysis"
-                    ></markdown>
-                  </p-accordion-content>
-                </p-accordion-panel>
-                <p-accordion-panel value="3">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Ioni Bowcher</span
-                      >
-                      <p-badge value="2" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <markdown
-                      class="variable-binding"
-                      [data]="project.analysisResultModel.planning.smartObjectives"
-                    ></markdown>
-                  </p-accordion-content>
-                </p-accordion-panel>
-                <p-accordion-panel value="4">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Ioni Bowcher</span
-                      >
-                      <p-badge value="2" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <markdown
-                      class="variable-binding"
-                      [data]="project.analysisResultModel.planning.stakeholdersMeeting"
-                    ></markdown>
-                  </p-accordion-content>
-                </p-accordion-panel>
-                <p-accordion-panel value="5">
-                  <p-accordion-header>
-                    <ng-template #toggleicon let-active="active">
-                      @if (active) {
-                      <i class="pi pi-minus"></i>
-                      } @else {
-                      <i class="pi pi-plus"></i>
-                      }
-                    </ng-template>
-                    <span class="flex items-center gap-2 w-full">
-                      <p-avatar
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                        shape="circle"
-                      />
-                      <span class="font-bold whitespace-nowrap"
-                        >Ioni Bowcher</span
-                      >
-                      <p-badge value="2" class="ml-auto mr-2" />
-                    </span>
-                  </p-accordion-header>
-                  <p-accordion-content>
-                    <markdown
-                      class="variable-binding"
-                      [data]="project.analysisResultModel.planning.useCaseModeling"
-                    ></markdown>
-                  </p-accordion-content>
-                </p-accordion-panel>
-              </p-accordion>
-            </div>
-          </p-tabpanel>
-          <p-tabpanel value="1">
-            <p class="m-0">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo inventore veritatis et quasi architecto beatae vitae
-              dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-              aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
-              eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci
-              velit, sed quia non numquam eius modi.
-            </p>
-          </p-tabpanel>
-          <p-tabpanel value="2">
-            <p class="m-0">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus.
-            </p>
-          </p-tabpanel>
-        </p-tabpanels>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                  <p-accordion-panel value="2">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >Risk analysis</span
+                        >
+                        <p-badge value="2" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
+                      <markdown
+                        class="variable-binding"
+                        [data]="
+                          project.analysisResultModel.planning.riskanalysis
+                        "
+                      ></markdown>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                  <p-accordion-panel value="3">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >Smart Objectives</span
+                        >
+                        <p-badge value="2" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
+                      <markdown
+                        class="variable-binding"
+                        [data]="
+                          project.analysisResultModel.planning.smartObjectives
+                        "
+                      ></markdown>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                  <p-accordion-panel value="4">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >Stakeholders Meeting</span
+                        >
+                        <p-badge value="2" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
+                      <markdown
+                        class="variable-binding"
+                        [data]="
+                          project.analysisResultModel.planning
+                            .stakeholdersMeeting
+                        "
+                      ></markdown>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                  <p-accordion-panel value="5">
+                    <p-accordion-header>
+                      <ng-template #toggleicon let-active="active">
+                        @if (active) {
+                        <i class="pi pi-minus"></i>
+                        } @else {
+                        <i class="pi pi-plus"></i>
+                        }
+                      </ng-template>
+                      <span class="flex items-center gap-2 w-full">
+                        <p-avatar
+                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                          shape="circle"
+                        />
+                        <span class="font-bold whitespace-nowrap"
+                          >UseCase Modeling</span
+                        >
+                        <p-badge value="2" class="ml-auto mr-2" />
+                      </span>
+                    </p-accordion-header>
+                    <p-accordion-content>
+                      <markdown
+                        class="variable-binding"
+                        [data]="
+                          project.analysisResultModel.planning.useCaseModeling
+                        "
+                      ></markdown>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                </p-accordion>
+              </div>
+            </p-tabpanel>
+            <p-tabpanel value="1">
+              <p class="m-0">
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                quae ab illo inventore veritatis et quasi architecto beatae
+                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
+                voluptas sit aspernatur aut odit aut fugit, sed quia
+                consequuntur magni dolores eos qui ratione voluptatem sequi
+                nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
+                modi.
+              </p>
+            </p-tabpanel>
+            <p-tabpanel value="2">
+              <p class="m-0">
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui
+                blanditiis praesentium voluptatum deleniti atque corrupti quos
+                dolores et quas molestias excepturi sint occaecati cupiditate
+                non provident, similique sunt in culpa qui officia deserunt
+                mollitia animi, id est laborum et dolorum fuga. Et harum quidem
+                rerum facilis est et expedita distinctio. Nam libero tempore,
+                cum soluta nobis est eligendi optio cumque nihil impedit quo
+                minus.
+              </p>
+            </p-tabpanel>
+          </p-tabpanels>
+        </div>
       </p-tabs>
     </div>
   </div>

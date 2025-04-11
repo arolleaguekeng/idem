@@ -57,7 +57,7 @@ export default class CreateProjectDatas {
     { name: '$50K-$100K', code: '50000-100000' },
     { name: '> $100K', code: '100000+' },
   ];
-  static groupedConstraints: SelectItemGroup[];
+  
   static phases: DevelopmentPhase[] = [
     {
       id: 'planning',
@@ -144,6 +144,78 @@ export default class CreateProjectDatas {
           label: 'Benchmark performance',
           tier: 'premium',
         },
+      ],
+    },
+  ];
+  static groupedConstraints = [
+    {
+      label: 'Performance',
+      value: 'performance',
+      items: [
+        { label: 'Temps de réponse < 2s', value: 'fast_response' },
+        { label: 'Charge > 10k utilisateurs simultanés', value: 'high_load' },
+        { label: 'Optimisation des requêtes DB', value: 'db_optimization' },
+        { label: 'Cache stratégique', value: 'caching' },
+      ],
+    },
+    {
+      label: 'Sécurité',
+      value: 'security',
+      items: [
+        { label: 'Authentification forte (MFA)', value: 'auth' },
+        { label: 'Chiffrement des données', value: 'encryption' },
+        { label: 'Protection OWASP Top 10', value: 'owasp' },
+        { label: 'Certificats SSL/TLS', value: 'ssl' },
+        { label: 'GDPR/Compliance', value: 'compliance' },
+      ],
+    },
+    {
+      label: 'Maintenabilité',
+      value: 'maintainability',
+      items: [
+        { label: 'Documentation technique', value: 'documentation' },
+        { label: 'Tests unitaires > 80%', value: 'unit_tests' },
+        { label: 'Standards de codage', value: 'coding_standards' },
+        { label: 'Intégration continue', value: 'ci' },
+      ],
+    },
+    {
+      label: 'Évolutivité',
+      value: 'scalability',
+      items: [
+        { label: 'Architecture microservices', value: 'microservices' },
+        { label: 'Auto-scaling cloud', value: 'autoscaling' },
+        { label: 'Load balancing', value: 'load_balancer' },
+        { label: 'Découplage des services', value: 'loose_coupling' },
+      ],
+    },
+    {
+      label: 'Disponibilité',
+      value: 'availability',
+      items: [
+        { label: 'SLA > 99.9%', value: 'sla' },
+        { label: 'Systèmes redondants', value: 'redundancy' },
+        { label: 'Backups automatisés', value: 'backups' },
+        { label: 'Monitoring 24/7', value: 'monitoring' },
+      ],
+    },
+    {
+      label: 'Expérience Utilisateur',
+      value: 'ux',
+      items: [
+        { label: 'Accessibilité WCAG', value: 'accessibility' },
+        { label: 'Design responsive', value: 'responsive' },
+        { label: "Taux d'erreur < 1%", value: 'error_rate' },
+        { label: 'Optimisation Core Web Vitals', value: 'web_vitals' },
+      ],
+    },
+    {
+      label: 'Coûts',
+      value: 'cost',
+      items: [
+        { label: 'Optimisation cloud', value: 'cloud_optimization' },
+        { label: 'Budget monitoring', value: 'budget_control' },
+        { label: 'ROI mesurable', value: 'roi' },
       ],
     },
   ];

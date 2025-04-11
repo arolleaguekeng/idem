@@ -8,6 +8,7 @@ import { UseCaseModelingService } from './use-case-modeling.service';
 import { ProjectModel } from '../../../models/project.model';
 import { AnalysisResultModel } from '../../../models/analysisResult.model';
 import { PlanningModel } from '../../../models/planning.model';
+import { ProjectService } from '../../project.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class FirstPhaseMainService {
     private smartObjectivesService: SmartObjectivesService,
     private requirementsGatheringService: RequirementsGatheringService,
     private stakeholderMeetingsService: StakeholderMeetingsService,
-    private useCaseModelingService: UseCaseModelingService
+    private useCaseModelingService: UseCaseModelingService,
+    private projectService: ProjectService
   ) {}
 
   /**
@@ -31,15 +33,8 @@ export class FirstPhaseMainService {
     project: ProjectModel
   ): Promise<AnalysisResultModel | { error: string; step: string }> {
     try {
-      const literralProject = `
-        Description: ${project.description}
-        Type: ${project.type}
-        Constraints: ${project.constraints.join(',')}
-        Team Size: ${project.teamSize}
-        Scope: ${project.scope}
-        Budget Intervals: ${project.budgetIntervals}
-        Targets: ${project.targets}
-      `;
+      const literralProject =
+        this.projectService.getProjectDescriptionForPrompt(project);
       // 1. Feasibility Study
       let feasibility: string;
 
@@ -59,7 +54,7 @@ export class FirstPhaseMainService {
       let risks;
       try {
         risks = await this.riskAnalysisService.analyzeRisks(
-          [feasibility],
+          [],
           literralProject
         );
         console.log('Risk Analysis completed:', risks);
@@ -73,7 +68,7 @@ export class FirstPhaseMainService {
       try {
         smartObjectives =
           await this.smartObjectivesService.defineSmartObjectives(
-            [feasibility, risks],
+            [],
             literralProject
           );
         console.log('SMART Objectives defined:', smartObjectives);
@@ -87,7 +82,7 @@ export class FirstPhaseMainService {
       try {
         requirements =
           await this.requirementsGatheringService.gatherRequirements(
-            [feasibility, risks, smartObjectives],
+            [],
             literralProject
           );
         console.log('Requirements Gathering completed:', requirements);
@@ -101,7 +96,7 @@ export class FirstPhaseMainService {
       try {
         stakeholderMeetings =
           await this.stakeholderMeetingsService.organizeStakeholderMeetings(
-            [feasibility, risks, smartObjectives, requirements],
+            [],
             literralProject
           );
         console.log('Stakeholder Meetings organized:', stakeholderMeetings);
@@ -118,11 +113,7 @@ export class FirstPhaseMainService {
       try {
         useCases = await this.useCaseModelingService.modelUseCases(
           [
-            feasibility,
-            risks,
-            smartObjectives,
-            requirements,
-            stakeholderMeetings,
+
           ],
           literralProject
         );

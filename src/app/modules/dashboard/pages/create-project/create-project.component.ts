@@ -6,7 +6,6 @@ import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning
 import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { SelectItemGroup } from 'primeng/api';
 import { Select } from 'primeng/select';
 import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
 import { ProjectService } from '../../services/project.service';
@@ -56,78 +55,7 @@ export class CreateProjectComponent {
 
   groupedScopes: SelectElement[] = CreateProjectDatas.groupedScopes;
   groupedBudgets: SelectElement[] = CreateProjectDatas.groupedBudgets;
-  groupedConstraints = [
-    {
-      label: 'Performance',
-      value: 'performance',
-      items: [
-        { label: 'Temps de réponse < 2s', value: 'fast_response' },
-        { label: 'Charge > 10k utilisateurs simultanés', value: 'high_load' },
-        { label: 'Optimisation des requêtes DB', value: 'db_optimization' },
-        { label: 'Cache stratégique', value: 'caching' },
-      ],
-    },
-    {
-      label: 'Sécurité',
-      value: 'security',
-      items: [
-        { label: 'Authentification forte (MFA)', value: 'auth' },
-        { label: 'Chiffrement des données', value: 'encryption' },
-        { label: 'Protection OWASP Top 10', value: 'owasp' },
-        { label: 'Certificats SSL/TLS', value: 'ssl' },
-        { label: 'GDPR/Compliance', value: 'compliance' },
-      ],
-    },
-    {
-      label: 'Maintenabilité',
-      value: 'maintainability',
-      items: [
-        { label: 'Documentation technique', value: 'documentation' },
-        { label: 'Tests unitaires > 80%', value: 'unit_tests' },
-        { label: 'Standards de codage', value: 'coding_standards' },
-        { label: 'Intégration continue', value: 'ci' },
-      ],
-    },
-    {
-      label: 'Évolutivité',
-      value: 'scalability',
-      items: [
-        { label: 'Architecture microservices', value: 'microservices' },
-        { label: 'Auto-scaling cloud', value: 'autoscaling' },
-        { label: 'Load balancing', value: 'load_balancer' },
-        { label: 'Découplage des services', value: 'loose_coupling' },
-      ],
-    },
-    {
-      label: 'Disponibilité',
-      value: 'availability',
-      items: [
-        { label: 'SLA > 99.9%', value: 'sla' },
-        { label: 'Systèmes redondants', value: 'redundancy' },
-        { label: 'Backups automatisés', value: 'backups' },
-        { label: 'Monitoring 24/7', value: 'monitoring' },
-      ],
-    },
-    {
-      label: 'Expérience Utilisateur',
-      value: 'ux',
-      items: [
-        { label: 'Accessibilité WCAG', value: 'accessibility' },
-        { label: 'Design responsive', value: 'responsive' },
-        { label: "Taux d'erreur < 1%", value: 'error_rate' },
-        { label: 'Optimisation Core Web Vitals', value: 'web_vitals' },
-      ],
-    },
-    {
-      label: 'Coûts',
-      value: 'cost',
-      items: [
-        { label: 'Optimisation cloud', value: 'cloud_optimization' },
-        { label: 'Budget monitoring', value: 'budget_control' },
-        { label: 'ROI mesurable', value: 'roi' },
-      ],
-    },
-  ];
+  groupedConstraints = CreateProjectDatas.groupedConstraints;
   phases: DevelopmentPhase[] = CreateProjectDatas.phases;
   markdown = '';
   constructor() {}
@@ -135,7 +63,7 @@ export class CreateProjectComponent {
   ngOnInit(): void {}
   autoResize(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto'; // Réinitialise la hauteur
+    textarea.style.height = 'auto'; 
 
     // Vérifie si la hauteur dépasse 400px
     const newHeight = Math.min(textarea.scrollHeight, 400);
@@ -144,46 +72,6 @@ export class CreateProjectComponent {
 
   generateSelectedPhases() {
     try {
-      // this.isLoaded = true;
-      // for (let phase in this.selectedPhases) {
-      //   console.log('Phase:', phase);
-      //   switch (phase) {
-      //     case '0': {
-      //       this.firstPhaseMainService
-      //         .executeFirstPhase(this.project)
-
-      //         .then((results) => {
-      //           console.log('Results:', results);
-      //           this.markdown = results.feasibility!;
-      //           this.project.analysisResultModel.planning =
-      //             results.feasibility!;
-      //         })
-      //         .catch((error) =>
-      //           console.error('Error while executing first phase:', error)
-      //         );
-      //       break;
-      //     }
-      //     case 'design': {
-      //       break;
-      //     }
-      //     case 'development': {
-      //       break;
-      //     }
-      //     case 'charte': {
-      //       break;
-      //     }
-      //     case 'landing': {
-      //       break;
-      //     }
-      //     case 'testing': {
-      //       break;
-      //     }
-      //     default: {
-      //       this.isLoaded = false;
-      //     }
-      //   }
-      // }
-
       this.project.selectedPhases = this.selectedPhases;
       this.projectService.createUserProject(this.project).then((projectId) => {
         this.router.navigate([`/project/editor/${projectId}`]);
@@ -197,7 +85,6 @@ export class CreateProjectComponent {
   }
   visible: boolean = false;
   showDialog() {
-    // this.project.constraints = this.groupedConstraints;
     console.log('Project: ', this.project.constraints);
     console.log('Project: ', this.project);
     this.visible = true;

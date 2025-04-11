@@ -157,4 +157,20 @@ export class ProjectService implements OnInit {
       throw error;
     }
   }
+
+  getProjectDescriptionForPrompt(project: ProjectModel) {
+    const projectDescription = `
+        Projet à analyser :
+        - Nom du projet: ${project.name}
+        - Description du projet : ${project.description}
+        - Type d'application : ${project.type}
+        - Contraintes techniques principales : ${project.constraints.join(', ')}
+        - Composition de l'équipe : ${project.teamSize} développeurs
+        - Périmètre fonctionnel couvert : ${project.scope}
+        - Fourchette budgétaire prévue : ${project.budgetIntervals}
+        - Publics cibles concernés : ${project.targets}
+`;
+
+    return projectDescription;
+  }
 }
