@@ -1,0 +1,1 @@
+export const BRAND_IDENTITY_SECTION_PROMPT = ``;

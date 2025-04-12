@@ -1,0 +1,1 @@
+export const COLOR_PALETTE_SECTION_PROMPT = ``;

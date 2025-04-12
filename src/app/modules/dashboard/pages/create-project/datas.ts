@@ -57,40 +57,21 @@ export default class CreateProjectDatas {
     { name: '$50K-$100K', code: '50000-100000' },
     { name: '> $100K', code: '100000+' },
   ];
-  
+
   static phases: DevelopmentPhase[] = [
     {
       id: 'planning',
-      label: 'Phase 1 - Planning',
-      tier: 'free', // "s"
+      label: 'Business plan',
+      tier: 'free',
       subItems: [
         { label: 'Étude de faisabilité', tier: 'free' },
         { label: 'Analyse des risques', tier: 'standard' },
         { label: 'Objectifs SMART', tier: 'premium' },
       ],
     },
+
     {
-      id: 'design',
-      label: 'Phase 2 - Design',
-      tier: 'standard', // "s"
-      subItems: [
-        { label: "Choix d'architecture", tier: 'free' },
-        { label: 'Modélisation UML', tier: 'standard' },
-        { label: 'Sélection technologique', tier: 'premium' },
-      ],
-    },
-    {
-      id: 'development',
-      label: 'Phase 3 - Development',
-      tier: 'premium', // "p"
-      subItems: [
-        { label: 'Setup projet', tier: 'standard' },
-        { label: 'Développement backend/frontend', tier: 'premium' },
-        { label: 'Base de données', tier: 'premium' },
-      ],
-    },
-    {
-      id: 'charte',
+      id: 'charter',
       label: 'Identité visuelle',
       tier: 'premium',
       subItems: [
@@ -108,6 +89,27 @@ export default class CreateProjectDatas {
         },
       ],
     },
+    {
+      id: 'design',
+      label: 'Design',
+      tier: 'standard',
+      subItems: [
+        { label: "Choix d'architecture", tier: 'free' },
+        { label: 'Modélisation UML', tier: 'standard' },
+        { label: 'Sélection technologique', tier: 'premium' },
+      ],
+    },
+    {
+      id: 'development',
+      label: 'Development',
+      tier: 'premium',
+      subItems: [
+        { label: 'Setup projet', tier: 'standard' },
+        { label: 'Développement backend/frontend', tier: 'premium' },
+        { label: 'Base de données', tier: 'premium' },
+      ],
+    },
+
     {
       id: 'landing',
       label: 'Landing Page',

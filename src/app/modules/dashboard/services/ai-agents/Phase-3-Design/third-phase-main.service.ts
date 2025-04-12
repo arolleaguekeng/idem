@@ -7,13 +7,13 @@ import { UMLModelingService } from './umlmodeling.service';
 @Injectable({
   providedIn: 'root',
 })
-export class SecondPhaseMainService {
+export class ThirdPhaseMainService {
   constructor(
     private projectService: ProjectService,
     private umlModelingService: UMLModelingService
   ) {}
 
-  async executeSecondPhaseDiagrams(
+  async executeThirdPhaseDiagrams(
     project: ProjectModel
   ): Promise<DiagramModel[] | { error: string; step: string }> {
     try {

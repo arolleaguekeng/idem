@@ -71,6 +71,7 @@ export class CreateProjectComponent {
   }
 
   generateSelectedPhases() {
+    
     try {
       this.project.selectedPhases = this.selectedPhases;
       this.projectService.createUserProject(this.project).then((projectId) => {

@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class LogoGenerationService {
+export class TypographySectionService {
 
   constructor() { }
-
 }

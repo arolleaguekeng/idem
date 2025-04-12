@@ -1,0 +1,1 @@
+export const TYPOGRAPHY_SECTION_PROMPT = ``;

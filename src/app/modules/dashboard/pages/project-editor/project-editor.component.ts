@@ -20,7 +20,7 @@ import { first } from 'rxjs';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
-import { SecondPhaseMainService } from '../../services/ai-agents/Phase-2-Design/second-phase-main.service';
+import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { DiagramModel } from '../../models/diagram.model';
 
 @Component({
@@ -43,86 +43,96 @@ export class ProjectEditorComponent implements OnInit {
   project!: ProjectModel;
   route = inject(ActivatedRoute);
   firstPhaseService = inject(FirstPhaseMainService);
-  secondPhaseService = inject(SecondPhaseMainService);
+  thirdPhaseService = inject(ThirdPhaseMainService);
   isLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
-  // userSubscription: Subscription;
   projectService = inject(ProjectService);
-  ngOnInit() {
-    this.auth.user$.pipe(first()).subscribe({
-      next: (user) => {
-        this.currentUser = user;
-        if (!this.currentUser) {
-          console.log('Utilisateur non connecté');
-          return;
-        }
+  async ngOnInit() {
+    try {
+      const user = await this.auth.user$.pipe(first()).toPromise();
+      this.currentUser = user;
 
-        this.id = this.route.snapshot.paramMap.get('id')!;
-        if (!this.id) {
-          console.log('ID du projet introuvable');
-          return;
-        }
+      if (!this.currentUser) {
+        console.log('Utilisateur non connecté');
+        return;
+      }
 
-        this.projectService
-          .getUserProjectById(this.id)
-          .then((project) => {
-            if (!project) {
-              console.log('Projet non trouvé');
-              return;
-            }
-            this.project = project;
+      this.id = this.route.snapshot.paramMap.get('id')!;
+      if (!this.id) {
+        console.log('ID du projet introuvable');
+        return;
+      }
 
+      const project = await this.projectService.getUserProjectById(this.id);
+      if (!project) {
+        console.log('Projet non trouvé');
+        return;
+      }
+
+      this.project = project;
+      for (let phase in this.project.selectedPhases) {
+        console.log('Phase:', phase);
+        switch (phase) {
+          case 'planning': {
+            console.log('Planing selected');
             if (!this.project.analysisResultModel?.planning) {
               console.log('Exécution de la première phase...');
-              this.firstPhaseService
-                .executeFirstPhase(this.project)
-                .then((analysis) => {
-                  this.project.analysisResultModel =
-                    analysis as AnalysisResultModel;
+              const analysis = await this.firstPhaseService.executeFirstPhase(
+                this.project
+              );
+              this.project.analysisResultModel =
+                analysis as AnalysisResultModel;
 
-                  this.projectService
-                    .editUserProject(this.id, this.project)
-                    .then(() => {
-                      this.isLoaded.set(false);
-                    });
-                });
+              await this.projectService.editUserProject(this.id, this.project);
             } else {
               console.log('Analyse déjà existante.');
             }
-
+            break;
+          }
+          case 'charter': {
+            break;
+          }
+          case 'design': {
             if (
               this.project.analysisResultModel.design &&
               this.project.analysisResultModel.design.length <= 0
             ) {
-              console.log('Tray to generate diagramms...');
-              this.secondPhaseService
-                .executeSecondPhaseDiagrams(this.project)
-                .then((diagrams) => {
-                  this.project.analysisResultModel.design =
-                    diagrams as DiagramModel[];
+              console.log('Tray to generate diagrams...');
+              const diagrams =
+                await this.thirdPhaseService.executeThirdPhaseDiagrams(
+                  this.project
+                );
+              this.project.analysisResultModel.design =
+                diagrams as DiagramModel[];
 
-                  this.projectService
-                    .editUserProject(this.id, this.project)
-                    .then(() => {
-                      this.isLoaded.set(false);
-                    });
-                });
+              await this.projectService.editUserProject(this.id, this.project);
             }
-            this.isLoaded.set(false);
-          })
-          .catch((error) => {
-            console.error('Erreur lors du chargement du projet', error);
-          });
-      },
-      error: (error) => {
-        console.error(
-          'Erreur lors de la récupération de l’utilisateur:',
-          error
-        );
-      },
-    });
+            break;
+          }
+          case 'development': {
+            break;
+          }
+
+          case 'landing': {
+            break;
+          }
+          case 'testing': {
+            break;
+          }
+          default: {
+          }
+        }
+      }
+
+      this.isLoaded.set(false);
+    } catch (error) {
+      console.error(
+        'Erreur lors du chargement du projet ou de l’utilisateur',
+        error
+      );
+    }
   }
 
   autoResize(event: Event) {
@@ -132,3 +142,4 @@ export class ProjectEditorComponent implements OnInit {
     textarea.style.height = newHeight + 'px';
   }
 }
+// this.isLoaded = true;

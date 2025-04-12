@@ -1,0 +1,1 @@
+export const VISUAL_EXAMPLES_SECTION_PROMPT = ``;

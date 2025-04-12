@@ -1,0 +1,1 @@
+export const USAGE_GUIDELINES_SECTION_PROMPT = ``;

@@ -1,0 +1,1 @@
+export const VISUAL_IDENTITY_SYNTHESIZER_PROMPT = ``;
