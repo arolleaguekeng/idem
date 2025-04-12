@@ -20,6 +20,8 @@ import { first } from 'rxjs';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
+import { SecondPhaseMainService } from '../../services/ai-agents/Phase-2-Design/second-phase-main.service';
+import { DiagramModel } from '../../models/diagram.model';
 
 @Component({
   selector: 'app-project-editor',
@@ -41,6 +43,7 @@ export class ProjectEditorComponent implements OnInit {
   project!: ProjectModel;
   route = inject(ActivatedRoute);
   firstPhaseService = inject(FirstPhaseMainService);
+  secondPhaseService = inject(SecondPhaseMainService);
   isLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
@@ -87,8 +90,27 @@ export class ProjectEditorComponent implements OnInit {
                 });
             } else {
               console.log('Analyse déjà existante.');
-              this.isLoaded.set(false);
             }
+
+            if (
+              this.project.analysisResultModel.design &&
+              this.project.analysisResultModel.design.length <= 0
+            ) {
+              console.log('Tray to generate diagramms...');
+              this.secondPhaseService
+                .executeSecondPhaseDiagrams(this.project)
+                .then((diagrams) => {
+                  this.project.analysisResultModel.design =
+                    diagrams as DiagramModel[];
+
+                  this.projectService
+                    .editUserProject(this.id, this.project)
+                    .then(() => {
+                      this.isLoaded.set(false);
+                    });
+                });
+            }
+            this.isLoaded.set(false);
           })
           .catch((error) => {
             console.error('Erreur lors du chargement du projet', error);

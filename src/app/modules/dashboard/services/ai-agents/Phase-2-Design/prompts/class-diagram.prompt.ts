@@ -12,11 +12,11 @@ En tant qu'expert UML certifié, génère immédiatement un diagramme de classes
 6. Relations claires (héritage, association, etc.)
 
 ## Format de Sortie Exigé :
-\`\`\`mermaid
+
 classDiagram
     [Classes avec attributs/méthodes]
     [Relations entre classes]
-\`\`\`
+
 
 ## Exemple Structuré :
 classDiagram
@@ -35,4 +35,5 @@ classDiagram
 - Nommage en PascalCase/CamelCase
 - Types primitifs uniquement
 - Cardinalités explicites
+- pas besoin de preciser "\`\`\`mermaid" a l'entete du diagramme. donne directement le diagramme
 `;

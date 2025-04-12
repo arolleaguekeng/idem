@@ -9,7 +9,7 @@
       <p-tabs value="0">
         <p-tablist>
           <p-tab value="0"> Planning</p-tab>
-          <p-tab value="1" disabled>Design</p-tab>
+          <p-tab value="1">Design</p-tab>
           <p-tab value="2" disabled>Development</p-tab>
           <p-tab disabled>Landing Page</p-tab>
           <p-tab disabled>Tests</p-tab>
@@ -65,11 +65,9 @@
                           image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
                           shape="circle"
                         />
-                        <span class="font-bold whitespace-nowrap"
-                          >
+                        <span class="font-bold whitespace-nowrap">
                           Requirements Gathering
-                          </span
-                        >
+                        </span>
                         <p-badge value="4" class="ml-auto mr-2" />
                       </span>
                     </p-accordion-header>
@@ -205,14 +203,10 @@
             </p-tabpanel>
             <p-tabpanel value="1">
               <p class="m-0">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-                modi.
+                <markdown
+                  class="variable-binding"
+                  [data]="project.analysisResultModel.design[0].code"
+                ></markdown>
               </p>
             </p-tabpanel>
             <p-tabpanel value="2">
