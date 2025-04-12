@@ -1,0 +1,1 @@
+export const ER_DIAGRAM_PROMPT = ``;

@@ -1,0 +1,1 @@
+export const ARCHITECTURE_DIAGRAM_PROMPT = ``;
