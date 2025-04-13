@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { VISUAL_IDENTITY_SYNTHESIZER_PROMPT } from './prompts/visual-identity-synthesizer.prompt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class VisualIdentitySynthesizerService {
+export class VisualIdentitySynthesizerService extends AiGenericPromptService {
+  constructor() {
+    super();
+  }
 
-  constructor() { }
+  async generateDatas(
+    history: any[],
+    projectDescription: string
+  ): Promise<string> {
+    const prompt = ` ${VISUAL_IDENTITY_SYNTHESIZER_PROMPT} ${projectDescription}.`;
+
+    return this.sendPrompt(history, prompt);
+  }
 }

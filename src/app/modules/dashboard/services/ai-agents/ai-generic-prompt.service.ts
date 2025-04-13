@@ -13,7 +13,10 @@ export class AiGenericPromptService {
 
   http = inject(HttpClient);
   auth = inject(Auth);
-  async sendPrompt(history: any[], prompt: string): Promise<any> {
+  async sendPrompt(
+    history: string,
+    prompt: string
+  ): Promise<any> {
     try {
       const user = this.auth.currentUser;
       if (!user) throw new Error('User not authenticated');

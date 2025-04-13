@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { TYPOGRAPHY_SECTION_PROMPT } from './prompts/typography-section.prompt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class TypographySectionService {
+export class TypographySectionService extends AiGenericPromptService {
+  constructor() {
+    super();
+  }
 
-  constructor() { }
+  async generateDatas(
+      history: any[],
+      projectDescription: string
+    ): Promise<string> {
+      const prompt = ` ${TYPOGRAPHY_SECTION_PROMPT} ${projectDescription}.`;
+  
+      return this.sendPrompt(history, prompt);
+    }
 }

@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { COLOR_PALETTE_SECTION_PROMPT } from './prompts/color-palette-section.prompt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ColorPaletteSectionService {
+export class ColorPaletteSectionService extends AiGenericPromptService {
+  constructor() {
+    super();
+  }
 
-  constructor() { }
+  async generateDatas(
+      history: any[],
+      projectDescription: string
+    ): Promise<string> {
+      const prompt = ` ${COLOR_PALETTE_SECTION_PROMPT} ${projectDescription}.`;
+  
+      return this.sendPrompt(history, prompt);
+    }
 }

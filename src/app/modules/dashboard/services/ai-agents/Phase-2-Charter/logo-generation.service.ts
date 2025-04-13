@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AiGenericPromptService } from '../ai-generic-prompt.service';
+import { LOGO_GENERATION_PROMPT } from './prompts/logo-generation.prompt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class LogoGenerationService {
+export class LogoGenerationService extends AiGenericPromptService {
+  constructor() {
+    super();
+  }
 
-  constructor() { }
+  async generateDatas(
+      history: any[],
+      projectDescription: string
+    ): Promise<string> {
+      const prompt = ` ${LOGO_GENERATION_PROMPT} ${projectDescription}.`;
+  
+      return this.sendPrompt(history, prompt);
+    }
 }

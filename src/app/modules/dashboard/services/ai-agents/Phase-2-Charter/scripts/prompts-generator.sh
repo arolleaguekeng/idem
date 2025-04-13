@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Dossier de destination
+
 PROMPTS_DIR="./prompts"
 mkdir -p "$PROMPTS_DIR"
 
-# Tableau : chaque ligne contient nom_fichier:nom_constante
+
 PROMPT_ENTRIES=(
   "visual-identity-synthesizer:VISUAL_IDENTITY_SYNTHESIZER_PROMPT"
   "brand-identity-section:BRAND_IDENTITY_SECTION_PROMPT"
@@ -18,8 +18,8 @@ PROMPT_ENTRIES=(
 echo "📦 Génération des fichiers de prompts (contenu vide) dans '$PROMPTS_DIR'..."
 
 for ENTRY in "${PROMPT_ENTRIES[@]}"; do
-  FILENAME="${ENTRY%%:*}"         # extrait la partie avant :
-  CONST_NAME="${ENTRY##*:}"       # extrait la partie après :
+  FILENAME="${ENTRY%%:*}"         
+  CONST_NAME="${ENTRY##*:}"       
   FILE_PATH="${PROMPTS_DIR}/${FILENAME}.prompt.ts"
 
   echo "📝 Création : $FILE_PATH"
