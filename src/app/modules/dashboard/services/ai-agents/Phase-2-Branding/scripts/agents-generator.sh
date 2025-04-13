@@ -14,7 +14,7 @@ SERVICES=(
   "logo-generation"
   "usage-guidelines-section"
   "visual-examples-section"
-  graphic-charter-orchestrator
+  graphic-branding-orchestrator
 )
 
 echo "📦 Generating AI agent services in '$TARGET_DIR'..."

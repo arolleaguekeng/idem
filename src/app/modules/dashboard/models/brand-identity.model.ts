@@ -1,3 +1,5 @@
+import { LogoModel } from './logo.model';
+
 export interface BrandIdentityModel {
   brandDefinition: { content: string; summary: string };
   toneOfVoice: { content: string; summary: string };
@@ -6,4 +8,6 @@ export interface BrandIdentityModel {
   colorSystem: { content: string; summary: string };
   iconographyAndImagery: { content: string; summary: string };
   layoutAndComposition: { content: string; summary: string };
+  logo: LogoModel;
+  summary: { content: string; summary: string };
 }

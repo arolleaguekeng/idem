@@ -1,4 +1,4 @@
-export const GRAPHIC_CHARTER_PROMPT = `
+export const GRAPHIC_BRANDING_PROMPT = `
 Tu es un expert en design graphique, branding et UI/UX. Tu as aussi des compétences avancées en HTML et CSS. Génère une charte graphique complète pour une entreprise, au format HTML, avec un style propre, professionnel et bien structuré.
 
 L'utilisateur fournira les informations suivantes sur le projet :

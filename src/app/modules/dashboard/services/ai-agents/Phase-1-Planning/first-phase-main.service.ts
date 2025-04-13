@@ -31,7 +31,7 @@ export class FirstPhaseMainService {
    */
   async executeFirstPhase(
     project: ProjectModel
-  ): Promise<AnalysisResultModel | { error: string; step: string }> {
+  ): Promise<PlanningModel | { error: string; step: string }> {
     try {
       const literralProject =
         this.projectService.getProjectDescriptionForPrompt(project);
@@ -128,18 +128,8 @@ export class FirstPhaseMainService {
         stakeholdersMeeting: { content: stakeholderMeetings, summary: '' },
         useCaseModeling: { content: useCases, summary: '' },
       };
-      const analysisResult: AnalysisResultModel = {
-        planning: planningResult,
-        architectures: [],
-        design: [],
-        development: '',
-        charte: '',
-        landing: '',
-        testing: '',
-        createdAt: new Date(Date.now()),
-      };
 
-      return analysisResult;
+      return planningResult;
     } catch (error) {
       console.error('Error during Phase 1 execution:', error);
       throw error;

@@ -11,7 +11,6 @@ import { ProjectModel } from '../../models/project.model';
 import { FormsModule } from '@angular/forms';
 import { ProjectService } from '../../services/project.service';
 import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning/first-phase-main.service';
-import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { MarkdownComponent } from 'ngx-markdown';
 import { User } from '@angular/fire/auth';
@@ -22,6 +21,9 @@ import { BadgeModule } from 'primeng/badge';
 import { AccordionModule } from 'primeng/accordion';
 import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { DiagramModel } from '../../models/diagram.model';
+import { BrandingOrchestratorService } from '../../services/ai-agents/Phase-2-Branding/branding-orchestrator.service';
+import { BrandIdentityModel } from '../../models/brand-identity.model';
+import { PlanningModel } from '../../models/planning.model';
 
 @Component({
   selector: 'app-project-editor',
@@ -44,13 +46,20 @@ export class ProjectEditorComponent implements OnInit {
   route = inject(ActivatedRoute);
   firstPhaseService = inject(FirstPhaseMainService);
   thirdPhaseService = inject(ThirdPhaseMainService);
-  isLoaded = signal(true);
+  brandOrchestratorService = inject(BrandingOrchestratorService);
+  isPlanningLoaded = signal(true);
+  isBrandingLoaded = signal(true);
+  isDesignLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
+
   async ngOnInit() {
     try {
+      this.isBrandingLoaded.set(true);
+      this.isPlanningLoaded.set(true);
+      this.isDesignLoaded.set(true);
       const user = await this.auth.user$.pipe(first()).toPromise();
       this.currentUser = user;
 
@@ -82,16 +91,26 @@ export class ProjectEditorComponent implements OnInit {
               const analysis = await this.firstPhaseService.executeFirstPhase(
                 this.project
               );
-              this.project.analysisResultModel =
-                analysis as AnalysisResultModel;
+              this.project.analysisResultModel.planning =
+                analysis as PlanningModel;
 
               await this.projectService.editUserProject(this.id, this.project);
             } else {
               console.log('Analyse déjà existante.');
             }
+
+            this.isPlanningLoaded.set(false);
             break;
           }
-          case 'charter': {
+          case 'branding': {
+            const analysis =
+              await this.brandOrchestratorService.generateFullBranding(
+                this.project
+              );
+            this.project.analysisResultModel.branding =
+              analysis as BrandIdentityModel;
+
+            await this.projectService.editUserProject(this.id, this.project);
             break;
           }
           case 'design': {
@@ -109,6 +128,7 @@ export class ProjectEditorComponent implements OnInit {
 
               await this.projectService.editUserProject(this.id, this.project);
             }
+            this.isDesignLoaded.set(false);
             break;
           }
           case 'development': {
@@ -125,8 +145,6 @@ export class ProjectEditorComponent implements OnInit {
           }
         }
       }
-
-      this.isLoaded.set(false);
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',
@@ -142,4 +160,3 @@ export class ProjectEditorComponent implements OnInit {
     textarea.style.height = newHeight + 'px';
   }
 }
-// this.isLoaded = true;

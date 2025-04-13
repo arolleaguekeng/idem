@@ -71,7 +71,7 @@ export default class CreateProjectDatas {
     },
 
     {
-      id: 'charter',
+      id: 'branding',
       label: 'Identité visuelle',
       tier: 'premium',
       subItems: [
