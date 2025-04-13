@@ -16,7 +16,7 @@ export class RequirementsGatheringService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async gatherRequirements(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = `${REQUIREMENTS_PROMPT} : ${projectDescription}.`;

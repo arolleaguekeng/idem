@@ -11,11 +11,11 @@ export class ColorPaletteSectionService extends AiGenericPromptService {
   }
 
   async generateDatas(
-      history: any[],
-      projectDescription: string
-    ): Promise<string> {
-      const prompt = ` ${COLOR_PALETTE_SECTION_PROMPT} ${projectDescription}.`;
-  
-      return this.sendPrompt(history, prompt);
-    }
+    history: string,
+    projectDescription: string
+  ): Promise<string> {
+    const prompt = ` ${COLOR_PALETTE_SECTION_PROMPT} ${projectDescription}.`;
+
+    return this.sendPrompt(history, prompt);
+  }
 }

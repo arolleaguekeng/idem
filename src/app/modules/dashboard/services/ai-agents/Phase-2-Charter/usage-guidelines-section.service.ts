@@ -11,11 +11,11 @@ export class UsageGuidelinesSectionService extends AiGenericPromptService {
   }
 
   async generateDatas(
-      history: any[],
-      projectDescription: string
-    ): Promise<string> {
-      const prompt = ` ${USAGE_GUIDELINES_SECTION_PROMPT} ${projectDescription}.`;
-  
-      return this.sendPrompt(history, prompt);
-    }
+    history: string,
+    projectDescription: string
+  ): Promise<string> {
+    const prompt = ` ${USAGE_GUIDELINES_SECTION_PROMPT} ${projectDescription}.`;
+
+    return this.sendPrompt(history, prompt);
+  }
 }

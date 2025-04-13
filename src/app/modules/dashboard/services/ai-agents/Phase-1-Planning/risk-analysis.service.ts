@@ -16,7 +16,7 @@ export class RiskAnalysisService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async analyzeRisks(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = `${RISK_ANALYSIS_PROMPT} : ${projectDescription}.`;

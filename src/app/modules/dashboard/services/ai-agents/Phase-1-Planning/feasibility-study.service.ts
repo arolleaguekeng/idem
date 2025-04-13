@@ -16,7 +16,7 @@ export class FeasibilityStudyService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async analyzeFeasibility(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${FAISABILITY_PROMPT} ${projectDescription}.`;

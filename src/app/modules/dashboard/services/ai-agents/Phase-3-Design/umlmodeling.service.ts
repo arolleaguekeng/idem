@@ -19,7 +19,7 @@ export class UMLModelingService extends AiGenericPromptService {
   }
 
   async generateClassDiagramm(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${CLASS_DIAGRAM_PROMPT} ${projectDescription}.`;
@@ -28,7 +28,7 @@ export class UMLModelingService extends AiGenericPromptService {
   }
 
   async generateUseCaseDiagramm(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${USECASE_DIAGRAM_PROMPT} ${projectDescription}.`;
@@ -37,7 +37,7 @@ export class UMLModelingService extends AiGenericPromptService {
   }
 
   async generateSequenceDiagramm(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${SEQUENCE_DIAGRAM_PROMPT} ${projectDescription}.`;
@@ -46,7 +46,7 @@ export class UMLModelingService extends AiGenericPromptService {
   }
 
   async generateERDiagramm(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${ER_DIAGRAM_PROMPT} ${projectDescription}.`;
@@ -55,7 +55,7 @@ export class UMLModelingService extends AiGenericPromptService {
   }
 
   async generateArchitectureDiagramm(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = ` ${ARCHITECTURE_DIAGRAM_PROMPT} ${projectDescription}.`;

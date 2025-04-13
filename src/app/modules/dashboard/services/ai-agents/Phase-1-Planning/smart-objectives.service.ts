@@ -16,7 +16,7 @@ export class SmartObjectivesService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async defineSmartObjectives(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = `${SMART_OBJECTIVES_PROMPT} : ${projectDescription}.`;

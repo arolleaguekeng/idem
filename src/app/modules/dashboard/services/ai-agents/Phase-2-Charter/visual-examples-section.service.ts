@@ -11,11 +11,11 @@ export class VisualExamplesSectionService extends AiGenericPromptService {
   }
 
   async generateDatas(
-      history: any[],
-      projectDescription: string
-    ): Promise<string> {
-      const prompt = ` ${VISUAL_EXAMPLES_SECTION_PROMPT} ${projectDescription}.`;
-  
-      return this.sendPrompt(history, prompt);
-    }
+    history: string,
+    projectDescription: string
+  ): Promise<string> {
+    const prompt = ` ${VISUAL_EXAMPLES_SECTION_PROMPT} ${projectDescription}.`;
+
+    return this.sendPrompt(history, prompt);
+  }
 }

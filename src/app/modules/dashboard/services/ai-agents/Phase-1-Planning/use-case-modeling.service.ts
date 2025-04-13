@@ -16,7 +16,7 @@ export class UseCaseModelingService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async modelUseCases(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = `${USE_CASE_MODELING_PROMPT} : ${projectDescription}.`;

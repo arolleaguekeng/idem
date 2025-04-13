@@ -24,7 +24,7 @@ export class ThirdPhaseMainService {
       let classDiagramm: string;
       try {
         classDiagramm = await this.umlModelingService.generateClassDiagramm(
-          [],
+          '',
           literralProject
         );
         diagramms.push({
@@ -38,7 +38,7 @@ export class ThirdPhaseMainService {
         console.error('Diagramm generation failed:', error);
         return { error: 'Diagramm generation failed', step: 'feasibility' };
       }
-      console.table(diagramms)
+      console.table(diagramms);
       return diagramms;
     } catch (error) {
       console.error('Error during Phase 1 execution:', error);

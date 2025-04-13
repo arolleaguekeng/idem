@@ -16,7 +16,7 @@ export class StakeholderMeetingsService extends AiGenericPromptService {
    * @returns La réponse de l'API Lexi.
    */
   async organizeStakeholderMeetings(
-    history: any[],
+    history: string,
     projectDescription: string
   ): Promise<string> {
     const prompt = `${STAKEHOLDER_MEETINGS_PROMPT} : ${projectDescription}.`;

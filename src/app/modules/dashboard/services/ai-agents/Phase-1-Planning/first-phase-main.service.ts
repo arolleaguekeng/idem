@@ -41,7 +41,7 @@ export class FirstPhaseMainService {
       console.log('Litteral project', literralProject);
       try {
         feasibility = await this.feasibilityStudyService.analyzeFeasibility(
-          [],
+          '',
           literralProject
         );
         console.log('Feasibility Study completed:', feasibility);
@@ -54,7 +54,7 @@ export class FirstPhaseMainService {
       let risks;
       try {
         risks = await this.riskAnalysisService.analyzeRisks(
-          [],
+          '',
           literralProject
         );
         console.log('Risk Analysis completed:', risks);
@@ -68,7 +68,7 @@ export class FirstPhaseMainService {
       try {
         smartObjectives =
           await this.smartObjectivesService.defineSmartObjectives(
-            [],
+            '',
             literralProject
           );
         console.log('SMART Objectives defined:', smartObjectives);
@@ -82,7 +82,7 @@ export class FirstPhaseMainService {
       try {
         requirements =
           await this.requirementsGatheringService.gatherRequirements(
-            [],
+            '',
             literralProject
           );
         console.log('Requirements Gathering completed:', requirements);
@@ -96,7 +96,7 @@ export class FirstPhaseMainService {
       try {
         stakeholderMeetings =
           await this.stakeholderMeetingsService.organizeStakeholderMeetings(
-            [],
+            '',
             literralProject
           );
         console.log('Stakeholder Meetings organized:', stakeholderMeetings);
@@ -112,9 +112,7 @@ export class FirstPhaseMainService {
       let useCases;
       try {
         useCases = await this.useCaseModelingService.modelUseCases(
-          [
-
-          ],
+          '',
           literralProject
         );
         console.log('Use Case Modeling completed:', useCases);
@@ -140,7 +138,7 @@ export class FirstPhaseMainService {
         testing: '',
         createdAt: new Date(Date.now()),
       };
-      // Return the results of all steps
+
       return analysisResult;
     } catch (error) {
       console.error('Error during Phase 1 execution:', error);

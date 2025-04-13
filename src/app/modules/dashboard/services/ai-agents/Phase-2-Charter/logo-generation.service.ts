@@ -11,11 +11,11 @@ export class LogoGenerationService extends AiGenericPromptService {
   }
 
   async generateDatas(
-      history: any[],
-      projectDescription: string
-    ): Promise<string> {
-      const prompt = ` ${LOGO_GENERATION_PROMPT} ${projectDescription}.`;
-  
-      return this.sendPrompt(history, prompt);
-    }
+    history: string,
+    projectDescription: string
+  ): Promise<string> {
+    const prompt = ` ${LOGO_GENERATION_PROMPT} ${projectDescription}.`;
+
+    return this.sendPrompt(history, prompt);
+  }
 }
