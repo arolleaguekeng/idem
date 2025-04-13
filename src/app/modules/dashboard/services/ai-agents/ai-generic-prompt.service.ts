@@ -1,22 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Auth, User } from '@angular/fire/auth'; // Firebase Auth
+import { Auth } from '@angular/fire/auth';
 import { firstValueFrom } from 'rxjs';
+import { GENERIC_JSON_FORMAT_PROMPT } from './prompts/aditional.prompt';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiGenericPromptService {
-  private apiUrl = 'http://localhost:3000/api/prompt'; // Remplace par ton URL backend
-  // private apiUrl = 'https://lexis-api.vercel.app/api/prompt'; // Remplace par ton URL backend
+  private apiUrl = 'http://localhost:3000/api/prompt';
+  // private apiUrl = 'https://lexis-api.vercel.app/api/prompt';
   constructor() {}
 
   http = inject(HttpClient);
   auth = inject(Auth);
-  async sendPrompt(
-    history: string,
-    prompt: string
-  ): Promise<any> {
+  async sendPrompt(history: string, prompt: string): Promise<any> {
     try {
       const user = this.auth.currentUser;
       if (!user) throw new Error('User not authenticated');
@@ -26,13 +24,14 @@ export class AiGenericPromptService {
         'Content-Type': 'application/json',
       });
 
+      prompt = ` ${prompt}.  summary:  ${history}.  ${GENERIC_JSON_FORMAT_PROMPT}`;
+
       return await firstValueFrom(
-        this.http.post(
+        this.http.post<{ content: string; summary: string }>(
           this.apiUrl,
-          { history, prompt },
+          { prompt },
           {
             headers,
-            responseType: 'text',
           }
         )
       );
