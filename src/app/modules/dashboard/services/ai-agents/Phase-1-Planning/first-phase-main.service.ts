@@ -121,12 +121,12 @@ export class FirstPhaseMainService {
         return { error: 'Use Case Modeling failed', step: 'useCases' };
       }
       const planningResult: PlanningModel = {
-        feasibilityStudy: feasibility,
-        riskanalysis: risks,
-        requirementsGathering: requirements,
-        smartObjectives: smartObjectives,
-        stakeholdersMeeting: stakeholderMeetings,
-        useCaseModeling: useCases,
+        feasibilityStudy: { content: feasibility, summary: '' },
+        riskanalysis: { content: risks, summary: '' },
+        requirementsGathering: { content: requirements, summary: '' },
+        smartObjectives: { content: smartObjectives, summary: '' },
+        stakeholdersMeeting: { content: stakeholderMeetings, summary: '' },
+        useCaseModeling: { content: useCases, summary: '' },
       };
       const analysisResult: AnalysisResultModel = {
         planning: planningResult,
