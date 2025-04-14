@@ -86,11 +86,10 @@ export class ProjectEditorComponent implements OnInit {
 
       project.analysisResultModel = this.analis as AnalysisResultModel;
       this.project = project;
-      console.log('project', this.project);
+      console.log('project', this.project.selectedPhases);
       for (let phase in this.project.selectedPhases) {
-        console.log('Phase:', phase);
-        switch (phase) {
-          case '0': {
+        switch (this.project.selectedPhases[phase]) {
+          case "planning": {
             if (!this.project.analysisResultModel?.planning) {
               console.log('Exécution de la première phase...');
               // const analysis = await this.firstPhaseService.executeFirstPhase(
@@ -115,7 +114,7 @@ export class ProjectEditorComponent implements OnInit {
             // this.isPlanningLoaded.set(false);
             break;
           }
-          case '1': {
+          case 'branding': {
             
             const brand =
               await this.brandOrchestratorService.generateFullBranding(
@@ -128,10 +127,9 @@ export class ProjectEditorComponent implements OnInit {
             await this.projectService.editUserProject(this.id, this.project);
             break;
           }
-          case '2': {
+          case 'design': {
             if (
-              this.project.analysisResultModel.design &&
-              this.project.analysisResultModel.design.length <= 0
+              !this.project.analysisResultModel.design
             ) {
               console.log('Tray to generate diagrams...');
               const diagrams =
