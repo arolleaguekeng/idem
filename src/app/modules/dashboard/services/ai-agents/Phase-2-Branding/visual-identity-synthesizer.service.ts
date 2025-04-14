@@ -13,7 +13,7 @@ export class VisualIdentitySynthesizerService extends AiGenericPromptService {
   async generateDatas(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string, summary: string }> {
     const prompt = ` ${VISUAL_IDENTITY_SYNTHESIZER_PROMPT} ${projectDescription}.`;
 
     return this.sendPrompt(history, prompt);

@@ -12,7 +12,7 @@ export class BrandIdentitySectionService extends AiGenericPromptService {
   async generateDatas(
       history: string,
       projectDescription: string
-    ): Promise<string> {
+    ): Promise<{ content: string, summary: string }> {
       const prompt = ` ${BRAND_IDENTITY_SECTION_PROMPT} ${projectDescription}.`;
   
       return this.sendPrompt(history, prompt);

@@ -1,16 +1,18 @@
 export const GENERIC_JSON_FORMAT_PROMPT = `
-Tu es un expert dans ton domaine. Ta tâche consiste à générer un contenu professionnel de qualité selon les instructions spécifiques que j'ai fournis .
+You are an expert in your field. Your task is to generate high-quality professional content according to the specific instructions provided.
 
-⚠️ Ta réponse doit impérativement respecter ce format de sortie JSON :
+⚠️ Your response must never follow this exact raw JSON output format — with **no Markdown, no code block, no explanations**, and no formatting like \`\`\`json or similar.
+
+Return ONLY a clean JSON object like this:
 
 {
-  "content": "<contenu HTML ou texte complet généré ici>",
-  "summary": "<résumé synthétique et pertinent des informations essentielles à transmettre à l'étape suivante (max 500 caractères)>"
+  "content": "<full generated HTML or text here>",
+  "summary": "<a concise summary (max 500 characters) of the essential information for the next AI agent>"
 }
 
-- Le champ "content" contient tout le contenu détaillé demandé, sous forme de texte ou de HTML si précisé.
-- Le champ "summary" doit être une chaîne de caractères résumant les éléments clés à retenir pour le prochain agent.
-
-Respecte rigoureusement la structure JSON indiquée : pas de texte autour, pas d’explication, uniquement le JSON final.
-
+Guidelines:
+- "content" contains all the detailed content as plain text or HTML.
+- "summary" must summarize the key points that should be passed to the next agent.
+- Do NOT include any introduction, explanation, or Markdown formatting like \`\`\`, \`\`\`json, etc.
+- The response must be clean raw JSON — nothing more, nothing less.
 `;

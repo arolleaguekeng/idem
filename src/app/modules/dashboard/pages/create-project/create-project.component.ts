@@ -12,6 +12,7 @@ import { ProjectService } from '../../services/project.service';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { Router } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
+import { AnalysisResultModel } from '../../models/analysisResult.model';
 
 @Component({
   selector: 'app-create-project',
@@ -34,10 +35,6 @@ export class CreateProjectComponent {
   }
   project: ProjectModel = initEmptyObject<ProjectModel>();
 
-  userWithDefaults: ProjectModel = initEmptyObject<ProjectModel>({
-    name: 'John Doe',
-  });
-  private firstPhaseMainService = inject(FirstPhaseMainService);
   projectService = inject(ProjectService);
   router = inject(Router);
   isLoaded = false;
@@ -59,11 +56,45 @@ export class CreateProjectComponent {
   phases: DevelopmentPhase[] = CreateProjectDatas.phases;
   markdown = '';
   constructor() {}
-
-  ngOnInit(): void {}
+  // analysisResult: AnalysisResultModel = {
+  //   planning: {
+  //     feasibilityStudy: { content: '', summary: '' },
+  //     riskanalysis: { content: '', summary: '' },
+  //     requirementsGathering: { content: '', summary: '' },
+  //     smartObjectives: { content: '', summary: '' },
+  //     stakeholdersMeeting: { content: '', summary: '' },
+  //     useCaseModeling: { content: '', summary: '' },
+  //   },
+  //   architectures: [],
+  //   design: [],
+  //   development: '',
+  //   branding: {
+  //     brandDefinition: { content: '', summary: '' },
+  //     toneOfVoice: { content: '', summary: '' },
+  //     visualIdentityGuidelines: { content: '', summary: '' },
+  //     typographySystem: { content: '', summary: '' },
+  //     colorSystem: { content: '', summary: '' },
+  //     iconographyAndImagery: { content: '', summary: '' },
+  //     layoutAndComposition: { content: '', summary: '' },
+  //     summary: { content: '', summary: '' },
+  //     logo: {
+  //       svg: '',
+  //       summary: '',
+  //       concept: '',
+  //       colors: [],
+  //       fonts: [],
+  //     },
+  //   },
+  //   landing: '',
+  //   testing: '',
+  //   createdAt: new Date(Date.now()),
+  // };
+  ngOnInit(): void {
+    console.log('project', this.project);
+  }
   autoResize(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto'; 
+    textarea.style.height = 'auto';
 
     // Vérifie si la hauteur dépasse 400px
     const newHeight = Math.min(textarea.scrollHeight, 400);
@@ -71,9 +102,9 @@ export class CreateProjectComponent {
   }
 
   generateSelectedPhases() {
-    
     try {
       this.project.selectedPhases = this.selectedPhases;
+      // this.project.analysisResultModel = this.analysisResult;
       this.projectService.createUserProject(this.project).then((projectId) => {
         this.router.navigate([`/project/editor/${projectId}`]);
       });
@@ -86,7 +117,6 @@ export class CreateProjectComponent {
   }
   visible: boolean = false;
   showDialog() {
-    console.log('Project: ', this.project.constraints);
     console.log('Project: ', this.project);
     this.visible = true;
     this.isLoaded = false;

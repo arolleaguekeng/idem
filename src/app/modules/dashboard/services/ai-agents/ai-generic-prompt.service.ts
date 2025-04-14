@@ -24,7 +24,7 @@ export class AiGenericPromptService {
         'Content-Type': 'application/json',
       });
 
-      prompt = ` ${prompt}.  summary:  ${history}.  ${GENERIC_JSON_FORMAT_PROMPT}`;
+      prompt = ` ${prompt}.  summary:  ${history}.  ${GENERIC_JSON_FORMAT_PROMPT} le contenus que tu genere  ne doit absollument pas depasser 800 carateres. si necessaire resume poour ne pas depasser la limite`;
 
       return await firstValueFrom(
         this.http.post<{ content: string; summary: string }>(

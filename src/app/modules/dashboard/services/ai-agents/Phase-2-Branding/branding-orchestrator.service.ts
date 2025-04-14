@@ -9,6 +9,7 @@ import { VisualIdentitySynthesizerService } from './visual-identity-synthesizer.
 import { BrandIdentityModel } from '../../../models/brand-identity.model';
 import { ProjectModel } from '../../../models/project.model';
 import { ProjectService } from '../../project.service';
+import { LogoModel } from '../../../models/logo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.brandDefinition = this.parseJson(brand);
+    result.brandDefinition = brand;
     history += result.brandDefinition.summary + '\n';
 
     // Step 2: Color Palette
@@ -66,7 +67,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.colorSystem = this.parseJson(palette);
+    result.colorSystem = palette;
     history += result.colorSystem.summary + '\n';
 
     // Step 3: Logo Generation
@@ -74,7 +75,8 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.logo = JSON.parse(logo);
+    console.log('Logo', logo['content']);
+    result.logo = logo['content'] as LogoModel;
     history += result.logo.summary + '\n';
 
     // Step 4: Typography
@@ -82,7 +84,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.typographySystem = this.parseJson(typography);
+    result.typographySystem = typography;
     history += result.typographySystem.summary + '\n';
 
     // Step 5: Usage Guidelines (you said it's in TypographyService too, double-check)
@@ -90,7 +92,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.visualIdentityGuidelines = this.parseJson(guidelines);
+    result.visualIdentityGuidelines = guidelines;
     history += result.visualIdentityGuidelines.summary + '\n';
 
     // Step 6: Visual Examples
@@ -98,7 +100,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.layoutAndComposition = this.parseJson(visuals);
+    result.layoutAndComposition = visuals;
     history += result.layoutAndComposition.summary + '\n';
 
     // Step 7: Final Synthesized Visual Identity
@@ -106,20 +108,8 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       history,
       literralProject
     );
-    result.summary = this.parseJson(synthesis);
+    result.summary = synthesis;
 
     return result;
-  }
-
-  /**
-   * Parses the API response string into a JSON object
-   */
-  private parseJson(data: string): { content: string; summary: string } {
-    try {
-      return JSON.parse(data);
-    } catch (e) {
-      console.error('Invalid JSON response:', data);
-      return { content: '', summary: '' };
-    }
   }
 }
