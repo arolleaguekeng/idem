@@ -207,13 +207,11 @@
               </div>
             </p-tabpanel>
             <p-tabpanel value="1">
-              <p >
+              <p>
                 <markdown
-                  
+                  katex
                   class="variable-binding"
-                  [data]="
-                    project.analysisResultModel.branding.logo.svg
-                  "
+                  [data]="project.analysisResultModel.branding.logo.svg"
                 ></markdown>
                 <markdown
                   html
@@ -278,7 +276,8 @@
             <p-tabpanel value="2">
               <p class="m-0">
                 <markdown
-                  class="variable-binding"
+                  mermaid
+                  katex
                   [data]="project.analysisResultModel.design[0].code"
                 ></markdown>
               </p>

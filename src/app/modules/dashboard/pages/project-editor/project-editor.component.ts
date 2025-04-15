@@ -43,6 +43,7 @@ import { PlanningModel } from '../../models/planning.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectEditorComponent implements OnInit {
+  
   id = '';
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
@@ -58,7 +59,9 @@ export class ProjectEditorComponent implements OnInit {
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
-
+  data = `
+   <pre> \`\`\`mermaid graph TD A[Start] --> B{Is it working?} B -- Yes --> C[Great] B -- No --> D[Fix it] \`\`\` </pre>
+  `
   async ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
