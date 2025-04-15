@@ -14,6 +14,7 @@ Instructions:
 - Describe the rationale behind each color choice (symbolism, emotion, culture).
 - Explain how these colors support the brand identity.
 - Mention how to use them (dominance, contrast, backgrounds, UI).
+i want just html code it is a website for my app branding
 
 Contextual branding summary:
 `;

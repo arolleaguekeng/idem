@@ -10,8 +10,9 @@
       <p-tabs value="0">
         <p-tablist>
           <p-tab value="0"> Planning</p-tab>
-          <p-tab value="1">Design</p-tab>
-          <p-tab value="2" disabled>Development</p-tab>
+          <p-tab value="1">Branding</p-tab>
+          <p-tab value="2">Design</p-tab>
+          <p-tab value="3" disabled>Development</p-tab>
           <p-tab disabled>Landing Page</p-tab>
           <p-tab disabled>Tests</p-tab>
         </p-tablist>
@@ -206,23 +207,80 @@
               </div>
             </p-tabpanel>
             <p-tabpanel value="1">
-              <p class="m-0">
+              <p >
                 <markdown
+                  
                   class="variable-binding"
-                  [data]="project.analysisResultModel.design[0].code"
+                  [data]="
+                    project.analysisResultModel.branding.logo.svg
+                  "
+                ></markdown>
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.brandDefinition.content
+                  "
+                ></markdown>
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.colorSystem.content
+                  "
+                ></markdown>
+
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.iconographyAndImagery
+                      .content
+                  "
+                ></markdown>
+
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.layoutAndComposition
+                      .content
+                  "
+                ></markdown>
+
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.toneOfVoice.content
+                  "
+                ></markdown>
+
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding.typographySystem
+                      .content
+                  "
+                ></markdown>
+
+                <markdown
+                  html
+                  class="variable-binding"
+                  [data]="
+                    project.analysisResultModel.branding
+                      .visualIdentityGuidelines.content
+                  "
                 ></markdown>
               </p>
             </p-tabpanel>
             <p-tabpanel value="2">
               <p class="m-0">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis praesentium voluptatum deleniti atque corrupti quos
-                dolores et quas molestias excepturi sint occaecati cupiditate
-                non provident, similique sunt in culpa qui officia deserunt
-                mollitia animi, id est laborum et dolorum fuga. Et harum quidem
-                rerum facilis est et expedita distinctio. Nam libero tempore,
-                cum soluta nobis est eligendi optio cumque nihil impedit quo
-                minus.
+                <markdown
+                  class="variable-binding"
+                  [data]="project.analysisResultModel.design[0].code"
+                ></markdown>
               </p>
             </p-tabpanel>
           </p-tabpanels>

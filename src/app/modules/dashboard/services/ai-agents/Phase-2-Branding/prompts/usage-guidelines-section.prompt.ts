@@ -15,6 +15,7 @@ Instructions:
 - Give typography usage examples and spacing ratios.
 - Add common "do and don't" examples for maintaining visual consistency.
 - Make it useful for developers, designers, and marketers.
+i want just html code it is a website for my app branding
 
 Contextual branding summary:
 `;

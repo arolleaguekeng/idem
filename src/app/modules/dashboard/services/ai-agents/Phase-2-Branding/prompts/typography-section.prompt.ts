@@ -15,6 +15,7 @@ Instructions:
 - Give reasons for the font choice (mood, legibility, style, tone).
 - Indicate if the fonts are Google Fonts or include licensing info.
 - Make sure the typography aligns with the overall brand identity.
+i want just html code it is a website for my app branding
 
 Contextual branding summary:
 `;

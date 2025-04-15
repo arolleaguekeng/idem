@@ -14,6 +14,6 @@ Instructions:
 - Define the core values and emotional attributes the brand should convey.
 - Suggest a brand voice that aligns with the project's audience and goals.
 - Make sure your description is concise, clear, and usable by other designers.
-
+i want just html code it is a website for my app branding
 Project description:
 `;

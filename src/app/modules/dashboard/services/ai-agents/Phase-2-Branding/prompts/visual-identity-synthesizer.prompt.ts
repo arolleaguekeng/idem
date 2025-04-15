@@ -13,6 +13,7 @@ Instructions:
 - Create a cohesive summary that includes the logo, color palette, typography, and visual tone.
 - Explain how the elements work together to communicate the brand essence.
 - This summary will be presented to stakeholders to validate the visual direction.
+i want just html code it is a website for my app branding
 
 All branding elements:
 `;

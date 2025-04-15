@@ -15,6 +15,7 @@ Instructions:
 - Respect the defined color palette, typography, and logo usage.
 - Keep it clean and aesthetically pleasing.
 - Do not include scripts, only static HTML/CSS if necessary.
+i want just html code it is a website for my app branding
 
 Contextual branding summary:
 `;
