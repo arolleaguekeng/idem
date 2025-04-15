@@ -36,7 +36,7 @@ export class FirstPhaseMainService {
       const literralProject =
         this.projectService.getProjectDescriptionForPrompt(project);
       // 1. Feasibility Study
-      let feasibility: string;
+      let feasibility: { content: string; summary: string };
 
       console.log('Litteral project', literralProject);
       try {
@@ -121,12 +121,12 @@ export class FirstPhaseMainService {
         return { error: 'Use Case Modeling failed', step: 'useCases' };
       }
       const planningResult: PlanningModel = {
-        feasibilityStudy: { content: feasibility, summary: '' },
-        riskanalysis: { content: risks, summary: '' },
-        requirementsGathering: { content: requirements, summary: '' },
-        smartObjectives: { content: smartObjectives, summary: '' },
-        stakeholdersMeeting: { content: stakeholderMeetings, summary: '' },
-        useCaseModeling: { content: useCases, summary: '' },
+        feasibilityStudy: feasibility,
+        riskanalysis: risks,
+        requirementsGathering: requirements,
+        smartObjectives: requirements,
+        stakeholdersMeeting: stakeholderMeetings,
+        useCaseModeling: useCases,
       };
 
       return planningResult;

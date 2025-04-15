@@ -23,9 +23,9 @@ import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/t
 import { DiagramModel } from '../../models/diagram.model';
 import { BrandingOrchestratorService } from '../../services/ai-agents/Phase-2-Branding/branding-orchestrator.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
-import { PlanningModel } from '../../models/planning.model';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
+import { PlanningModel } from '../../models/planning.model';
 
 @Component({
   selector: 'app-project-editor',
@@ -84,47 +84,52 @@ export class ProjectEditorComponent implements OnInit {
         return;
       }
 
-      project.analysisResultModel = this.analis as AnalysisResultModel;
+      if (!project.analysisResultModel) {
+        project.analysisResultModel = this.analis as AnalysisResultModel;
+      }
       this.project = project;
-      console.log('project', this.project.selectedPhases);
+      console.log('project', this.project);
       for (let phase in this.project.selectedPhases) {
         switch (this.project.selectedPhases[phase]) {
-          case "planning": {
+          case 'planning': {
             if (!this.project.analysisResultModel?.planning) {
               console.log('Exécution de la première phase...');
-              // const analysis = await this.firstPhaseService.executeFirstPhase(
-              //   this.project
-              // );
-              // if (!analysis) {
-              //   console.log('error on anallysis');
-              //   return;
-              // }
-              // console.log('anallist', analysis);
-              // console.log('project', project);
-              // console.log('planning', project.analysisResultModel.planning);
+              const analysis = await this.firstPhaseService.executeFirstPhase(
+                this.project
+              );
+              if (!analysis) {
+                console.log('error on anallysis');
+                return;
+              }
+              console.log('anallist', analysis);
+              console.log('project', project);
+              console.log('planning', project.analysisResultModel.planning);
 
-              // this.project.analysisResultModel.planning =
-              //   analysis as PlanningModel;
+              this.project.analysisResultModel.planning =
+                analysis as PlanningModel;
 
-              // await this.projectService.editUserProject(this.id, this.project);
+              await this.projectService.editUserProject(this.id, this.project);
             } else {
               console.log('Analyse déjà existante.');
             }
 
-            // this.isPlanningLoaded.set(false);
+            this.isPlanningLoaded.set(false);
             break;
           }
           case 'branding': {
-            
-            const brand =
+            if(!this.project.analysisResultModel.branding){
+              const brand =
               await this.brandOrchestratorService.generateFullBranding(
                 this.project
               );
-              
+
             this.project.analysisResultModel.branding =
               brand as BrandIdentityModel;
 
             await this.projectService.editUserProject(this.id, this.project);
+            
+            }
+            this.isBrandingLoaded.set(false)
             break;
           }
           case 'design': {
@@ -141,7 +146,7 @@ export class ProjectEditorComponent implements OnInit {
 
               await this.projectService.editUserProject(this.id, this.project);
             }
-            // this.isDesignLoaded.set(false);
+            this.isDesignLoaded.set(false);
             break;
           }
           case 'development': {

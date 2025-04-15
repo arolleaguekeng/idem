@@ -18,7 +18,7 @@ export class StakeholderMeetingsService extends AiGenericPromptService {
   async organizeStakeholderMeetings(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string; summary: string }> {
     const prompt = `${STAKEHOLDER_MEETINGS_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }

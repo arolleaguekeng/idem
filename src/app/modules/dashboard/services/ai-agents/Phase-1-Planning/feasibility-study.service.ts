@@ -18,7 +18,7 @@ export class FeasibilityStudyService extends AiGenericPromptService {
   async analyzeFeasibility(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string; summary: string }> {
     const prompt = ` ${FAISABILITY_PROMPT} ${projectDescription}.`;
 
     console.log('final prompr', prompt);

@@ -18,7 +18,7 @@ export class UseCaseModelingService extends AiGenericPromptService {
   async modelUseCases(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string; summary: string }> {
     const prompt = `${USE_CASE_MODELING_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }

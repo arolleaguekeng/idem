@@ -18,7 +18,7 @@ export class SmartObjectivesService extends AiGenericPromptService {
   async defineSmartObjectives(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string; summary: string }> {
     const prompt = `${SMART_OBJECTIVES_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }

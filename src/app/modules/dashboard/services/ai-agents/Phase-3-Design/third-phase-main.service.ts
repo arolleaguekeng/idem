@@ -21,7 +21,7 @@ export class ThirdPhaseMainService {
       const literralProject =
         this.projectService.getProjectDescriptionForPrompt(project);
 
-      let classDiagramm: string;
+      let classDiagramm;
       try {
         classDiagramm = await this.umlModelingService.generateClassDiagramm(
           '',
@@ -29,8 +29,8 @@ export class ThirdPhaseMainService {
         );
         diagramms.push({
           name: 'class',
-          description: 'Class Diagram',
-          code: classDiagramm,
+          description: classDiagramm.summary,
+          code: classDiagramm.content,
         });
 
         console.log('Diagramm generation completed...');

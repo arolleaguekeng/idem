@@ -18,7 +18,7 @@ export class RiskAnalysisService extends AiGenericPromptService {
   async analyzeRisks(
     history: string,
     projectDescription: string
-  ): Promise<string> {
+  ): Promise<{ content: string; summary: string }> {
     const prompt = `${RISK_ANALYSIS_PROMPT} : ${projectDescription}.`;
     return this.sendPrompt(history, prompt);
   }
