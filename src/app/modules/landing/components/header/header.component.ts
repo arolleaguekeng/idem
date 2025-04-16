@@ -25,7 +25,7 @@ import { MenuItem } from 'primeng/api';
     CommonModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrl: './header.component.css',
   animations: [
     trigger('slideInOut', [
       transition(':enter', [

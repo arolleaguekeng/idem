@@ -7,6 +7,6 @@ import { HeaderComponent } from '../../modules/landing/components/header/header.
   selector: 'app-public-layout',
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './public-layout.component.html',
-  styleUrl: './public-layout.component.scss',
+  styleUrl: './public-layout.component.css',
 })
 export class PublicLayoutComponent {}

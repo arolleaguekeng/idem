@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   authService = inject(AuthService);

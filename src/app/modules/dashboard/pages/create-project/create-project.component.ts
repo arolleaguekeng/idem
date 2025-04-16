@@ -25,7 +25,7 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
     LoaderComponent,
   ],
   templateUrl: './create-project.component.html',
-  styleUrl: './create-project.component.scss',
+  styleUrl: './create-project.component.css',
 })
 export class CreateProjectComponent {
   onConstraintsChange() {

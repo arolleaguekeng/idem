@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-home',
   imports: [RouterLink, FormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  styleUrl: './home.component.css',
   animations: [
     trigger('fadeIn', [
       transition(':enter', [

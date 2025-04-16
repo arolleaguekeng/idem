@@ -43,11 +43,12 @@ import { PlanningModel } from '../../models/planning.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectEditorComponent implements OnInit {
-  
+
+
   id = '';
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
-
+  formatedDiagrams: DiagramModel[] = [];
   route = inject(ActivatedRoute);
   firstPhaseService = inject(FirstPhaseMainService);
   thirdPhaseService = inject(ThirdPhaseMainService);
@@ -59,9 +60,7 @@ export class ProjectEditorComponent implements OnInit {
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
-  data = `
-   <pre> \`\`\`mermaid graph TD A[Start] --> B{Is it working?} B -- Yes --> C[Great] B -- No --> D[Fix it] \`\`\` </pre>
-  `
+
   async ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
@@ -120,25 +119,22 @@ export class ProjectEditorComponent implements OnInit {
             break;
           }
           case 'branding': {
-            if(!this.project.analysisResultModel.branding){
+            if (!this.project.analysisResultModel.branding) {
               const brand =
-              await this.brandOrchestratorService.generateFullBranding(
-                this.project
-              );
+                await this.brandOrchestratorService.generateFullBranding(
+                  this.project
+                );
 
-            this.project.analysisResultModel.branding =
-              brand as BrandIdentityModel;
+              this.project.analysisResultModel.branding =
+                brand as BrandIdentityModel;
 
-            await this.projectService.editUserProject(this.id, this.project);
-            
+              await this.projectService.editUserProject(this.id, this.project);
             }
-            this.isBrandingLoaded.set(false)
+            this.isBrandingLoaded.set(false);
             break;
           }
           case 'design': {
-            if (
-              !this.project.analysisResultModel.design
-            ) {
+            if (!this.project.analysisResultModel.design) {
               console.log('Tray to generate diagrams...');
               const diagrams =
                 await this.thirdPhaseService.executeThirdPhaseDiagrams(
@@ -149,6 +145,12 @@ export class ProjectEditorComponent implements OnInit {
 
               await this.projectService.editUserProject(this.id, this.project);
             }
+            for (let diagram of this.project.analysisResultModel.design) {
+              diagram.code = '```mermaid \n\n' + diagram.code + ' \n\n ```';
+              console.log(diagram);
+              this.formatedDiagrams.push(diagram);
+            }
+            project.analysisResultModel.design = this.formatedDiagrams;
             this.isDesignLoaded.set(false);
             break;
           }

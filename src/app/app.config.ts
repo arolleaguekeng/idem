@@ -29,13 +29,7 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  MARKED_OPTIONS,
-  MarkedOptions,
-  MarkedRenderer,
-  MERMAID_OPTIONS,
-  provideMarkdown,
-} from 'ngx-markdown';
+import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './modules/auth/services/auth.service';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
@@ -89,38 +83,19 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'system',
           cssLayer: false,
         },
-      },
+      },  
     }),
     provideAnimations(),
     provideHttpClient(),
     provideMarkdown({
       sanitize: SecurityContext.NONE,
-      markedOptions: {
-        provide: MARKED_OPTIONS,
-        useFactory: () => {
-          const renderer = new MarkedRenderer();
-          renderer.code = ({ text, lang }) => {
-            return `<pre><code class="language-${lang}">${text}</code></pre>`;
-          };
-
-          return {
-            renderer,
-            gfm: true,
-            breaks: true,
-            pedantic: false,
-            smartLists: true,
-            smartypants: false,
-          } as MarkedOptions;
-        },
-      },
       mermaidOptions: {
+        
         provide: MERMAID_OPTIONS,
         useValue: {
           darkMode: false,
           look: 'classic',
-          theme: 'default',
         },
-        
       },
     }),
     AuthService,
