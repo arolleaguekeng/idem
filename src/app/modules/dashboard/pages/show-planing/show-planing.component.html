@@ -23,7 +23,7 @@
           <markdown
             class="variable-binding"
             [data]="
-              project()!.analysisResultModel.planning.feasibilityStudy.content
+              project.analysisResultModel.planning.feasibilityStudy.content
             "
           ></markdown>
         </p>
@@ -53,8 +53,7 @@
         <markdown
           class="variable-binding"
           [data]="
-            project()!.analysisResultModel.planning.requirementsGathering
-              .content
+            project.analysisResultModel.planning.requirementsGathering.content
           "
         ></markdown>
       </p-accordion-content>
@@ -80,7 +79,7 @@
       <p-accordion-content>
         <markdown
           class="variable-binding"
-          [data]="project()!.analysisResultModel.planning.riskanalysis.content"
+          [data]="project.analysisResultModel.planning.riskanalysis.content"
         ></markdown>
       </p-accordion-content>
     </p-accordion-panel>
@@ -105,9 +104,7 @@
       <p-accordion-content>
         <markdown
           class="variable-binding"
-          [data]="
-            project()!.analysisResultModel.planning.smartObjectives.content
-          "
+          [data]="project.analysisResultModel.planning.smartObjectives.content"
         ></markdown>
       </p-accordion-content>
     </p-accordion-panel>
@@ -133,7 +130,7 @@
         <markdown
           class="variable-binding"
           [data]="
-            project()!.analysisResultModel.planning.stakeholdersMeeting.content
+            project.analysisResultModel.planning.stakeholdersMeeting.content
           "
         ></markdown>
       </p-accordion-content>
@@ -159,9 +156,7 @@
       <p-accordion-content>
         <markdown
           class="variable-binding"
-          [data]="
-            project()!.analysisResultModel.planning.useCaseModeling.content
-          "
+          [data]="project.analysisResultModel.planning.useCaseModeling.content"
         ></markdown>
       </p-accordion-content>
     </p-accordion-panel>
