@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { ProjectModel } from '../../models/project.model';
