@@ -33,7 +33,7 @@ export const routes: Routes = [
 
   // Layout dashboard (avec navbar spécifique)
   {
-    path: '',
+    path: 'console',
     loadComponent: () =>
       import('./layouts/dashboard-layout/dashboard-layout.component').then(
         (m) => m.DashboardLayoutComponent
@@ -47,12 +47,62 @@ export const routes: Routes = [
           ).then((m) => m.CreateProjectComponent),
       },
       {
+        path: 'dashboard',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/dashboard/dashboard.component'
+          ).then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'branding/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-branding/show-branding.component'
+          ).then((m) => m.ShowBrandingComponent),
+      },
+      {
+        path: 'planing/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-planing/show-planing.component'
+          ).then((m) => m.ShowPlaningComponent),
+      },
+      {
+        path: 'diagrams/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-diagrams/show-diagrams.component'
+          ).then((m) => m.ShowDiagramsComponent),
+      },
+      {
+        path: 'landing/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-landing/show-landing.component'
+          ).then((m) => m.ShowLandingComponent),
+      },
+      {
+        path: 'tests/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-tests/show-tests.component'
+          ).then((m) => m.ShowTestsComponent),
+      },
+      {
+        path: 'developement/:id',
+        loadComponent: () =>
+          import(
+            './modules/dashboard/pages/show-development/show-development.component'
+          ).then((m) => m.ShowDevelopmentComponent),
+      },
+      {
         path: 'project/editor/:id',
         loadComponent: () =>
           import(
             './modules/dashboard/pages/project-editor/project-editor.component'
           ).then((m) => m.ProjectEditorComponent),
       },
+      { path: '**', redirectTo: 'dashboard' },
     ],
   },
 
