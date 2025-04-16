@@ -14,7 +14,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import { ProjectModel } from '../models/project.model';
 import { Auth, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,11 +26,10 @@ export class ProjectService implements OnInit {
   user$ = this.auth.user$;
   userSubscription: Subscription;
   router = inject(Router);
+
   constructor(private firestore: Firestore) {
     this.userSubscription = this.user$.subscribe((user: User | null) => {
-      //handle idToken changes here. Note, that user will be null if there is no currently logged in user.
       this.currentUser = user;
-      console.log('subssssss', user);
     });
   }
   ngOnInit(): void {
@@ -67,7 +66,13 @@ export class ProjectService implements OnInit {
   }
 
   async getAllUserProjects(): Promise<ProjectModel[]> {
-    if (!this.currentUser) return [];
+    const user = await this.auth.user$.pipe(first()).toPromise();
+    this.currentUser = user;
+
+    if (!this.currentUser) {
+      console.log('Utilisateur non connecté');
+      return [];
+    }
 
     try {
       const projectsCollectionRef = collection(
@@ -76,6 +81,7 @@ export class ProjectService implements OnInit {
       );
 
       const querySnapshot = await getDocs(projectsCollectionRef);
+      console.log('pjts', querySnapshot.docs);
       return querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

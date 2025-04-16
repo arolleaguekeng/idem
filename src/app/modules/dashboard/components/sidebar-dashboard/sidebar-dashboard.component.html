@@ -18,6 +18,18 @@
         </a>
       </div>
 
+      @if (isLoading()) {}@else {
+      <div class="w-[300px] z-50 fixed left-64 h-[30px]">
+        <p-select
+          [options]="dropDownProjects"
+          (onChange)="onProjectChange($event)"
+          placeholder="Choisir une portée"
+          [editable]="false"
+          optionLabel="name"
+          styleClass=" w-full input"
+        />
+      </div>
+      }
 
       <!-- Bouton de connexion (visible sur desktop) -->
       <div class="hidden md:flex items-center relative z-50">

@@ -74,8 +74,6 @@ export class ShowBrandingComponent {
       if (!project.analysisResultModel) {
         project.analysisResultModel = this.analis as AnalysisResultModel;
       }
-      this.project = project;
-      console.log('project', this.project);
       if (project.selectedPhases.includes('branding')) {
         if (!this.project.analysisResultModel.branding) {
           const brand =
@@ -89,8 +87,6 @@ export class ShowBrandingComponent {
           await this.projectService.editUserProject(this.id, this.project);
         }
         this.isBrandingLoaded.set(false);
-      }
-      for (let phase in this.project.selectedPhases) {
       }
     } catch (error) {
       console.error(

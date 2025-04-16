@@ -6,19 +6,26 @@ import {
   inject,
   ViewChild,
   OnInit,
+  signal,
 } from '@angular/core';
-import { Router } from 'express';
 import { MenuItem } from 'primeng/api';
 import { PanelMenu } from 'primeng/panelmenu';
 import { AuthService } from '../../../auth/services/auth.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Select, SelectChangeEvent } from 'primeng/select';
+import { ProjectService } from '../../services/project.service';
+import { ProjectModel } from '../../models/project.model';
+import { SelectElement } from '../../pages/create-project/datas';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar-dashboard',
   templateUrl: './sidebar-dashboard.component.html',
   styleUrls: ['./sidebar-dashboard.component.css'],
-  imports: [PanelMenu, AsyncPipe],
+  standalone: true,
+  imports: [PanelMenu, AsyncPipe, Select, CommonModule, FormsModule],
   animations: [
     trigger('slideInOut', [
       transition(':enter', [
@@ -34,108 +41,102 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 export class SidebarDashboardComponent implements OnInit {
   items: MenuItem[] = [];
+  userProjects: ProjectModel[] = [];
+  dropDownProjects: SelectElement[] = [];
+  selectedProject: SelectElement | undefined;
+  isLoading = signal(true);
 
-  ngOnInit() {
+  auth = inject(AuthService);
+  projectService = inject(ProjectService);
+  router = inject(Router);
+
+  user$ = this.auth.user$;
+  isMenuOpen = false;
+  isDropdownOpen = false;
+
+  @ViewChild('menu') menuRef!: ElementRef;
+
+  async ngOnInit() {
+    this.userProjects = await this.projectService.getAllUserProjects();
+
+    this.dropDownProjects = this.userProjects.map((project) => ({
+      name: project.name,
+      code: project.id!,
+    }));
+
+    this.isLoading.set(false);
+
+    if (this.dropDownProjects.length > 0) {
+      this.selectedProject = this.dropDownProjects[0];
+      this.updateSidebarRoutes();
+    }
+  }
+
+  onProjectChange(event: SelectChangeEvent) {
+    const selected = event.value as SelectElement;
+    this.selectedProject = selected;
+    console.log('Projet sélectionné :', selected);
+
+    this.updateSidebarRoutes();
+
+    // Redirection automatique vers la page planning du projet sélectionné
+    this.router.navigate([`planning/${selected.code}`]);
+  }
+
+  updateSidebarRoutes() {
     this.items = [
       {
         label: 'Planning',
         icon: 'pi pi-calendar',
-        items: [
-          {
-            label: 'Roadmap',
-            icon: 'pi pi-map',
-            routerLink: ['/planning/roadmap'],
-          },
-          {
-            label: 'Meetings',
-            icon: 'pi pi-users',
-            routerLink: ['/planning/meetings'],
-          },
-        ],
+        routerLink: [`planing/${this.selectedProject?.code}`],
       },
       {
         label: 'Branding',
         icon: 'pi pi-star',
-        items: [
-          {
-            label: 'Logo',
-            icon: 'pi pi-image',
-            routerLink: ['/branding/logo'],
-          },
-          {
-            label: 'Guidelines',
-            icon: 'pi pi-book',
-            routerLink: ['/branding/guidelines'],
-          },
-        ],
+        routerLink: [`branding/${this.selectedProject?.code}`],
       },
       {
-        label: 'Design',
+        label: 'Diagrams',
         icon: 'pi pi-palette',
-        items: [
-          {
-            label: 'Mockups',
-            icon: 'pi pi-desktop',
-            routerLink: ['/design/mockups'],
-          },
-          {
-            label: 'Components',
-            icon: 'pi pi-cog',
-            routerLink: ['/design/components'],
-          },
-        ],
+        routerLink: [`diagrams/${this.selectedProject?.code}`],
       },
       {
         label: 'Development',
         icon: 'pi pi-code',
-        items: [
-          { label: 'API', icon: 'pi pi-server', routerLink: ['/dev/api'] },
-          {
-            label: 'Frontend',
-            icon: 'pi pi-desktop',
-            routerLink: ['/dev/frontend'],
-          },
-        ],
+        routerLink: [`developement/${this.selectedProject?.code}`],
       },
       {
         label: 'Landing Page',
         icon: 'pi pi-globe',
-        items: [
-          {
-            label: 'Hero Section',
-            icon: 'pi pi-bolt',
-            routerLink: ['/landing/hero'],
-          },
-          {
-            label: 'Contact',
-            icon: 'pi pi-envelope',
-            routerLink: ['/landing/contact'],
-          },
-        ],
+        routerLink: [`landing/${this.selectedProject?.code}`],
       },
       {
         label: 'Tests',
         icon: 'pi pi-check-square',
-        items: [
-          {
-            label: 'Unit Tests',
-            icon: 'pi pi-list',
-            routerLink: ['/tests/unit'],
-          },
-          { label: 'E2E', icon: 'pi pi-sitemap', routerLink: ['/tests/e2e'] },
-        ],
+        routerLink: [`tests/${this.selectedProject?.code}`],
       },
     ];
   }
 
-  auth = inject(AuthService);
-  isMenuOpen = false;
-  user$ = this.auth.user$;
-
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
-  @ViewChild('menu') menuRef!: ElementRef;
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  navigateTo(path: string) {
+    this.isDropdownOpen = false;
+    this.router.navigate([`/${path}`]);
+  }
+
+  logout() {
+    this.isDropdownOpen = false;
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
     if (
@@ -146,25 +147,7 @@ export class SidebarDashboardComponent implements OnInit {
       this.isMenuOpen = false;
     }
   }
-  isDropdownOpen = false;
-  // router = inject(Router);
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
-
-  navigateTo(path: string) {
-    this.isDropdownOpen = false;
-    // this.router.navigate([`/${path}`]);
-  }
-
-  logout() {
-    this.isDropdownOpen = false;
-    this.auth.logout();
-    // this.router.navigate(['/login']);
-  }
-
-  // Ferme le dropdown quand on clique en dehors
   @HostListener('document:click', ['$event'])
   closeDropdown(event: Event) {
     if (!(event.target as HTMLElement).closest('.relative')) {
