@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProjectModel } from '../../models/project.model';
 import { inject } from '@angular/core';
-import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning/first-phase-main.service';
 import { Checkbox } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -22,8 +21,11 @@ import { FloatLabel } from 'primeng/floatlabel';
     Checkbox,
     CommonModule,
     MultiSelectModule,
-    Select,FormsModule, InputTextModule, FloatLabel,
-    
+    Select,
+    FormsModule,
+    InputTextModule,
+    FloatLabel,
+
     LoaderComponent,
   ],
   templateUrl: './create-project.component.html',
@@ -39,9 +41,13 @@ export class CreateProjectComponent {
 
   projectService = inject(ProjectService);
   router = inject(Router);
-  isLoaded = false;
+  isLoaded = signal(false);
   showResults = false;
   selectedConstraints: SelectElement[] = [];
+
+  isFirstStep = signal(true);
+  isSecondStep = signal(false);
+  isThirdStep = signal(false);
 
   selectedTeamSize: SelectElement | undefined;
   selectedTarget: SelectElement | undefined;
@@ -58,39 +64,19 @@ export class CreateProjectComponent {
   phases: DevelopmentPhase[] = CreateProjectDatas.phases;
   markdown = '';
   constructor() {}
-  // analysisResult: AnalysisResultModel = {
-  //   planning: {
-  //     feasibilityStudy: { content: '', summary: '' },
-  //     riskanalysis: { content: '', summary: '' },
-  //     requirementsGathering: { content: '', summary: '' },
-  //     smartObjectives: { content: '', summary: '' },
-  //     stakeholdersMeeting: { content: '', summary: '' },
-  //     useCaseModeling: { content: '', summary: '' },
-  //   },
-  //   architectures: [],
-  //   design: [],
-  //   development: '',
-  //   branding: {
-  //     brandDefinition: { content: '', summary: '' },
-  //     toneOfVoice: { content: '', summary: '' },
-  //     visualIdentityGuidelines: { content: '', summary: '' },
-  //     typographySystem: { content: '', summary: '' },
-  //     colorSystem: { content: '', summary: '' },
-  //     iconographyAndImagery: { content: '', summary: '' },
-  //     layoutAndComposition: { content: '', summary: '' },
-  //     summary: { content: '', summary: '' },
-  //     logo: {
-  //       svg: '',
-  //       summary: '',
-  //       concept: '',
-  //       colors: [],
-  //       fonts: [],
-  //     },
-  //   },
-  //   landing: '',
-  //   testing: '',
-  //   createdAt: new Date(Date.now()),
-  // };
+  @ViewChild('projectDescription') projectDescription!: ElementRef;
+  @ViewChild('projectDetails') projectDetails!: ElementRef;
+  @ViewChild('selectFeatures') selectFeatures!: ElementRef;
+
+  scrollToSection(section: ElementRef) {
+    if (section && section.nativeElement) {
+      section.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        this.isLoaded.set(false);
+      }, 800);
+    }
+  }
+
   ngOnInit(): void {
     console.log('project', this.project);
   }
@@ -106,27 +92,24 @@ export class CreateProjectComponent {
   generateSelectedPhases() {
     try {
       this.project.selectedPhases = this.selectedPhases;
-      // this.project.analysisResultModel = this.analysisResult;
       this.projectService.createUserProject(this.project).then((projectId) => {
         this.router.navigate([`/project/editor/${projectId}`]);
       });
     } catch (e) {
       console.error('error', e);
-      this.isLoaded = false;
+      this.isLoaded.set(false);
     } finally {
-      this.isLoaded = false;
+      this.isLoaded.set(false);
     }
   }
   visible: boolean = false;
-  showDialog() {
+  analizeProject() {
     console.log('Project: ', this.project);
     this.visible = true;
-    this.isLoaded = false;
-    this.showResults = true;
-  }
+    this.isLoaded.set(false);
+    this.isThirdStep.set(true);
 
-  generateScripts(architecture: string) {
-    alert(`Scripts générés pour l'architecture ${architecture}`);
+    this.scrollToSection(this.selectFeatures);
   }
 
   selectedPhases: string[] = [];
@@ -135,6 +118,22 @@ export class CreateProjectComponent {
     this.selectedPhases = isChecked
       ? [...this.selectedPhases, phaseId]
       : this.selectedPhases.filter((id) => id !== phaseId);
+  }
+
+  gotToNextStep() {
+    this.isFirstStep.set(false);
+    this.isSecondStep.set(true);
+    this.isLoaded.set(true);
+
+    setTimeout(() => {
+      this.isLoaded.set(false);
+    }, 500);
+
+    setTimeout(() => {
+      this.scrollToSection(this.projectDetails);
+    }, 500);
+
+    this.isFirstStep.set(true);
   }
 
   onCheckboxChange(phaseId: string, event: any): void {

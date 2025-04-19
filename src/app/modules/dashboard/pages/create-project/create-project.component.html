@@ -1,9 +1,12 @@
-@if (isLoaded) {
-<div class="h-screen w-full flex items-center justify-center">
-  <app-loader />
-</div>
-} @else {
-<section class="h-[93vh] p-4 flex flex-col items-center justify-center w-full">
+<div [class.no-scroll]="isFirstStep()">
+  @if (isLoaded() == true) {
+  <div class="h-screen w-full flex items-center justify-center">
+    <app-loader />
+  </div>
+  } <section
+  class="h-[93vh] p-4 flex flex-col items-center justify-center w-full"
+  #projectDescription
+>
   <h1
     class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
   >
@@ -16,7 +19,7 @@
     <textarea
       id="projectDescription"
       [(ngModel)]="project.description"
-      rows="1"
+      rows="4"
       class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-lg resize-none overflow-y-auto max-h-[400px]"
       placeholder="Message Lexi"
       (input)="autoResize($event)"
@@ -43,6 +46,7 @@
         <i class="pi pi-paperclip text-gray-400 text-xl cursor-pointer"></i>
         <button
           class="flex items-center justify-center w-8 h-8 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400"
+          (click)="gotToNextStep()"
         >
           <i class="pi pi-arrow-up"></i>
         </button>
@@ -50,9 +54,10 @@
     </div>
   </div>
 </section>
-
+@if (true) {
 <section
   class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
+  #projectDetails
 >
   <h1
     class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
@@ -60,7 +65,9 @@
     Before continues, we need more informations of your project
   </h1>
   <div class="max-w-3xl mx-auto p-6 w-full">
-    <h2 class="text-xl font-semibold text-gray-100 mb-4">Détails du Projet</h2>
+    <h2 class="text-xl font-semibold text-gray-100 mb-4">
+      Détails du Projet
+    </h2>
 
     <div class="mb-4 w-full">
       <p-floatlabel variant="in">
@@ -194,14 +201,17 @@
       </div>
     </div>
     <div class="flex w-full justify-end">
-      <button (click)="showDialog()" class="inner-button">
+      <button (click)="analizeProject()" class="inner-button">
         Analyser le Projet
       </button>
     </div>
   </div>
 </section>
-@if (showResults) {
-<section class="md:h-screen flex flex-col items-center justify-center w-full">
+} @if (true) {
+<section
+  class="md:h-screen flex flex-col items-center justify-center w-full"
+  #selectFeatures
+>
   <h1
     class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
   >
@@ -232,8 +242,8 @@
             <span
               class="text-xs px-2 py-1 rounded-full ml-2"
               [ngClass]="{
-                'bg-primary font-semibold text-white': phase.tier === 'free',
-              }"
+                  'bg-primary font-semibold text-white': phase.tier === 'free',
+                }"
             >
               @if (phase.tier === 'free') {
               {{ phase.tier | uppercase }}
@@ -268,4 +278,5 @@
     </div>
   </div>
 </section>
-} }
+}
+</div>
