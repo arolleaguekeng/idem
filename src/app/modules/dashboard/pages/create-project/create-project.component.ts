@@ -77,14 +77,17 @@ export class CreateProjectComponent {
     }
   }
 
+  allowScroll(): void {
+    document.body.style.overflow = '';
+  }
   ngOnInit(): void {
     console.log('project', this.project);
+    document.body.style.overflow = 'hidden';
   }
   autoResize(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
 
-    // Vérifie si la hauteur dépasse 400px
     const newHeight = Math.min(textarea.scrollHeight, 400);
     textarea.style.height = newHeight + 'px';
   }
@@ -103,13 +106,14 @@ export class CreateProjectComponent {
     }
   }
   visible: boolean = false;
-  analizeProject() {
+  goToThirdStape() {
     console.log('Project: ', this.project);
     this.visible = true;
     this.isLoaded.set(false);
     this.isThirdStep.set(true);
 
     this.scrollToSection(this.selectFeatures);
+    // this.allowScroll();
   }
 
   selectedPhases: string[] = [];
@@ -120,7 +124,7 @@ export class CreateProjectComponent {
       : this.selectedPhases.filter((id) => id !== phaseId);
   }
 
-  gotToNextStep() {
+  gotToSecondStep() {
     this.isFirstStep.set(false);
     this.isSecondStep.set(true);
     this.isLoaded.set(true);
@@ -134,6 +138,20 @@ export class CreateProjectComponent {
     }, 500);
 
     this.isFirstStep.set(true);
+  }
+
+  gotToFirstStape() {
+    this.isFirstStep.set(true);
+    this.isSecondStep.set(false);
+    this.isLoaded.set(true);
+
+    setTimeout(() => {
+      this.isLoaded.set(false);
+    }, 500);
+
+    setTimeout(() => {
+      this.scrollToSection(this.projectDescription);
+    }, 500);
   }
 
   onCheckboxChange(phaseId: string, event: any): void {

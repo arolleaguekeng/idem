@@ -1,167 +1,134 @@
-<div [class.no-scroll]="isFirstStep()">
+<div>
   @if (isLoaded() == true) {
   <div class="h-screen w-full flex items-center justify-center">
     <app-loader />
   </div>
-  } <section
-  class="h-[93vh] p-4 flex flex-col items-center justify-center w-full"
-  #projectDescription
->
-  <h1
-    class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
+  }
+  <section
+    class="h-[93vh] p-4 flex flex-col items-center justify-center w-full"
+    #projectDescription
   >
-    DESCRIBE YOUR PROJECT
-  </h1>
-  <div
-    class="bg-gray-700 rounded-2xl px-4 py-2 w-full sm:min-w-[500px] sm:max-w-[750px]"
-  >
-    <!-- Zone de saisie -->
-    <textarea
-      id="projectDescription"
-      [(ngModel)]="project.description"
-      rows="4"
-      class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-lg resize-none overflow-y-auto max-h-[400px]"
-      placeholder="Message Lexi"
-      (input)="autoResize($event)"
-    ></textarea>
+    <h1
+      class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
+    >
+      DESCRIBE YOUR PROJECT
+    </h1>
+    <div
+      class="bg-gray-700 rounded-2xl px-4 py-2 w-full sm:min-w-[500px] sm:max-w-[750px]"
+    >
+      <!-- Zone de saisie -->
+      <textarea
+        id="projectDescription"
+        [(ngModel)]="project.description"
+        rows="4"
+        class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-lg resize-none overflow-y-auto max-h-[400px]"
+        placeholder="Message Lexi"
+        (input)="autoResize($event)"
+      ></textarea>
 
-    <!-- Boutons en bas -->
-    <div class="flex justify-between items-center mt-2">
-      <!-- Boutons à gauche -->
-      <div class="flex space-x-2">
-        <button
-          class="flex items-center bg-gray-600 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-500"
-        >
-          <i class="pi pi-brain mr-2"></i> Reformuler
-        </button>
-        <button
-          class="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500"
-        >
-          <i class="pi pi-globe mr-2"></i> Corriger
-        </button>
-      </div>
+      <!-- Boutons en bas -->
+      <div class="flex justify-between items-center mt-2">
+        <!-- Boutons à gauche -->
+        <div class="flex space-x-2">
+          <button
+            class="flex items-center bg-gray-600 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-500"
+          >
+            <i class="pi pi-brain mr-2"></i> Reformuler
+          </button>
+          <button
+            class="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500"
+          >
+            <i class="pi pi-globe mr-2"></i> Corriger
+          </button>
+        </div>
 
-      <!-- Icônes à droite -->
-      <div class="flex items-center space-x-3">
-        <i class="pi pi-paperclip text-gray-400 text-xl cursor-pointer"></i>
-        <button
-          class="flex items-center justify-center w-8 h-8 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400"
-          (click)="gotToNextStep()"
-        >
-          <i class="pi pi-arrow-up"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-@if (true) {
-<section
-  class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
-  #projectDetails
->
-  <h1
-    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
-  >
-    Before continues, we need more informations of your project
-  </h1>
-  <div class="max-w-3xl mx-auto p-6 w-full">
-    <h2 class="text-xl font-semibold text-gray-100 mb-4">
-      Détails du Projet
-    </h2>
-
-    <div class="mb-4 w-full">
-      <p-floatlabel variant="in">
-        <input
-          pInputText
-          id="in_label"
-          [(ngModel)]="project.name"
-          autocomplete="off"
-          class="w-full input"
-        />
-        <label for="in_label">Project Name</label>
-      </p-floatlabel>
-    </div>
-
-    <div class="mb-4">
-      <label for="projectType" class="block text-sm font-medium">
-        Type de Projet
-      </label>
-      <div class="card flex justify-start w-full">
-        <p-select
-          [options]="groupedProjectTypes"
-          [(ngModel)]="project.type"
-          placeholder="Selectioner un type"
-          [editable]="false"
-          optionLabel="name"
-          styleClass=" w-full input"
-        />
+        <!-- Icônes à droite -->
+        <div class="flex items-center space-x-3">
+          <i class="pi pi-paperclip text-gray-400 text-xl cursor-pointer"></i>
+          <button
+            class="flex items-center justify-center w-8 h-8 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400"
+            (click)="gotToSecondStep()"
+          >
+            <i class="pi pi-arrow-up"></i>
+          </button>
+        </div>
       </div>
     </div>
+  </section>
+  @if (true) {
+  <section
+    class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
+    #projectDetails
+  >
+    <h1
+      class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+    >
+      Before continues, we need more informations of your project
+    </h1>
+    <div class="max-w-3xl mx-auto p-6 w-full">
+      <h2 class="text-xl font-semibold text-gray-100 mb-4">
+        Détails du Projet
+      </h2>
 
-    <h2 class="text-xl font-semibold text-gray-100 mb-4">
-      Options de planification
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4 w-full">
+        <p-floatlabel variant="in">
+          <input
+            pInputText
+            id="in_label"
+            [(ngModel)]="project.name"
+            autocomplete="off"
+            class="w-full input"
+          />
+          <label for="in_label">Project Name</label>
+        </p-floatlabel>
+      </div>
+
       <div class="mb-4">
-        <label for="teamSize" class="block text-sm font-medium">
-          Taille de l'Équipe
+        <label for="projectType" class="block text-sm font-medium">
+          Type de Projet
         </label>
         <div class="card flex justify-start w-full">
           <p-select
-            [options]="groupedTeamSizes"
-            [(ngModel)]="project.teamSize"
-            placeholder="Select a City"
-            [editable]="true"
+            [options]="groupedProjectTypes"
+            [(ngModel)]="project.type"
+            placeholder="Selectioner un type"
+            [editable]="false"
             optionLabel="name"
             styleClass=" w-full input"
           />
         </div>
       </div>
 
-      <div class="mb-4">
-        <label for="projectScope" class="block text-sm font-medium">
-          Portée du Projet
-        </label>
-
-        <div class="card flex justify-start w-full">
-          <p-select
-            [options]="groupedScopes"
-            [(ngModel)]="project.scope"
-            placeholder="Choisir une portée"
-            [editable]="true"
-            optionLabel="name"
-            styleClass=" w-full input"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="mb-4">
-        <label for="projectBudget" class="block text-sm font-medium">
-          Budget du Projet
-        </label>
-        <div class="card flex justify-start w-full">
-          <p-select
-            [options]="groupedBudgets"
-            [(ngModel)]="project.budgetIntervals"
-            placeholder="Choisir une budget"
-            [editable]="true"
-            optionLabel="name"
-            styleClass=" w-full input"
-          />
-        </div>
-      </div>
-      <div class="mb-4">
-        <label for="projectTargets" class="block text-sm font-medium">
-          Cible principale du Projet
-        </label>
-        <div class="relative mt-1 rounded-md shadow-sm">
+      <h2 class="text-xl font-semibold text-gray-100 mb-4">
+        Options de planification
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="teamSize" class="block text-sm font-medium">
+            Taille de l'Équipe
+          </label>
           <div class="card flex justify-start w-full">
             <p-select
-              [options]="groupedTargets"
-              [(ngModel)]="project.targets"
-              placeholder="Choisir une cible"
+              [options]="groupedTeamSizes"
+              [(ngModel)]="project.teamSize"
+              placeholder="Select a City"
+              [editable]="true"
+              optionLabel="name"
+              styleClass=" w-full input"
+            />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="projectScope" class="block text-sm font-medium">
+            Portée du Projet
+          </label>
+
+          <div class="card flex justify-start w-full">
+            <p-select
+              [options]="groupedScopes"
+              [(ngModel)]="project.scope"
+              placeholder="Choisir une portée"
               [editable]="true"
               optionLabel="name"
               styleClass=" w-full input"
@@ -169,114 +136,151 @@
           </div>
         </div>
       </div>
-      <div>
-        <label class="block text-sm font-medium">
-          Contraintes Techniques
-        </label>
-        <div class="flex justify-start w-full">
-          <div class="card flex justify-center w-full">
-            <p-multiselect
-              [options]="groupedConstraints"
-              [group]="true"
-              [(ngModel)]="selectedConstraints"
-              placeholder="Choisir des Contraintes"
-              (onChange)="onConstraintsChange()"
-              scrollHeight="350px"
-              display="chip"
-              styleClass=" w-full input"
-            >
-              <ng-template let-group #group>
-                <div class="flex items-center">
-                  <img
-                    src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                    [class]="'mr-2 flag flag-' + group.value"
-                    style="width: 20px"
-                  />
-                  <span class="font-bold">{{ group.label }}</span>
-                </div>
-              </ng-template>
-            </p-multiselect>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex w-full justify-end">
-      <button (click)="analizeProject()" class="inner-button">
-        Analyser le Projet
-      </button>
-    </div>
-  </div>
-</section>
-} @if (true) {
-<section
-  class="md:h-screen flex flex-col items-center justify-center w-full"
-  #selectFeatures
->
-  <h1
-    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
-  >
-    Nice ! Now Select what you need yo generate !
-  </h1>
 
-  <div class="card flex justify-center">
-    <div class="max-w-3xl mx-auto p-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @for (phase of phases; track $index) {
-        <div
-          class="p-4 border border-gray-500 rounded-lg hover:shadow-3xl hover:shadow-red hover:bg-gray-900 transition-all cursor-pointer"
-          [class.border-primary]="selectedPhases.includes(phase.id)"
-          (click)="togglePhase(phase.id, !selectedPhases.includes(phase.id))"
-        >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <p-checkbox
-                [value]="phase.id"
-                [(ngModel)]="selectedPhases"
-                inputId="{{ phase.id }}"
-                styleClass="bg-red h-[200px] accent-pink-500"
-                class="accent-pink-500"
-                (onChange)="onCheckboxChange(phase.id, $event)"
-              ></p-checkbox>
-              <span class="ml-2 font-bold">{{ phase.label }}</span>
-            </div>
-            <span
-              class="text-xs px-2 py-1 rounded-full ml-2"
-              [ngClass]="{
-                  'bg-primary font-semibold text-white': phase.tier === 'free',
-                }"
-            >
-              @if (phase.tier === 'free') {
-              {{ phase.tier | uppercase }}
-              } @else {
-              <i class="pi pi-crown text-orange-500"></i>
-
-              }
-            </span>
+        <div class="mb-4">
+          <label for="projectBudget" class="block text-sm font-medium">
+            Budget du Projet
+          </label>
+          <div class="card flex justify-start w-full">
+            <p-select
+              [options]="groupedBudgets"
+              [(ngModel)]="project.budgetIntervals"
+              placeholder="Choisir une budget"
+              [editable]="true"
+              optionLabel="name"
+              styleClass=" w-full input"
+            />
           </div>
-
-          <ul class="mt-2 text-sm text-gray-300 pl-6 list-disc">
-            @for (item of phase.subItems; track $index) {
-            <li class="flex items-center">
-              {{ item.label }}
-            </li>
-            }
-          </ul>
         </div>
-        }
+        <div class="mb-4">
+          <label for="projectTargets" class="block text-sm font-medium">
+            Cible principale du Projet
+          </label>
+          <div class="relative mt-1 rounded-md shadow-sm">
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedTargets"
+                [(ngModel)]="project.targets"
+                placeholder="Choisir une cible"
+                [editable]="true"
+                optionLabel="name"
+                styleClass=" w-full input"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">
+            Contraintes Techniques
+          </label>
+          <div class="flex justify-start w-full">
+            <div class="card flex justify-center w-full">
+              <p-multiselect
+                [options]="groupedConstraints"
+                [group]="true"
+                [(ngModel)]="selectedConstraints"
+                placeholder="Choisir des Contraintes"
+                (onChange)="onConstraintsChange()"
+                scrollHeight="350px"
+                display="chip"
+                styleClass=" w-full input"
+              >
+                <ng-template let-group #group>
+                  <div class="flex items-center">
+                    <img
+                      src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                      [class]="'mr-2 flag flag-' + group.value"
+                      style="width: 20px"
+                    />
+                    <span class="font-bold">{{ group.label }}</span>
+                  </div>
+                </ng-template>
+              </p-multiselect>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="flex justify-end mt-6">
-        <button
-          label="Générer les Artéfacts"
-          class="inner-button"
-          (click)="generateSelectedPhases()"
-          [disabled]="selectedPhases.length === 0"
-        >
-          GENERER LES ARTEFACTS
+      <div class="flex w-full justify-end gap-4">
+        <button (click)="gotToFirstStape()" class="outer-button">Preview</button>
+        <button (click)="goToThirdStape()" class="inner-button">
+          Analyse Project
         </button>
       </div>
     </div>
-  </div>
-</section>
-}
+  </section>
+  } @if (true) {
+  <section
+    class="md:h-screen flex flex-col items-center justify-center w-full"
+    #selectFeatures
+  >
+    <h1
+      class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+    >
+      Nice ! Now Select what you need yo generate !
+    </h1>
+
+    <div class="card flex justify-center">
+      <div class="max-w-3xl mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          @for (phase of phases; track $index) {
+          <div
+            class="p-4 border border-gray-500 rounded-lg hover:shadow-3xl hover:shadow-red hover:bg-gray-900 transition-all cursor-pointer"
+            [class.border-primary]="selectedPhases.includes(phase.id)"
+            (click)="togglePhase(phase.id, !selectedPhases.includes(phase.id))"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <p-checkbox
+                  [value]="phase.id"
+                  [(ngModel)]="selectedPhases"
+                  inputId="{{ phase.id }}"
+                  styleClass="bg-red h-[200px] accent-pink-500"
+                  class="accent-pink-500"
+                  (onChange)="onCheckboxChange(phase.id, $event)"
+                ></p-checkbox>
+                <span class="ml-2 font-bold">{{ phase.label }}</span>
+              </div>
+              <span
+                class="text-xs px-2 py-1 rounded-full ml-2"
+                [ngClass]="{
+                  'bg-primary font-semibold text-white': phase.tier === 'free',
+                }"
+              >
+                @if (phase.tier === 'free') {
+                {{ phase.tier | uppercase }}
+                } @else {
+                <i class="pi pi-crown text-orange-500"></i>
+
+                }
+              </span>
+            </div>
+
+            <ul class="mt-2 text-sm text-gray-300 pl-6 list-disc">
+              @for (item of phase.subItems; track $index) {
+              <li class="flex items-center">
+                {{ item.label }}
+              </li>
+              }
+            </ul>
+          </div>
+          }
+        </div>
+
+        <div class="flex justify-end mt-6  gap-4">
+          <button (click)="gotToSecondStep()" class="outer-button">Preview</button>
+
+          <button
+            label="Générer les Artéfacts"
+            class="inner-button"
+            (click)="generateSelectedPhases()"
+            [disabled]="selectedPhases.length === 0"
+          >
+            GENERER LES ARTEFACTS
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  }
 </div>
