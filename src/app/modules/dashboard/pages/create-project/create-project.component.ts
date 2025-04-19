@@ -94,9 +94,10 @@ export class CreateProjectComponent {
 
   generateSelectedPhases() {
     try {
+      this.isLoaded.set(true);
       this.project.selectedPhases = this.selectedPhases;
       this.projectService.createUserProject(this.project).then((projectId) => {
-        this.router.navigate([`/project/editor/${projectId}`]);
+        this.router.navigate([`/console/planing/${projectId}`]);
       });
     } catch (e) {
       console.error('error', e);
