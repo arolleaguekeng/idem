@@ -20,6 +20,7 @@ import { BrandingOrchestratorService } from '../../services/ai-agents/Phase-2-Br
 import { ProjectService } from '../../services/project.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { first } from 'rxjs';
+import { LoaderComponent } from "../../../../components/loader/loader.component";
 
 @Component({
   selector: 'app-show-branding',
@@ -30,7 +31,8 @@ import { first } from 'rxjs';
     AccordionModule,
     AvatarModule,
     BadgeModule,
-  ],
+    LoaderComponent
+],
   templateUrl: './show-branding.component.html',
   styleUrl: './show-branding.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,11 +72,14 @@ export class ShowBrandingComponent {
         console.log('Projet non trouvé');
         return;
       }
+      
 
       if (!project.analysisResultModel) {
         project.analysisResultModel = this.analis as AnalysisResultModel;
       }
+      this.project = project;
       if (project.selectedPhases.includes('branding')) {
+        console.log(this.project);
         if (!this.project.analysisResultModel.branding) {
           const brand =
             await this.brandOrchestratorService.generateFullBranding(

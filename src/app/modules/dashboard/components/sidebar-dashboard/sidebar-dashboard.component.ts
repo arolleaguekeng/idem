@@ -18,7 +18,7 @@ import { ProjectService } from '../../services/project.service';
 import { ProjectModel } from '../../models/project.model';
 import { SelectElement } from '../../pages/create-project/datas';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar-dashboard',
@@ -45,12 +45,12 @@ export class SidebarDashboardComponent implements OnInit {
   dropDownProjects: SelectElement[] = [];
   selectedProject: SelectElement | undefined;
   isLoading = signal(true);
-
+  id = '';
   auth = inject(AuthService);
   user$ = this.auth.user$;
   isMenuOpen = false;
   isDropdownOpen = false;
-
+  route = inject(ActivatedRoute);
   projectService = inject(ProjectService);
   router = inject(Router);
   @ViewChild('menu') menuRef!: ElementRef;
@@ -58,10 +58,23 @@ export class SidebarDashboardComponent implements OnInit {
   async ngOnInit() {
     this.userProjects = await this.projectService.getAllUserProjects();
 
-    if (this.userProjects.length > 0){
+    if (this.userProjects.length > 0) {
       this.selectedProject = {
         name: this.userProjects[0].name,
         code: this.userProjects[0].id!,
+      };
+    }
+
+    this.id = this.route.snapshot.paramMap.get('id')!;
+    if (!this.id) {
+      console.log('ID du projet introuvable');
+    }
+
+    const project = await this.projectService.getUserProjectById(this.id);
+    if (project) {
+      this.selectedProject = {
+        name: project.name,
+        code: project.id!,
       };
     }
 

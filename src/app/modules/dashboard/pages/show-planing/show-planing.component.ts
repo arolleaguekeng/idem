@@ -20,6 +20,7 @@ import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { PlanningModel } from '../../models/planning.model';
+import { LoaderComponent } from "../../../../components/loader/loader.component";
 
 @Component({
   selector: 'app-show-planing',
@@ -30,7 +31,8 @@ import { PlanningModel } from '../../models/planning.model';
     AccordionModule,
     AvatarModule,
     BadgeModule,
-  ],
+    LoaderComponent
+],
   templateUrl: './show-planing.component.html',
   styleUrl: './show-planing.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

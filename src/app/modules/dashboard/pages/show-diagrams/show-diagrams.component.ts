@@ -21,6 +21,7 @@ import { DiagramModel } from '../../models/diagram.model';
 import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
+import { LoaderComponent } from "../../../../components/loader/loader.component";
 
 @Component({
   selector: 'app-show-diagrams',
@@ -31,7 +32,8 @@ import { first } from 'rxjs';
     AccordionModule,
     AvatarModule,
     BadgeModule,
-  ],
+    LoaderComponent
+],
   templateUrl: './show-diagrams.component.html',
   styleUrl: './show-diagrams.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

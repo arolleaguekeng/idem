@@ -1,4 +1,10 @@
+@if(isDesignLoaded()){
+<div class="w-full h-screen flex flex-col items-center justify-center">
+  <app-loader />
+</div>
+}@else {
 <markdown
   mermaid
   [data]="project.analysisResultModel.design[0].code"
 ></markdown>
+}

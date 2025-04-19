@@ -1,9 +1,16 @@
+@if(isBrandingLoaded()){
+<div class="w-full h-screen flex flex-col items-center justify-center">
+  <app-loader />
+</div>
+}@else {
 <div class="p-14">
-  <markdown
+  <div class="w-[100px]">
+    <markdown
     katex
     class="variable-binding w-[100px]"
     [data]="project.analysisResultModel.branding.logo.svg"
   ></markdown>
+  </div>
   <markdown
     html
     class="variable-binding"
@@ -47,3 +54,4 @@
     "
   ></markdown>
 </div>
+}

@@ -41,14 +41,7 @@ export const routes: Routes = [
       ),
     children: [
       {
-        path: 'project/create',
-        loadComponent: () =>
-          import(
-            './modules/dashboard/pages/create-project/create-project.component'
-          ).then((m) => m.CreateProjectComponent),
-      },
-      {
-        path: 'dashboard',
+        path: 'dashboard/:id',
         loadComponent: () =>
           import(
             './modules/dashboard/pages/dashboard/dashboard.component'
@@ -103,12 +96,19 @@ export const routes: Routes = [
             './modules/dashboard/pages/project-editor/project-editor.component'
           ).then((m) => m.ProjectEditorComponent),
       },
-      { path: '**', redirectTo: 'dashboard' },
+      { path: '**', redirectTo: '/projects' },
     ],
   },
 
   // Redirection par défaut
   { path: 'projects', component: ProjectsListComponent },
+  {
+    path: 'project/create',
+    loadComponent: () =>
+      import(
+        './modules/dashboard/pages/create-project/create-project.component'
+      ).then((m) => m.CreateProjectComponent),
+  },
 
   { path: '**', redirectTo: 'home' },
 ];
