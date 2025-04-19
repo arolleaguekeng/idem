@@ -18,7 +18,11 @@
         </a>
       </div>
 
-      @if (isLoading()) {}@else {
+      @if (isLoading()) {
+        
+      }
+      @else {
+
       <div class="w-[300px] z-50 fixed left-64 h-[30px]">
         <p-select
           [options]="dropDownProjects"

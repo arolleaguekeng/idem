@@ -47,17 +47,23 @@ export class SidebarDashboardComponent implements OnInit {
   isLoading = signal(true);
 
   auth = inject(AuthService);
-  projectService = inject(ProjectService);
-  router = inject(Router);
-
   user$ = this.auth.user$;
   isMenuOpen = false;
   isDropdownOpen = false;
 
+  projectService = inject(ProjectService);
+  router = inject(Router);
   @ViewChild('menu') menuRef!: ElementRef;
 
   async ngOnInit() {
     this.userProjects = await this.projectService.getAllUserProjects();
+
+    if (this.userProjects.length > 0){
+      this.selectedProject = {
+        name: this.userProjects[0].name,
+        code: this.userProjects[0].id!,
+      };
+    }
 
     this.dropDownProjects = this.userProjects.map((project) => ({
       name: project.name,
@@ -75,12 +81,7 @@ export class SidebarDashboardComponent implements OnInit {
   onProjectChange(event: SelectChangeEvent) {
     const selected = event.value as SelectElement;
     this.selectedProject = selected;
-    console.log('Projet sélectionné :', selected);
-
     this.updateSidebarRoutes();
-
-    // Redirection automatique vers la page planning du projet sélectionné
-    this.router.navigate([`planning/${selected.code}`]);
   }
 
   updateSidebarRoutes() {

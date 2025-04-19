@@ -1,0 +1,358 @@
+<nav
+class="bg-gray-900 text-white overflow-hidden shadow-2xl fixed w-full z-50 top-0 shadow-primary/35 px-0"
+>
+<div class="max-w-8xl mx-auto px-4">
+  <div class="flex justify-between h-16">
+    <!-- Logo -->
+    <div class="flex-shrink-0 flex items-center">
+      <a
+        routerLink="/"
+        class="text-2xl font-bold hover:text-blue-700 transition duration-300 flex items-center gap-1"
+      >
+        <img
+          src="/assets/icons/logo_white.png"
+          alt=""
+          class="w-[50px] h-[50px] font-bold"
+        />
+        LEXI
+      </a>
+    </div>
+
+
+
+    <!-- Bouton de connexion (visible sur desktop) -->
+    <div class="hidden md:flex items-center relative z-50">
+      @if (user$ | async) {
+      <div class="relative">
+        <!-- Avatar -->
+        <button (click)="toggleDropdown()" class="flex items-center">
+          <img
+            [src]="(user$ | async)!.photoURL"
+            alt="Avatar"
+            class="w-10 h-10 rounded-full cursor-pointer"
+          />
+        </button>
+
+        <!-- Dropdown Menu -->
+        @if (isDropdownOpen) {
+        <div
+          class="fixed right-0 mt-2 w-48 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-200 rounded-lg shadow-lg flex flex-col z-50 mr-[38px] p-2 [&_.child]:cursor-pointer"
+        >
+          <a
+            routerLink="/profile"
+            class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
+            >Profil</a
+          >
+          <a
+            routerLink="settings"
+            class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
+            >Settings</a
+          >
+          <a
+            (click)="logout()"
+            class="dropdown-item border-t p-3 hover:bg-primary cursor-pointer"
+            >Logout</a
+          >
+        </div>
+        }
+      </div>
+      } @else {
+      <div>
+        <div
+          class="w-[50px] h-[50px] rounded-full h-10 bg-gray-300 animate-pulse"
+        ></div>
+      </div>
+      }
+    </div>
+
+    <!-- Menu mobile (visible sur mobile) -->
+    <div class="flex items-center md:hidden">
+      <button
+        (click)="toggleMenu()"
+        class="inline-flex items-center justify-center p-2 rounded-md hover:text-primary focus:outline-none transition duration-300"
+      >
+        <svg
+          class="h-6 w-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Menu mobile (ouvert/fermé) -->
+@if (isMenuOpen) {
+<div
+  class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
+  #menu
+  [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
+>
+  <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+    <a
+      routerLink="/home"
+      (click)="toggleMenu()"
+      routerLinkActive="text-primary bg-blue-50"
+      class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
+    >
+      Accueil
+    </a>
+    <a
+      routerLink="/project/create"
+      (click)="toggleMenu()"
+      routerLinkActive="text-primary bg-blue-50"
+      class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
+    >
+      Projets
+    </a>
+    <a
+      routerLink="/analysis"
+      (click)="toggleMenu()"
+      routerLinkActive="text-primary bg-blue-50"
+      class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
+    >
+      Analyse
+    </a>
+    <a
+      routerLink="/profile"
+      (click)="toggleMenu()"
+      routerLinkActive="text-primary bg-blue-50"
+      class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
+    >
+      Profil
+    </a>
+    <a
+      routerLink="/login"
+      (click)="toggleMenu()"
+      class="block outer-button rounded-md transition duration-300"
+    >
+      Connexion
+    </a>
+  </div>
+</div>
+}
+</nav>
+<div class="min-h-screen bg-gray-950 text-white flex flex-col">
+  <!-- HEADER -->
+
+
+  <!-- MAIN CONTENT -->
+  <div class="flex-1 flex p-[4%]">
+    <!-- MAIN SECTION -->
+    <main class="flex-1 p-6 space-y-10 overflow-y-auto">
+      <!-- Projets récents -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold text-primary-500">
+            Projets récents
+          </h2>
+        </div>
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <!-- Créer un projet -->
+          <a
+            routerLink="/create-project"
+            class="h-[180px] flex flex-col justify-center items-center text-center border-2 border-dashed border-secondary-500/50 rounded-xl bg-gray-800/50 hover:bg-gray-800 hover:shadow-[0_0_20px_-5px_var(--color-primary)] hover:scale-[1.02] transition p-4 group"
+          >
+            <div
+              class="w-12 h-12 mb-3 bg-secondary-500/10 rounded-full flex items-center justify-center group-hover:bg-secondary-500/20 transition"
+            >
+              <i class="lucide lucide-plus text-secondary-500 text-2xl"></i>
+            </div>
+            <div class="font-bold">Créer un projet</div>
+            <div class="text-sm text-gray-400 group-hover:text-white">
+              Commencer un nouveau projet
+            </div>
+          </a>
+
+          <!-- Cartes projets récents -->
+          @for (project of recentProjects; track $index) {
+          <div
+            class="h-[180px] bg-gradient-to-br from-gray-800/80 to-gray-800 rounded-xl p-4 border border-gray-700 hover:border-primary-500 transition hover:shadow-lg hover:scale-[1.01] duration-300 relative overflow-hidden group"
+          >
+            @if (project.analysisResultModel.branding.logo.svg) {
+            <div
+              class="absolute top-4 right-4 w-16 h-16 group-hover:opacity-100 transition"
+            >
+              <div
+                [innerHTML]="
+                  project.analysisResultModel.branding.logo.svg | safeHtml
+                "
+                class="w-full h-full"
+              ></div>
+            </div>
+            }
+
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition"
+            ></div>
+
+            <div class="relative z-10 h-full flex flex-col">
+              <h3 class="text-lg font-bold truncate mb-1">
+                {{ project.name }}
+              </h3>
+              <div class="text-sm text-gray-400 mb-3 line-clamp-2">
+                {{ project.description }}
+              </div>
+
+              <div class="mt-auto">
+                <div class="flex flex-wrap gap-1 text-xs text-gray-300">
+                  <span class="bg-gray-700 px-2 py-1 rounded">{{
+                    project.type.toString()
+                  }}</span>
+                  <span class="bg-gray-700 px-2 py-1 rounded">{{
+                    project.targets
+                  }}</span>
+                </div>
+
+                <div
+                  class="flex justify-between items-center mt-2 text-xs text-gray-500"
+                >
+                  <span>{{ project.createdAt | date : "shortDate" }}</span>
+                  <button
+                    class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400"
+                  >
+                    <i class="lucide lucide-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </section>
+
+      <!-- Tous les projets -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold text-primary-500">
+            Tous les projets
+          </h2>
+          <div class="flex gap-2">
+            
+          </div>
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          @for (project of userProjects; track $index) {
+          <div
+            class="bg-gray-800 rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
+          >
+            @if (project.analysisResultModel.branding.logo.svg) {
+            <div class="absolute top-4 right-4 w-16 h-16">
+              <div
+                [innerHTML]="
+                  project.analysisResultModel.branding.logo.svg | safeHtml
+                "
+                class="w-full h-full"
+              ></div>
+            </div>
+            }
+
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-lg font-bold truncate pr-6">
+                {{ project.name }}
+              </h3>
+            </div>
+
+            <p class="text-sm text-gray-400 mb-4 line-clamp-3">
+              {{ project.description }}
+            </p>
+
+            <div class="flex flex-wrap gap-2 text-xs mb-3">
+              <span
+                class="bg-secondary-500/20 text-secondary-500 px-2 py-1 rounded font-medium"
+              >
+                {{ project.type }}
+              </span>
+              <span class="bg-gray-700 px-2 py-1 rounded text-gray-300"
+                >👥 {{ project.teamSize }}</span
+              >
+              <span class="bg-gray-700 px-2 py-1 rounded text-gray-300"
+                >🎯 {{ project.targets }}</span
+              >
+            </div>
+
+            <div
+              class="flex justify-between items-center mt-4 text-xs text-gray-500"
+            >
+              <span>{{ project.createdAt | date : "shortDate" }}</span>
+              <button
+                class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400"
+              >
+                Ouvrir <i class="lucide lucide-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+
+        @if (isLoading()) {
+        <div class="flex justify-center items-center h-64">
+          <app-loader />
+        </div>
+        } @else { @if (userProjects.length === 0) {
+        <div
+          class="text-center py-16 border-2 border-dashed border-gray-800 rounded-xl"
+        >
+          <i class="lucide lucide-folder-x text-4xl text-gray-600 mb-3"></i>
+          <div class="text-gray-400">Aucun projet disponible</div>
+          <a
+            routerLink="/create-project"
+            class="text-primary-500 hover:underline mt-2 inline-block"
+            >Créer un projet</a
+          >
+        </div>
+        } }
+      </section>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside
+      class="w-16 p-2 flex flex-col items-center fixed right-0 gap-4 bg-gray-900 border-l border-gray-800  top-16 h-[calc(100vh-4rem)]"
+    >
+      <button
+        class="hover:bg-gray-800 p-2 rounded-full transition relative"
+        aria-label="Chat"
+      >
+        <i class="lucide lucide-message-circle text-xl text-white"></i>
+        <span
+          class="absolute top-0 right-0 w-2 h-2 bg-primary-500 rounded-full"
+        ></span>
+      </button>
+      <button
+        class="hover:bg-gray-800 p-2 rounded-full transition"
+        aria-label="Aide"
+      >
+        <i class="lucide lucide-help-circle text-xl text-white"></i>
+      </button>
+
+      <div class="w-8 h-px bg-gray-700 my-2"></div>
+
+      <button
+        class="hover:bg-gray-800 p-2 rounded-full transition"
+        aria-label="Paramètres"
+      >
+        <i class="lucide lucide-settings text-xl text-white"></i>
+      </button>
+
+      <button
+        class="hover:bg-gray-800 p-2 rounded-full transition mt-auto"
+        aria-label="Thème"
+      >
+        <i class="lucide lucide-moon text-xl text-white"></i>
+      </button>
+    </aside>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ProjectsListComponent } from './modules/dashboard/pages/projects-list/projects-list.component';
 
 export const routes: Routes = [
   // Layout public (avec header et footer)
@@ -107,5 +108,7 @@ export const routes: Routes = [
   },
 
   // Redirection par défaut
+  { path: 'projects', component: ProjectsListComponent },
+
   { path: '**', redirectTo: 'home' },
 ];
