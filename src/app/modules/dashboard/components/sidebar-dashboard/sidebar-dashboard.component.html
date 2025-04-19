@@ -24,7 +24,7 @@
         <p-select
           [options]="dropDownProjects"
           (onChange)="onProjectChange($event)"
-          placeholder="Choose a project"
+          placeholder={{selectedProject?.name}}
           [editable]="false"
           optionLabel="name"
           styleClass=" w-full input"

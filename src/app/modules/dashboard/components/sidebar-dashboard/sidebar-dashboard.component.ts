@@ -100,6 +100,11 @@ export class SidebarDashboardComponent implements OnInit {
   updateSidebarRoutes() {
     this.items = [
       {
+        label: 'Dashboard',
+        icon: 'pi pi-home',
+        routerLink: [`dashboard/${this.selectedProject?.code}`],
+      },
+      {
         label: 'Planning',
         icon: 'pi pi-calendar',
         routerLink: [`planing/${this.selectedProject?.code}`],

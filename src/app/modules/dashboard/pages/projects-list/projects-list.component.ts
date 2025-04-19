@@ -13,11 +13,11 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { SafeHtmlPipe } from './safehtml.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
-import { Router } from 'express';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [DatePipe, LoaderComponent, SafeHtmlPipe,AsyncPipe],
+  imports: [DatePipe, LoaderComponent, SafeHtmlPipe,AsyncPipe,RouterLink],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +31,7 @@ export class ProjectsListComponent implements OnInit {
   isLoading = signal(true);
   isMenuOpen = false;
   isDropdownOpen = false;
-  // router = inject(Router);
+  router = inject(Router);
   @ViewChild('menu') menuRef!: ElementRef;
   async ngOnInit() {
     try {
@@ -65,5 +65,10 @@ export class ProjectsListComponent implements OnInit {
     this.isDropdownOpen = false;
     this.auth.logout();
     // this.router.navigate(['/login']);
+  }
+
+  openProjectDashboard(projectId: string) {
+    this.isDropdownOpen = false;
+    this.router.navigate([`console/dashboard/${projectId}`]);
   }
 }

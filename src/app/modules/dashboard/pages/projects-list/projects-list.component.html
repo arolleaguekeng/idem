@@ -96,8 +96,8 @@
         >
           <!-- Créer un projet -->
           <a
-            routerLink="/create-project"
-            class="h-[180px] flex flex-col justify-center items-center text-center border-2 border-dashed border-secondary-500/50 rounded-xl bg-gray-800/50 hover:bg-gray-800 hover:shadow-[0_0_20px_-5px_var(--color-primary)] hover:scale-[1.02] transition p-4 group"
+            routerLink="/project/create"
+            class="h-[180px] flex flex-col justify-center items-center text-center border-2 border-dashed border-secondary-500/50 rounded-xl bg-gray-800/50 hover:bg-gray-800 hover:shadow-[0_0_20px_-5px_var(--color-primary)] hover:scale-[1.02] transition p-4 hover:cursor-pointer group"
           >
             <div
               class="w-12 h-12 mb-3 bg-secondary-500/10 rounded-full flex items-center justify-center group-hover:bg-secondary-500/20 transition"
@@ -113,7 +113,8 @@
           <!-- Cartes projets récents -->
           @for (project of recentProjects; track $index) {
           <div
-            class="h-[180px] bg-gradient-to-br from-gray-800/80 to-gray-800 rounded-xl p-4 border border-gray-700 hover:border-primary-500 transition hover:shadow-lg hover:scale-[1.01] duration-300 relative overflow-hidden group"
+            class="h-[180px] hover:cursor-pointer bg-gradient-to-br from-gray-800/80 to-gray-800 rounded-xl p-4 border border-gray-700 hover:border-primary-500 transition hover:shadow-lg hover:scale-[1.01] duration-300 relative overflow-hidden group"
+            (click)="openProjectDashboard(project.id!)"
           >
             @if (project.analysisResultModel.branding.logo.svg) {
             <div
@@ -179,7 +180,8 @@
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           @for (project of userProjects; track $index) {
           <div
-            class="bg-gray-800 rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
+            class="bg-gray-800 hover:cursor-pointer rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
+            (click)="openProjectDashboard(project.id!)"
           >
             @if (project.analysisResultModel.branding.logo.svg) {
             <div class="absolute top-4 right-4 w-16 h-16">

@@ -12,7 +12,8 @@ import { ProjectService } from '../../services/project.service';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { Router } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
-import { AnalysisResultModel } from '../../models/analysisResult.model';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-create-project',
@@ -21,7 +22,8 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
     Checkbox,
     CommonModule,
     MultiSelectModule,
-    Select,
+    Select,FormsModule, InputTextModule, FloatLabel,
+    
     LoaderComponent,
   ],
   templateUrl: './create-project.component.html',
