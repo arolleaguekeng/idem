@@ -1,21 +1,61 @@
 export const TYPOGRAPHY_SECTION_PROMPT = `
-You are a typographic expert and brand designer.
+You are a senior typography designer specializing in digital brand systems. Create a comprehensive typography section following strict technical requirements.
 
-Your job is to define the typography system of the brand based on the project description and previous brand elements.
+STRICT OUTPUT REQUIREMENTS:
+1. Generate ONLY one <section> with this exact structure:
+<section id="typography" class="brand-section type-section">
+  <h2>Typography System</h2>
+  <div class="content">
+    <div class="font-group">
+      <h3>Primary Font</h3>
+      <div class="font-example">
+        <p class="font-name">[FONT_NAME]</p>
+        <p class="font-license">[LICENSE_INFO]</p>
+        <div class="font-samples">
+          <p class="headline-example">Headline</p>
+          <p class="body-example">Body text sample</p>
+        </div>
+        <p class="font-rationale">[RATIONALE]</p>
+      </div>
+    </div>
+    [REPEAT FOR SECONDARY FONT]
+  </div>
+</section>
 
-Return the result as a JSON object of the form: 
+2. JSON FORMAT:
 {
-  "content": "...", 
-  "summary": "..."
+  "content": "[MINIFIED_HTML_SECTION]",
+  "summary": "Primary: [FONT_NAME] (Usage: [HEADINGS/BODY]) | Secondary: [FONT_NAME] (Usage: [ACCENTS])"
 }
 
-Instructions:
-- Recommend primary and secondary fonts.
-- Specify usage for each (headings, body text, buttons, etc).
-- Give reasons for the font choice (mood, legibility, style, tone).
-- Indicate if the fonts are Google Fonts or include licensing info.
-- Make sure the typography aligns with the overall brand identity.
-i want just html code it is a website for my app branding
+DESIGN RULES:
+- Max 2 font families (1 primary, 1 secondary)
+- Google Fonts preferred (indicate if self-hosted)
+- Include specific weights for each usage
+- Show real text examples (not "Lorem ipsum")
+- Remove all line breaks in HTML
+- Escape " with \\"
 
-Contextual branding summary:
-`;
+TECHNICAL SPECS:
+1. Web Font Requirements:
+   - Subset fonts if self-hosted
+   - Specify WOFF2 format
+   - Include fallback stack (e.g., sans-serif)
+
+2. Accessibility:
+   - Minimum 16px body text
+   - Line height 1.5 for body
+   - WCAG AA contrast compliant
+
+3. Usage Guidelines:
+   - Heading hierarchy (h1-h6 specs)
+   - Button/UI text sizing
+   - Responsive scaling rules
+
+EXAMPLE OUTPUT:
+{
+  "content": "<section id=\"typography\" class=\"brand-section type-section\"><h2>Typography System</h2><div class=\"content\"><div class=\"font-group\"><h3>Primary Font</h3><div class=\"font-example\"><p class=\"font-name\">Inter</p><p class=\"font-license\">Google Fonts (SIL Open Font License)</p><div class=\"font-samples\"><p class=\"headline-example\">Headline</p><p class=\"body-example\">Sample body text for readability</p></div><p class=\"font-rationale\">Neo-grotesque sans-serif for optimal UI legibility</p></div></div></div></section>",
+  "summary": "Primary: Inter (Headings/Body) | Secondary: Roboto Mono (Code/Accents)"
+}
+
+CONTEXT:`;

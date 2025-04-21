@@ -34,8 +34,8 @@ export class AiGenericPromptService {
       ].filter(Boolean).join('\n\n');
 
       const requestBody = {
-        provider: 'DEEPSEEK', 
-        modelName: 'deepseek/deepseek-chat-v3-0324:free', 
+        provider: 'GEMINI', 
+        modelName: 'gemini-2.0-flash', 
         prompt: fullPrompt,
         llmOptions: {
           maxOutputTokens: 800 

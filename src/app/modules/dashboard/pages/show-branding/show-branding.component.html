@@ -4,54 +4,6 @@
 </div>
 }@else {
 <div class="p-14">
-  <div class="w-[100px]">
-    <markdown
-    katex
-    class="variable-binding w-[100px]"
-    [data]="project.analysisResultModel.branding.logo.svg"
-  ></markdown>
-  </div>
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.brandDefinition.content"
-  ></markdown>
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.colorSystem.content"
-  ></markdown>
-
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.iconographyAndImagery.content"
-  ></markdown>
-
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.layoutAndComposition.content"
-  ></markdown>
-
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.toneOfVoice.content"
-  ></markdown>
-
-  <markdown
-    html
-    class="variable-binding"
-    [data]="project.analysisResultModel.branding.typographySystem.content"
-  ></markdown>
-
-  <markdown
-    html
-    class="variable-binding"
-    [data]="
-      project.analysisResultModel.branding.visualIdentityGuidelines.content
-    "
-  ></markdown>
+  <markdown html class="variable-binding" [data]="branding"></markdown>
 </div>
 }

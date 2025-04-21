@@ -10,6 +10,7 @@ import { BrandIdentityModel } from '../../../models/brand-identity.model';
 import { ProjectModel } from '../../../models/project.model';
 import { ProjectService } from '../../project.service';
 import { LogoModel } from '../../../models/logo.model';
+import { GlobalCssService } from './golabl-css.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
     private usageGuidelinesSectionService: TypographySectionService,
     private visualExemplesSectionService: VisualExamplesSectionService,
     private visualIdentitySynthesizerService: VisualIdentitySynthesizerService,
+    private globalCssService: GlobalCssService,
     private projectService: ProjectService
   ) {
     super();
@@ -42,6 +44,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       iconographyAndImagery: { content: '', summary: '' },
       layoutAndComposition: { content: '', summary: '' },
       summary: { content: '', summary: '' },
+      globalCss: { content: '', summary: '' },
       logo: {
         svg: '',
         summary: '',
@@ -103,11 +106,21 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
     result.layoutAndComposition = visuals;
     history += result.layoutAndComposition.summary + '\n';
 
+    // Step 8: Global CSS
+    const globalCss = await this.globalCssService.generateDatas(
+      history,
+      literralProject
+    );
+
+    result.globalCss = globalCss;
+    history += result.globalCss.summary + '\n';
+
     // Step 7: Final Synthesized Visual Identity
     const synthesis = await this.visualIdentitySynthesizerService.generateDatas(
       history,
       literralProject
     );
+
     result.summary = synthesis;
 
     return result;

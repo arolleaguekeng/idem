@@ -9,5 +9,6 @@ export interface BrandIdentityModel {
   iconographyAndImagery: { content: string; summary: string };
   layoutAndComposition: { content: string; summary: string };
   logo: LogoModel;
+  globalCss: { content: string; summary: string };
   summary: { content: string; summary: string };
 }

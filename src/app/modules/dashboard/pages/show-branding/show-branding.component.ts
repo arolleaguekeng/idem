@@ -20,7 +20,7 @@ import { BrandingOrchestratorService } from '../../services/ai-agents/Phase-2-Br
 import { ProjectService } from '../../services/project.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { first } from 'rxjs';
-import { LoaderComponent } from "../../../../components/loader/loader.component";
+import { LoaderComponent } from '../../../../components/loader/loader.component';
 
 @Component({
   selector: 'app-show-branding',
@@ -31,8 +31,8 @@ import { LoaderComponent } from "../../../../components/loader/loader.component"
     AccordionModule,
     AvatarModule,
     BadgeModule,
-    LoaderComponent
-],
+    LoaderComponent,
+  ],
   templateUrl: './show-branding.component.html',
   styleUrl: './show-branding.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,7 +48,7 @@ export class ShowBrandingComponent {
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
-
+  branding = '';
   async ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
@@ -72,7 +72,6 @@ export class ShowBrandingComponent {
         console.log('Projet non trouvé');
         return;
       }
-      
 
       if (!project.analysisResultModel) {
         project.analysisResultModel = this.analis as AnalysisResultModel;
@@ -91,6 +90,20 @@ export class ShowBrandingComponent {
 
           await this.projectService.editUserProject(this.id, this.project);
         }
+        this.branding =
+          project.analysisResultModel.branding.globalCss.content +
+          project.analysisResultModel.branding.logo.svg +
+
+          project.analysisResultModel.branding.summary.content +
+          project.analysisResultModel.branding.brandDefinition.content +
+          project.analysisResultModel.branding.visualIdentityGuidelines
+            .content +
+          project.analysisResultModel.branding.typographySystem.content +
+          project.analysisResultModel.branding.colorSystem.content +
+          project.analysisResultModel.branding.iconographyAndImagery.content +
+          project.analysisResultModel.branding.layoutAndComposition.content +
+          project.analysisResultModel.branding.toneOfVoice.content;
+
         this.isBrandingLoaded.set(false);
       }
     } catch (error) {

@@ -1,18 +1,39 @@
 export const GENERIC_JSON_FORMAT_PROMPT = `
-You are an expert in your field. Your task is to generate high-quality professional content according to the specific instructions provided.
+You are an expert AI assistant that generates perfect JSON output for web applications.
 
-⚠️ Your response must never follow this exact raw JSON output format — with **no Markdown, no code block, no explanations**, and no formatting like \`\`\`json or similar.
+STRICT REQUIREMENTS:
+1. Output ONLY raw JSON in this exact format:
+{"content":"[UNFORMATTED_HTML]","summary":"[SUMMARY]"}
 
-Return ONLY a clean JSON object like this:
+2. For HTML content:
+- Remove ALL line breaks and tabs
+- Keep HTML in single line
+- Escape ONLY what's necessary: " → \\", / → \\/
+- Preserve original HTML formatting
 
-{
-  "content": "<full generated HTML or text here>",
-  "summary": "<a concise summary (max 500 characters) of the essential information for the next AI agent>"
-}
+3. For summary:
+- Single line only
+- Max 500 chars
+- Escape quotes
 
-Guidelines:
-- "content" contains all the detailed content as plain text or HTML.
-- "summary" must summarize the key points that should be passed to the next agent.
-- Do NOT include any introduction, explanation, or Markdown formatting like \`\`\`, \`\`\`json, etc.
-- The response must be clean raw JSON — nothing more, nothing less.
+4. NEVER INCLUDE:
+- Pretty-printed JSON
+- Markdown formatting
+- Explanations
+- Code blocks
+- Trailing commas
+
+TECHNICAL RULES:
+1. Test output with:
+   JSON.parse(yourOutput)
+2. If invalid, return:
+   {"content":"","summary":""}
+
+EXAMPLE OUTPUT:
+{"content":"<div class=\\"header\\"><h1>Title</h1><p>Content</p></div>","summary":"Header section with title"}
+
+ERROR CASES:
+- If HTML contains unescaped " → INVALID
+- If contains \n or \t → INVALID
+- If contains --> or /* */ → INVALID
 `;

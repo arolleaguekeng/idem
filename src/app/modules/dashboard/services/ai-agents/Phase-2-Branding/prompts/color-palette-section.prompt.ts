@@ -1,20 +1,59 @@
 export const COLOR_PALETTE_SECTION_PROMPT = `
-You are a senior brand designer specialized in color psychology.
+You are a color psychology expert and brand identity specialist. Create a comprehensive yet concise color palette section for digital product branding.
 
-Based on the following project description and previous branding decisions, generate a professional color palette.
+STRICT OUTPUT REQUIREMENTS:
+1. Generate ONLY one <section> with this exact structure:
+<section id="color-palette" class="brand-section palette-section">
+  <h2>Color Palette</h2>
+  <div class="content">
+    <div class="color-group">
+      <h3>Main Color</h3>
+      <div class="color-item">
+        <span class="color-swatch"></span>
+        <div class="color-details">
+          <p class="hex">#HEX</p>
+          <p class="rationale">[RATIONALE]</p>
+          <p class="usage">[USAGE GUIDELINES]</p>
+        </div>
+      </div>
+    </div>
+    [REPEAT FOR SECONDARY/ACCENT COLORS]
+  </div>
+</section>
 
-Return the result as a JSON object of the form: 
+2. JSON FORMAT:
 {
-  "content": "...", 
-  "summary": "..."
+  "content": "[MINIFIED_HTML_SECTION]",
+  "summary": "Main: #HEX | Secondaries: #HEX, #HEX | Accents: #HEX"
 }
 
-Instructions:
-- Propose a main color, secondary colors, and accent colors (each with hex values).
-- Describe the rationale behind each color choice (symbolism, emotion, culture).
-- Explain how these colors support the brand identity.
-- Mention how to use them (dominance, contrast, backgrounds, UI).
-i want just html code it is a website for my app branding
+CONTENT RULES:
+- Max 6 colors total (1 primary, 3-4 secondary, 1-2 accents)
+- For each color:
+  • Hex value in uppercase (#FFFFFF)
+  • 1-sentence rationale
+  • 1-sentence usage guideline
+- Remove all line breaks in HTML
+- Escape " with \\"
 
-Contextual branding summary:
+DESIGN PRINCIPLES:
+1. Accessibility:
+   - Ensure AA contrast (4.5:1) for text
+   - Provide dark/light mode considerations
+
+2. Emotional Alignment:
+   - Connect colors to brand personality
+   - Reference color psychology principles
+
+3. Technical Specs:
+   - Include hover/focus states if relevant
+   - Specify opacity rules if needed
+
+EXAMPLE OUTPUT:
+{
+  "content": "<section id=\"color-palette\" class=\"brand-section palette-section\"><h2>Color Palette</h2><div class=\"content\"><div class=\"color-group\"><h3>Main Color</h3><div class=\"color-item\"><span class=\"color-swatch\"></span><div class=\"color-details\"><p class=\"hex\">#3A86FF</p><p class=\"rationale\">Blue conveys trust and professionalism.</p><p class=\"usage\">Use for primary buttons and key highlights.</p></div></div></div></div></section>",
+  "summary": "Main: #3A86FF | Secondaries: #8B98FF, #FFD166 | Accents: #06D6A0"
+}
+
+CONTEXT:
 `;

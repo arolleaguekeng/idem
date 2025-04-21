@@ -1,21 +1,47 @@
 export const VISUAL_EXAMPLES_SECTION_PROMPT = `
-You are a senior UI/UX designer and visual brand specialist.
+You are a UI/UX expert creating concise brand-compliant examples. Generate compact visual examples within strict length limits.
 
-Based on the brand’s visual identity, provide concrete examples of how the visual language can be used in real interfaces and products.
-
-Return the result as a JSON object of the form:
+STRICT REQUIREMENTS:
+1. MAX 1500 CHARACTERS TOTAL OUTPUT
+2. JSON structure:
 {
-  "content": "...", 
-  "summary": "..."
+  "content": "[MINIFIED_HTML]",
+  "summary": "[KEY_POINTS]"
 }
 
-Instructions:
-- Include mockup-style HTML/CSS (not real interfaces, but conceptual visuals).
-- Show examples such as landing pages, mobile cards, product sections.
-- Respect the defined color palette, typography, and logo usage.
-- Keep it clean and aesthetically pleasing.
-- Do not include scripts, only static HTML/CSS if necessary.
-i want just html code it is a website for my app branding
+HTML TEMPLATE (strictly follow):
+<section id="visual-examples" class="brand-section">
+  <h2>Applications</h2>
+  <div class="content">
+    <div class="example">
+      <h3>[EXAMPLE_NAME]</h3>
+      <div class="mockup">[ESSENTIAL_HTML]</div>
+    </div>
+  </div>
+</section>
 
-Contextual branding summary:
-`;
+RULES:
+- MAX 2 core examples
+- 1-2 sentences per rationale
+- Essential styles only
+- No redundant elements
+- Summary under 200 chars
+
+OPTIMIZATION TECHNIQUES:
+1. Style compression:
+   - Use shorthand properties
+   - Minimal styling
+   - Reuse brand variables
+
+2. Content prioritization:
+   - Show only key UI patterns
+   - Skip decorative elements
+   - Focus on layout principles
+
+EXAMPLE OUTPUT:
+{
+  "content": "<section id=\"visual-examples\" class=\"brand-section\"><h2>Applications</h2><div class=\"content\"><div class=\"example\"><h3>Nav</h3><div class=\"mockup\"><a href=\"#\">Menu</a></div></div></div></section>",
+  "summary": "Nav pattern | Main color"
+}
+
+PROJECT CONTEXT:`;
