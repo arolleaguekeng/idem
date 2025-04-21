@@ -9,9 +9,7 @@ import { ProjectModel } from '../../../models/project.model';
 import { PlanningModel } from '../../../models/planning.model';
 import { ProjectService } from '../../project.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FirstPhaseMainService {
   constructor(
     private feasibilityStudyService: FeasibilityStudyService,
@@ -23,115 +21,94 @@ export class FirstPhaseMainService {
     private projectService: ProjectService
   ) {}
 
-  /**
-   * Executes all steps of Phase 1 - Planning.
-   * @param projectDescription Project description.
-   * @returns An object containing the results of each step.
-   */
-  async executeFirstPhase(
-    project: ProjectModel
-  ): Promise<PlanningModel | { error: string; step: string }> {
+  async executeFirstPhase(project: ProjectModel): Promise<PlanningModel> {
+    const planning = project.analysisResultModel.planning;
+    const literralProject =
+      this.projectService.getProjectDescriptionForPrompt(project);
+
+    const feasibilityStudy = await this.generateStep(
+      planning?.feasibilityStudy,
+      (history) =>
+        this.feasibilityStudyService.analyzeFeasibility(
+          history,
+          literralProject
+        ),
+      'Feasibility Study'
+    );
+
+    const riskAnalysis = await this.generateStep(
+      planning?.riskanalysis,
+      (history) =>
+        this.riskAnalysisService.analyzeRisks(history, literralProject),
+      'Risk Analysis'
+    );
+
+    const smartObjectives = await this.generateStep(
+      planning?.smartObjectives,
+      (history) =>
+        this.smartObjectivesService.defineSmartObjectives(
+          history,
+          literralProject
+        ),
+      'SMART Objectives'
+    );
+
+    const requirementsGathering = await this.generateStep(
+      planning?.requirementsGathering,
+      (history) =>
+        this.requirementsGatheringService.gatherRequirements(
+          history,
+          literralProject
+        ),
+      'Requirements Gathering'
+    );
+
+    const stakeholdersMeeting = await this.generateStep(
+      planning?.stakeholdersMeeting,
+      (history) =>
+        this.stakeholderMeetingsService.organizeStakeholderMeetings(
+          history,
+          literralProject
+        ),
+      'Stakeholder Meetings'
+    );
+
+    const useCaseModeling = await this.generateStep(
+      planning?.useCaseModeling,
+      (history) =>
+        this.useCaseModelingService.modelUseCases(history, literralProject),
+      'Use Case Modeling'
+    );
+
+    return {
+      feasibilityStudy,
+      riskanalysis: riskAnalysis,
+      smartObjectives,
+      requirementsGathering,
+      stakeholdersMeeting,
+      useCaseModeling,
+    };
+  }
+
+  private async generateStep(
+    existingData: { content: string; summary: string } | undefined,
+    generationFn: (
+      history: string
+    ) => Promise<{ content: string; summary: string }>,
+    stepName: string
+  ): Promise<{ content: string; summary: string }> {
+    const isEmpty =
+      !existingData ||
+      (existingData.content === '' && existingData.summary === '');
+    if (!isEmpty) return existingData;
+
     try {
-      const literralProject =
-        this.projectService.getProjectDescriptionForPrompt(project);
-      // 1. Feasibility Study
-      let feasibility: { content: string; summary: string };
-
-      console.log('Litteral project', literralProject);
-      try {
-        feasibility = await this.feasibilityStudyService.analyzeFeasibility(
-          '',
-          literralProject
-        );
-        console.log('Feasibility Study completed:', feasibility);
-      } catch (error) {
-        console.error('Feasibility Study failed:', error);
-        return { error: 'Feasibility Study failed', step: 'feasibility' };
-      }
-
-      // 2. Risk Analysis
-      let risks;
-      try {
-        risks = await this.riskAnalysisService.analyzeRisks(
-          '',
-          literralProject
-        );
-        console.log('Risk Analysis completed:', risks);
-      } catch (error) {
-        console.error('Risk Analysis failed:', error);
-        return { error: 'Risk Analysis failed', step: 'risks' };
-      }
-
-      // 3. SMART Objectives
-      let smartObjectives;
-      try {
-        smartObjectives =
-          await this.smartObjectivesService.defineSmartObjectives(
-            '',
-            literralProject
-          );
-        console.log('SMART Objectives defined:', smartObjectives);
-      } catch (error) {
-        console.error('SMART Objectives failed:', error);
-        return { error: 'SMART Objectives failed', step: 'smartObjectives' };
-      }
-
-      // 4. Requirements Gathering
-      let requirements;
-      try {
-        requirements =
-          await this.requirementsGatheringService.gatherRequirements(
-            '',
-            literralProject
-          );
-        console.log('Requirements Gathering completed:', requirements);
-      } catch (error) {
-        console.error('Requirements Gathering failed:', error);
-        return { error: 'Requirements Gathering failed', step: 'requirements' };
-      }
-
-      // 5. Stakeholder Meetings
-      let stakeholderMeetings;
-      try {
-        stakeholderMeetings =
-          await this.stakeholderMeetingsService.organizeStakeholderMeetings(
-            '',
-            literralProject
-          );
-        console.log('Stakeholder Meetings organized:', stakeholderMeetings);
-      } catch (error) {
-        console.error('Stakeholder Meetings failed:', error);
-        return {
-          error: 'Stakeholder Meetings failed',
-          step: 'stakeholderMeetings',
-        };
-      }
-
-      // 6. Use Case Modeling
-      let useCases;
-      try {
-        useCases = await this.useCaseModelingService.modelUseCases(
-          '',
-          literralProject
-        );
-        console.log('Use Case Modeling completed:', useCases);
-      } catch (error) {
-        console.error('Use Case Modeling failed:', error);
-        return { error: 'Use Case Modeling failed', step: 'useCases' };
-      }
-      const planningResult: PlanningModel = {
-        feasibilityStudy: feasibility,
-        riskanalysis: risks,
-        requirementsGathering: requirements,
-        smartObjectives: requirements,
-        stakeholdersMeeting: stakeholderMeetings,
-        useCaseModeling: useCases,
-      };
-
-      return planningResult;
+      const result = await generationFn('');
+      console.log(`${stepName} completed`, result);
+      return result;
     } catch (error) {
-      console.error('Error during Phase 1 execution:', error);
-      throw error;
+      console.error(`${stepName} failed`, error);
+      return { content: '', summary: '' };
     }
   }
 }

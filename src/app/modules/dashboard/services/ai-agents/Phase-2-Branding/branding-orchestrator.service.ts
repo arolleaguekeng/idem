@@ -33,17 +33,25 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
    * Launches the full graphic branding generation pipeline
    * Each step depends on the previous step's summary to maintain coherence.
    */
-  async generateFullBranding(project: ProjectModel): Promise<any> {
+  async generateFullBranding(
+    project: ProjectModel
+  ): Promise<
+    | BrandIdentityModel
+    | { error: string; step: string; partial: BrandIdentityModel }
+  > {
     const result: BrandIdentityModel = {
-      brandDefinition: { content: '', summary: '' },
-      toneOfVoice: { content: '', summary: '' },
-      visualIdentityGuidelines: { content: '', summary: '' },
-      typographySystem: { content: '', summary: '' },
-      colorSystem: { content: '', summary: '' },
-      iconographyAndImagery: { content: '', summary: '' },
-      layoutAndComposition: { content: '', summary: '' },
-      summary: { content: '', summary: '' },
-      globalCss: { content: '', summary: '' },
+      brandDefinition: project.analysisResultModel.branding.brandDefinition,
+      toneOfVoice: project.analysisResultModel.branding.toneOfVoice,
+      visualIdentityGuidelines:
+        project.analysisResultModel.branding.visualIdentityGuidelines,
+      typographySystem: project.analysisResultModel.branding.typographySystem,
+      colorSystem: project.analysisResultModel.branding.colorSystem,
+      iconographyAndImagery:
+        project.analysisResultModel.branding.iconographyAndImagery,
+      layoutAndComposition:
+        project.analysisResultModel.branding.layoutAndComposition,
+      summary: project.analysisResultModel.branding.summary,
+      globalCss: project.analysisResultModel.branding.globalCss,
       logo: {
         content: {
           svg: '',
@@ -54,76 +62,115 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
         summary: '',
       },
     };
+
     let history = '';
     const literralProject =
       this.projectService.getProjectDescriptionForPrompt(project);
 
-    // Step 1: Brand Identity
-    const brand = await this.brandIdentitySectionService.generateDatas(
-      history,
-      literralProject
-    );
-    result.brandDefinition = brand;
-    history += result.brandDefinition.summary + '\n';
+    try {
+      // 1. Brand Identity
+      if (this.shouldGenerate(result.brandDefinition)) {
+        const brand = await this.brandIdentitySectionService.generateDatas(
+          history,
+          literralProject
+        );
+        result.brandDefinition = brand;
+        history += brand.summary + '\n';
+      }
 
-    // Step 2: Color Palette
-    const palette = await this.colorPaletteSectionService.generateDatas(
-      history,
-      literralProject
-    );
-    result.colorSystem = palette;
-    history += result.colorSystem.summary + '\n';
+      // 2. Color Palette
+      if (this.shouldGenerate(result.colorSystem)) {
+        const palette = await this.colorPaletteSectionService.generateDatas(
+          history,
+          literralProject
+        );
+        result.colorSystem = palette;
+        history += palette.summary + '\n';
+      }
 
-    // Step 3: Logo Generation
-    const logo = await this.logoGenerationService.generateDatas(
-      history,
-      literralProject
-    );
-    console.log('Logo', logo['content']);
-    result.logo.content = logo['content'];
-    history += result.logo.summary + '\n';
+      // 3. Logo Generation
+      if (!result.logo.content?.svg) {
+        const logo = await this.logoGenerationService.generateDatas(
+          history,
+          literralProject
+        );
+        result.logo.content = logo['content'];
+        result.logo.summary = logo['summary'] || '';
+        history += result.logo.summary + '\n';
+      }
 
-    // Step 4: Typography
-    const typography = await this.typographySectionService.generateDatas(
-      history,
-      literralProject
-    );
-    result.typographySystem = typography;
-    history += result.typographySystem.summary + '\n';
+      // 4. Typography
+      if (this.shouldGenerate(result.typographySystem)) {
+        const typography = await this.typographySectionService.generateDatas(
+          history,
+          literralProject
+        );
+        result.typographySystem = typography;
+        history += typography.summary + '\n';
+      }
 
-    // Step 5: Usage Guidelines (you said it's in TypographyService too, double-check)
-    const guidelines = await this.usageGuidelinesSectionService.generateDatas(
-      history,
-      literralProject
-    );
-    result.visualIdentityGuidelines = guidelines;
-    history += result.visualIdentityGuidelines.summary + '\n';
+      // 5. Usage Guidelines
+      if (this.shouldGenerate(result.visualIdentityGuidelines)) {
+        const guidelines =
+          await this.usageGuidelinesSectionService.generateDatas(
+            history,
+            literralProject
+          );
+        result.visualIdentityGuidelines = guidelines;
+        history += guidelines.summary + '\n';
+      }
 
-    // Step 6: Visual Examples
-    const visuals = await this.visualExemplesSectionService.generateDatas(
-      history,
-      literralProject
-    );
-    result.layoutAndComposition = visuals;
-    history += result.layoutAndComposition.summary + '\n';
+      // 6. Visual Examples
+      if (this.shouldGenerate(result.layoutAndComposition)) {
+        const visuals = await this.visualExemplesSectionService.generateDatas(
+          history,
+          literralProject
+        );
+        result.layoutAndComposition = visuals;
+        history += visuals.summary + '\n';
+      }
 
-    // Step 8: Global CSS
-    const globalCss = await this.globalCssService.generateDatas(
-      history,
-      literralProject
-    );
+      // 7. Global CSS
+      if (this.shouldGenerate(result.globalCss)) {
+        const globalCss = await this.globalCssService.generateDatas(
+          history,
+          literralProject
+        );
+        result.globalCss = globalCss;
+        history += globalCss.summary + '\n';
+      }
 
-    result.globalCss = globalCss;
-    history += result.globalCss.summary + '\n';
+      // 8. Final Synthesis
+      if (this.shouldGenerate(result.summary)) {
+        const synthesis =
+          await this.visualIdentitySynthesizerService.generateDatas(
+            history,
+            literralProject
+          );
+        result.summary = synthesis;
+      }
 
-    // Step 7: Final Synthesized Visual Identity
-    const synthesis = await this.visualIdentitySynthesizerService.generateDatas(
-      history,
-      literralProject
-    );
+      return result;
+    } catch (error: any) {
+      console.error('Branding generation failed at some step:', error);
+      return {
+        error: error?.message || 'Unknown error',
+        step: this.extractStepFromError(error),
+        partial: result,
+      };
+    }
+  }
 
-    result.summary = synthesis;
+  // Vérifie si une section doit être générée
+  private shouldGenerate(section: {
+    content: string;
+    summary: string;
+  }): boolean {
+    return section && section.content === '' && section.summary === '';
+  }
 
-    return result;
+  // Optionnel : pour indiquer l’étape ayant échoué (à adapter si tu veux plus précis)
+  private extractStepFromError(error: any): string {
+    return error?.step || 'unknown';
   }
 }
