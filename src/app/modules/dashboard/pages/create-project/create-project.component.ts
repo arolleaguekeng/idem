@@ -22,10 +22,8 @@ import { FloatLabel } from 'primeng/floatlabel';
     CommonModule,
     MultiSelectModule,
     Select,
-    FormsModule,
     InputTextModule,
     FloatLabel,
-
     LoaderComponent,
   ],
   templateUrl: './create-project.component.html',

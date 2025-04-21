@@ -89,13 +89,7 @@ export const routes: Routes = [
             './modules/dashboard/pages/show-development/show-development.component'
           ).then((m) => m.ShowDevelopmentComponent),
       },
-      {
-        path: 'project/editor/:id',
-        loadComponent: () =>
-          import(
-            './modules/dashboard/pages/project-editor/project-editor.component'
-          ).then((m) => m.ProjectEditorComponent),
-      },
+
       { path: '**', redirectTo: '/projects' },
     ],
   },

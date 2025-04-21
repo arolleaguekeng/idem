@@ -12,7 +12,7 @@ import {
 } from '@angular/fire/firestore';
 import { AuthService } from '../../auth/services/auth.service';
 import { ProjectModel } from '../models/project.model';
-import { Auth, User } from '@angular/fire/auth';
+import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { first, Subscription } from 'rxjs';
 

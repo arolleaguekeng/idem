@@ -9,7 +9,6 @@ import { VisualIdentitySynthesizerService } from './visual-identity-synthesizer.
 import { BrandIdentityModel } from '../../../models/brand-identity.model';
 import { ProjectModel } from '../../../models/project.model';
 import { ProjectService } from '../../project.service';
-import { LogoModel } from '../../../models/logo.model';
 import { GlobalCssService } from './golabl-css.service';
 
 @Injectable({

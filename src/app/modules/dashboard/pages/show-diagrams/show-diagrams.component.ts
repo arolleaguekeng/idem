@@ -2,15 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MarkdownComponent } from 'ngx-markdown';
-import { AccordionModule } from 'primeng/accordion';
-import { AvatarModule } from 'primeng/avatar';
-import { BadgeModule } from 'primeng/badge';
-import { TabsModule } from 'primeng/tabs';
 import { ProjectModel } from '../../models/project.model';
 import { User } from '@angular/fire/auth';
 import { ActivatedRoute } from '@angular/router';
@@ -26,12 +20,7 @@ import { LoaderComponent } from "../../../../components/loader/loader.component"
 @Component({
   selector: 'app-show-diagrams',
   imports: [
-    TabsModule,
-    FormsModule,
     MarkdownComponent,
-    AccordionModule,
-    AvatarModule,
-    BadgeModule,
     LoaderComponent
 ],
   templateUrl: './show-diagrams.component.html',

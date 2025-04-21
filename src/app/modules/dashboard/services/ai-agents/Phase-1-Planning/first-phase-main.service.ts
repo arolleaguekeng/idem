@@ -6,7 +6,6 @@ import { SmartObjectivesService } from './smart-objectives.service';
 import { StakeholderMeetingsService } from './stakeholder-meetings.service';
 import { UseCaseModelingService } from './use-case-modeling.service';
 import { ProjectModel } from '../../../models/project.model';
-import { AnalysisResultModel } from '../../../models/analysisResult.model';
 import { PlanningModel } from '../../../models/planning.model';
 import { ProjectService } from '../../project.service';
 
