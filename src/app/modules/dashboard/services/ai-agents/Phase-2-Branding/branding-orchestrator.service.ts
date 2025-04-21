@@ -46,11 +46,13 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       summary: { content: '', summary: '' },
       globalCss: { content: '', summary: '' },
       logo: {
-        svg: '',
+        content: {
+          svg: '',
+          concept: '',
+          colors: [],
+          fonts: [],
+        },
         summary: '',
-        concept: '',
-        colors: [],
-        fonts: [],
       },
     };
     let history = '';
@@ -79,7 +81,7 @@ export class BrandingOrchestratorService extends AiGenericPromptService {
       literralProject
     );
     console.log('Logo', logo['content']);
-    result.logo = logo['content'] as LogoModel;
+    result.logo.content = logo['content'];
     history += result.logo.summary + '\n';
 
     // Step 4: Typography

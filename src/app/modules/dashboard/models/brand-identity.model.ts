@@ -8,7 +8,7 @@ export interface BrandIdentityModel {
   colorSystem: { content: string; summary: string };
   iconographyAndImagery: { content: string; summary: string };
   layoutAndComposition: { content: string; summary: string };
-  logo: LogoModel;
+  logo: {content : LogoModel, summary: string};
   globalCss: { content: string; summary: string };
   summary: { content: string; summary: string };
 }

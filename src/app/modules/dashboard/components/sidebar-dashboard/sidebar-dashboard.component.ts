@@ -95,6 +95,7 @@ export class SidebarDashboardComponent implements OnInit {
     const selected = event.value as SelectElement;
     this.selectedProject = selected;
     this.updateSidebarRoutes();
+    this.router.navigate([`/console/dashboard/${selected.code}`]);
   }
 
   updateSidebarRoutes() {

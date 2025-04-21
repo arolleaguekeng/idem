@@ -92,7 +92,7 @@ export class ShowBrandingComponent {
         }
         this.branding =
           project.analysisResultModel.branding.globalCss.content +
-          project.analysisResultModel.branding.logo.svg +
+          project.analysisResultModel.branding.logo.content.svg +
 
           project.analysisResultModel.branding.summary.content +
           project.analysisResultModel.branding.brandDefinition.content +

@@ -116,13 +116,13 @@
             class="h-[180px] hover:cursor-pointer bg-gradient-to-br from-gray-800/80 to-gray-800 rounded-xl p-4 border border-gray-700 hover:border-primary-500 transition hover:shadow-lg hover:scale-[1.01] duration-300 relative overflow-hidden group"
             (click)="openProjectDashboard(project.id!)"
           >
-            @if (project.analysisResultModel.branding.logo.svg) {
+            @if (project.analysisResultModel.branding.logo.content.svg) {
             <div
               class="absolute top-4 right-4 w-16 h-16 group-hover:opacity-100 transition"
             >
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg | safeHtml
                 "
                 class="w-full h-full"
               ></div>
@@ -183,11 +183,11 @@
             class="bg-gray-800 hover:cursor-pointer rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
             (click)="openProjectDashboard(project.id!)"
           >
-            @if (project.analysisResultModel.branding.logo.svg) {
+            @if (project.analysisResultModel.branding.logo.content.svg) {
             <div class="absolute top-4 right-4 w-16 h-16">
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg | safeHtml
                 "
                 class="w-full h-full"
               ></div>
