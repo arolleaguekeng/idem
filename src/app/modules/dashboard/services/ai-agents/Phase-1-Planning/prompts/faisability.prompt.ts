@@ -1,73 +1,89 @@
 export const FAISABILITY_PROMPT = `
-En tant qu'expert en analyse de faisabilité, génère immédiatement une étude complète selon le format suivant, sans demander de précisions supplémentaires. L'analyse doit être exhaustive et directement exploitable.
+As a feasibility analysis expert, immediately generate a complete study in the following format, without asking for further clarification. The analysis must be exhaustive and directly usable.
 
-# Analyse de Faisabilité - [Nom du Projet]
+# Feasibility Analysis - [Project Name]
 
-## 1. Faisabilité Métier
-### Besin & Objectifs SMART
-- **Spécifique** : [Analyse]
-- **Mesurable** : [Indicateurs]
-- **Atteignable** : [Évaluation]
-- **Réaliste** : [Justification]
-- **Temporel** : [Échéancier]
+## 1. Business Feasibility
 
-### Différenciation Concurrentielle
-- [Avantages clés]
-- [Gap analysis vs concurrence]
+### Needs & SMART Objectives
 
-### Marché & Positionnement
-- [Taille marché]
-- [Positionnement stratégique proposé]
+*   **Specific**: [Analysis]
+*   **Measurable**: [Indicators]
+*   **Achievable**: [Assessment]
+*   **Realistic**: [Justification]
+*   **Time-bound**: [Timeline]
 
-### Risques & Opportunités
-- [Principaux risques]
-- [Opportunités identifiées]
+### Competitive Differentiation
 
-## 2. Faisabilité Financière
-### Budget Prévisionnel
-- Développement : [Estimation]
-- Exploitation : [Coûts annuels]
-- Maintenance : [Coûts récurrents]
+*   [Key advantages]
+*   [Gap analysis vs competition]
 
-### Financement
-- [Sources identifiées]
-- [Mix recommandé]
+### Market & Positioning
+
+*   [Market size]
+*   [Proposed strategic positioning]
+
+### Risks & Opportunities
+
+*   [Main risks]
+*   [Identified opportunities]
+
+## 2. Financial Feasibility
+
+### Budget Forecast
+
+*   Development: [Estimate]
+*   Operation: [Annual costs]
+*   Maintenance: [Recurring costs]
+
+### Funding
+
+*   [Identified sources]
+*   [Recommended mix]
 
 ### ROI
-- [Projection sur 3 ans]
-- [Seuil de rentabilité]
 
-## 3. Faisabilité Organisationnelle
-### Ressources Humaines
-- [Compétences disponibles]
-- [Gaps à combler]
+*   [3-year projection]
+*   [Break-even point]
 
-### Méthodologie
-- [Méthode recommandée]
-- [Justification]
+## 3. Organizational Feasibility
+
+### Human Resources
+
+*   [Available skills]
+*   [Gaps to fill]
+
+### Methodology
+
+*   [Recommended method]
+*   [Justification]
 
 ### Planning
-- [Jalons clés]
-- [Timeline estimée]
 
-## 4. Faisabilité Juridique
-### Conformité
-- [Régulations applicables]
-- [Exigences sectorielles]
+*   [Key milestones]
+*   [Estimated timeline]
 
-### Protection des Données
-- [Mesures RGPD/CCPA]
-- [Processus à implémenter]
+## 4. Legal Feasibility
 
-### Propriété Intellectuelle
-- [Brevets existants]
-- [Stratégie IP recommandée]
+### Compliance
 
-**Consignes :** 
-1. Remplir toutes les sections avec des analyses concrètes
-2. Éviter tout message d'introduction/transition
-3. Prioriser les listes à puces et tableaux synthétiques
-4. Maintenir un ton professionnel et factuel
-5. Inclure des recommandations actionnables dans chaque section 
+*   [Applicable regulations]
+*   [Sector requirements]
 
+### Data Protection
+
+*   [GDPR/CCPA measures]
+*   [Processes to implement]
+
+### Intellectual Property
+
+*   [Existing patents]
+*   [Recommended IP strategy]
+
+**Instructions:**
+
+*   Fill in all sections with concrete analyses
+*   Prioritize bulleted lists and summary tables
+*   Maintain a professional and factual tone
+*   Include actionable recommendations in each section
 `;

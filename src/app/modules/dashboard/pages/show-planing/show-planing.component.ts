@@ -17,16 +17,11 @@ import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { PlanningModel } from '../../models/planning.model';
-import { LoaderComponent } from "../../../../components/loader/loader.component";
+import { LoaderComponent } from '../../../../components/loader/loader.component';
 
 @Component({
   selector: 'app-show-planing',
-  imports: [
-    TabsModule,
-    MarkdownComponent,
-    BadgeModule,
-    LoaderComponent
-],
+  imports: [TabsModule, MarkdownComponent, BadgeModule, LoaderComponent],
   templateUrl: './show-planing.component.html',
   styleUrl: './show-planing.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,25 +67,18 @@ export class ShowPlaningComponent {
       this.project = project;
       console.log('project', this.project);
       if (this.project.selectedPhases.includes('planning')) {
-        if (!this.project.analysisResultModel?.planning) {
-          console.log('Exécution de la première phase...');
-          const analysis = await this.firstPhaseService.executeFirstPhase(
-            this.project
-          );
-          if (!analysis) {
-            console.log('error on anallysis');
-            return;
-          }
-          console.log('anallist', analysis);
-          console.log('project', project);
-          console.log('planning', project.analysisResultModel.planning);
+        console.log('Executing first phase...');
 
-          this.project.analysisResultModel.planning = analysis as PlanningModel;
-
-          await this.projectService.editUserProject(this.id, this.project);
-        } else {
-          console.log('Analyse déjà existante.');
+        const analysis = await this.firstPhaseService.executeFirstPhase(
+          this.project
+        );
+        if (!analysis) {
+          console.log('error on anallysis');
+          return;
         }
+        this.project.analysisResultModel.planning = analysis as PlanningModel;
+
+        await this.projectService.editUserProject(this.id, this.project);
 
         this.isPlanningLoaded.set(false);
       }

@@ -1,42 +1,51 @@
 export const RISK_ANALYSIS_PROMPT = `
-En tant qu'expert en gestion des risques, génère immédiatement une analyse complète selon le format suivant, sans demander de précisions supplémentaires.
+As a risk management expert, immediately generate a complete analysis in the following format, without asking for further clarification.
 
-# Analyse des Risques - [Nom du Projet]
+# Risk Analysis - [Project Name]
 
-## 1. Identification des Risques
-### Risques Techniques
-- [RT-001] [Description du risque]  
-  *Probabilité* : [Faible/Moyenne/Élevée]  
-  *Impact* : [Critique/Majeur/Mineur]
+## 1. Risk Identification
 
-### Risques Métier
-- [RM-001] [Description du risque]  
-  *Probabilité* : [Faible/Moyenne/Élevée]  
-  *Impact* : [Critique/Majeur/Mineur]
+### Technical Risks
 
-## 2. Évaluation des Risques
-| Risque | Probabilité | Impact | Niveau |  
-|--------|-------------|--------|--------|  
-| [Code] | [%] | [1-5] | [A/B/C] |
+*   [TR-001] [Risk description]
+    *   *Probability*: [Low/Medium/High]
+    *   *Impact*: [Critical/Major/Minor]
 
-## 3. Plan d'Atténuation
-### Mesures Préventives
-- [MP-001] Pour [Risque] : [Action concrète]  
-  *Coût* : [Estimation]  
-  *Efficacité* : [% de réduction du risque]
+### Business Risks
 
-### Plans de Contingence
-- [PC-001] Si [Risque] se produit : [Procédure d'urgence]
+*   [BR-001] [Risk description]
+    *   *Probability*: [Low/Medium/High]
+    *   *Impact*: [Critical/Major/Minor]
 
-## 4. Suivi des Risques
-- Fréquence de réévaluation : [Mensuelle/Trimestrielle]  
-- Métriques de surveillance : [Indicateurs clés]  
-- Responsables : [Rôles assignés]
+## 2. Risk Assessment
 
-**Consignes :**  
-1. Utiliser l'échelle ISO 31000 pour l'évaluation  
-2. Inclure au moins 5 risques par catégorie  
-3. Prioriser par niveau de criticité  
-4. Fournir des solutions concrètes et chiffrées  
-5. Éviter les formulations génériques  
+| Risk   | Probability | Impact | Level |
+| :----- | :---------- | :----- | :---- |
+| [Code] | [%]         | [1-5]  | [A/B/C] |
+
+## 3. Mitigation Plan
+
+### Preventive Measures
+
+*   [PM-001] For [Risk]: [Concrete action]
+    *   *Cost*: [Estimate]
+    *   *Effectiveness*: [% risk reduction]
+
+### Contingency Plans
+
+*   [CP-001] If [Risk] occurs: [Emergency procedure]
+
+## 4. Risk Monitoring
+
+*   Reassessment frequency: [Monthly/Quarterly]
+*   Monitoring metrics: [Key indicators]
+*   Responsibilities: [Assigned roles]
+
+**Instructions:**
+
+*   Use the ISO 31000 scale for assessment
+*   Include at least 5 risks per category
+*   Prioritize by criticality level
+*   Provide concrete and quantified solutions
+*   Avoid generic formulations
 `;

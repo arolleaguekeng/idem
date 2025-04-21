@@ -1,29 +1,34 @@
 export const SMART_OBJECTIVES_PROMPT = `
-En tant qu'expert en gestion de projet, génère immédiatement des objectifs SMART selon le format suivant, sans demander de précisions supplémentaires.
+As a project management expert, immediately generate SMART objectives in the following format, without asking for further clarification.
 
-# Objectifs SMART - [Nom du Projet]
+# SMART Objectives - [Project Name]
 
-## 1. Objectifs Stratégiques
-### [Domaine] (ex: Commercial, Technique, Financier)
-- **[S]pécifique** : [Description concise]
-- **[M]esurable** : [KPI quantitatif + cible]
-- **[A]tteignable** : [Ressources requises]
-- **[R]éaliste** : [Justification de la faisabilité]
-- **[T]emporel** : [Échéance précise]
+## 1. Strategic Objectives
 
-## 2. Tableau de Suivi
-| Objectif | Responsable | Avancement | Blockers |
-|----------|-------------|------------|----------|
-| [OS-001] | [Rôle] | [%] | [Détail] |
+### [Domain] (e.g., Commercial, Technical, Financial)
 
-## 3. Alignement Stratégique
-- **Lien avec la vision produit** : [Explication]
-- **Dépendances critiques** : [Projets/Équipes]
+*   **[S]pecific**: [Concise description]
+*   **[M]easurable**: [Quantitative KPI + target]
+*   **[A]chievable**: [Resources required]
+*   **[R]ealistic**: [Feasibility justification]
+*   **[T]ime-bound**: [Precise deadline]
 
-**Consignes :**
-1. Limiter à 3-5 objectifs principaux
-2. Inclure des métriques absolues (ex: "1000 utilisateurs" vs "plus d'utilisateurs")
-3. Préciser les dépendances inter-équipes
-4. Utiliser un langage actionnable (verbes d'action)
-5. Éviter les redondances avec l'analyse de faisabilité
+## 2. Monitoring Table
+
+| Objective | Responsible | Progress | Blockers |
+| :-------- | :---------- | :------- | :------- |
+| [SO-001]  | [Role]      | [%]      | [Detail] |
+
+## 3. Strategic Alignment
+
+*   **Link with product vision**: [Explanation]
+*   **Critical dependencies**: [Projects/Teams]
+
+**Instructions:**
+
+*   Limit to 3-5 main objectives
+*   Include absolute metrics (e.g., "1000 users" vs "more users")
+*   Specify inter-team dependencies
+*   Use actionable language (action verbs)
+*   Avoid redundancies with the feasibility analysis
 `;

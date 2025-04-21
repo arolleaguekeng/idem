@@ -1,38 +1,45 @@
 export const USE_CASE_MODELING_PROMPT = `
-En tant qu'expert en conception fonctionnelle, génère immédiatement une description détaillée des cas d'utilisation selon le format suivant, sans demander de précisions supplémentaires.
+As a functional design expert, immediately generate a detailed description of use cases in the following format, without asking for further clarification.
 
-# Description des Fonctionnalités - [Nom du Projet]
+# Feature Description - [Project Name]
 
-## 1. Fonctionnalités Principales
-### [FONC-001] [Nom de la fonctionnalité]
-- **Objectif** : [Description concise du but]
-- **Déclencheur** : [Événement/action qui lance la fonctionnalité]
-- **Processus** :
-  1. [Étape clé 1]
-  2. [Étape clé 2]
-  3. [Étape clé 3]
-- **Résultat attendu** : [Sortie/conclusion observable]
+## 1. Main Features
 
-## 2. Flux Alternatifs
-#### Pour [FONC-001] :
-- [FA-001] [Situation exceptionnelle] :
-  - [Processus alternatif]
-  - [Résultat spécifique]
+### [FEAT-001] [Feature Name]
 
-## 3. Règles Métier
-- [RB-001] [Description de la règle] :
-  - Champ d'application : [Portée]
-  - Contraintes : [Limites/conditions]
+*   **Objective**: [Concise description of the purpose]
+*   **Trigger**: [Event/action that starts the feature]
+*   **Process**:
+    1.  [Key Step 1]
+    2.  [Key Step 2]
+    3.  [Key Step 3]
+*   **Expected Outcome**: [Observable output/conclusion]
 
-## 4. Acteurs Concernés
-| Rôle | Interaction | Fréquence |
-|------|-------------|-----------|
-| [Rôle1] | [Description] | [Élevée/Moyenne/Faible] |
+## 2. Alternative Flows
 
-**Consignes :**
-1. Décrire 5-10 fonctionnalités maximum
-2. Inclure 1-2 flux alternatifs par fonctionnalité principale
-3. Numéroter les items (FONC-XXX, FA-XXX, RB-XXX)
-4. Utiliser un langage actionnable (verbes à l'infinitif)
-5. Éviter tout jargon technique complexe
+For [FEAT-001]:
+
+*   [AF-001] [Exceptional Situation]:
+    *   [Alternative Process]
+    *   [Specific Result]
+
+## 3. Business Rules
+
+*   [BR-001] [Description of the rule]:
+    *   Scope: [Scope]
+    *   Constraints: [Limits/conditions]
+
+## 4. Involved Actors
+
+| Role    | Interaction   | Frequency           |
+| :------ | :------------ | :------------------ |
+| [Role1] | [Description] | [High/Medium/Low] |
+
+**Instructions:**
+
+*   Describe a maximum of 5-10 features
+*   Include 1-2 alternative flows per main feature
+*   Number the items (FEAT-XXX, AF-XXX, BR-XXX)
+*   Use actionable language (verbs in the infinitive)
+*   Avoid complex technical jargon
 `;

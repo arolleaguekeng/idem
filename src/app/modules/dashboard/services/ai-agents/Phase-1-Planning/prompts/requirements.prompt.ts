@@ -1,49 +1,61 @@
 export const REQUIREMENTS_PROMPT = `
-En tant qu'analyste fonctionnel senior, génère immédiatement un document complet d'exigences selon le format suivant, sans demander de précisions supplémentaires.
+As a senior functional analyst, immediately generate a complete requirements document in the following format, without asking for further clarification.
 
-# Document d'Exigences - [Nom du Projet]
+# Requirements Document - [Project Name]
 
-## 1. Exigences Fonctionnelles
-### Fonctionnalités Principales
-- [FR-001] [Description claire en 1 phrase]  
-  *Critères d'acceptation* :  
-  - [CA1] [Condition mesurable]  
-  - [CA2] [Condition observable]
+## 1. Functional Requirements
 
-### Workflows Métier
+### Main Features
+
+*   [FR-001] [Clear description in 1 sentence]
+    *   *Acceptance criteria*:
+        *   [AC1] [Measurable condition]
+        *   [AC2] [Observable condition]
+
+### Business Workflows
+
 \`\`\`mermaid
 flowchart TD
-    A[Étape 1] --> B[Étape 2]
-    B --> C[Étape 3]
+    A[Step 1] --> B[Step 2]
+    B --> C[Step 3]
 \`\`\`
 
-## 2. Exigences Non-Fonctionnelles
+## 2. Non-Functional Requirements
+
 ### Performance
-- [NF-001] Temps de réponse < 500ms pour 90% des requêtes
 
-### Sécurité
-- [NF-002] Authentification à 2 facteurs obligatoire
+*   [NF-001] Response time < 500ms for 90% of requests
 
-### Compatibilité
-- [NF-003] Support des navigateurs : Chrome, Firefox, Safari
+### Security
 
-## 3. Contraintes Techniques
-| Type | Détail | Impact |
-|------|--------|--------|
-| [Technologie] | [Description] | [Effet sur le projet] |
+*   [NF-002] Mandatory 2-factor authentication
 
-## 4. Personas & Cas d'Utilisation
-### Profils Utilisateurs
-- [Persona 1] : [Description + Objectifs]
-- [Persona 2] : [Description + Objectifs]
+### Compatibility
+
+*   [NF-003] Browser support: Chrome, Firefox, Safari
+
+## 3. Technical Constraints
+
+| Type          | Detail        | Impact              |
+| :------------ | :------------ | :------------------ |
+| [Technology] | [Description] | [Effect on project] |
+
+## 4. Personas & Use Cases
+
+### User Profiles
+
+*   [Persona 1]: [Description + Objectives]
+*   [Persona 2]: [Description + Objectives]
 
 ### User Stories
-- [US-001] En tant que [rôle], je veux [action] pour [bénéfice]
 
-**Consignes :**
-1. Numéroter toutes les exigences (FR-xxx, NF-xxx)
-2. Inclure au moins 3 user stories complètes
-3. Utiliser des diagrammes Mermaid pour les workflows
-4. Prioriser les exigences (Must-have, Should-have, Could-have)
-5. Éviter toute redondance avec l'étude de faisabilité
+*   [US-001] As a [role], I want [action] to [benefit]
+
+**Instructions:**
+
+*   Number all requirements (FR-xxx, NF-xxx)
+*   Include at least 3 complete user stories
+*   Use Mermaid diagrams for workflows
+*   Prioritize requirements (Must-have, Should-have, Could-have)
+*   Avoid any redundancy with the feasibility study
 `;

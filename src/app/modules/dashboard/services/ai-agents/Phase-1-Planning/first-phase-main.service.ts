@@ -97,9 +97,16 @@ export class FirstPhaseMainService {
     ) => Promise<{ content: string; summary: string }>,
     stepName: string
   ): Promise<{ content: string; summary: string }> {
+    if (!existingData) {
+      console.log(`Generating ${stepName}...`);
+    } else {
+      console.log(`${stepName} already exists, checking for updates...`);
+    }
     const isEmpty =
-      !existingData ||
-      (existingData.content === '' && existingData.summary === '');
+      existingData == null ||
+      existingData == undefined ||
+      existingData.content === '' ||
+      existingData.summary === '';
     if (!isEmpty) return existingData;
 
     try {
