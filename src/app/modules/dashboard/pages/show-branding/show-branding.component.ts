@@ -19,10 +19,7 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 
 @Component({
   selector: 'app-show-branding',
-  imports: [
-    MarkdownComponent,
-    LoaderComponent,
-  ],
+  imports: [MarkdownComponent, LoaderComponent],
   templateUrl: './show-branding.component.html',
   styleUrl: './show-branding.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,21 +66,16 @@ export class ShowBrandingComponent {
       this.project = project;
       if (project.selectedPhases.includes('branding')) {
         console.log(this.project);
-        if (!this.project.analysisResultModel.branding) {
-          const brand =
-            await this.brandOrchestratorService.generateFullBranding(
-              this.project
-            );
+        const brand = await this.brandOrchestratorService.generateFullBranding(
+          this.project
+        );
 
-          this.project.analysisResultModel.branding =
-            brand as BrandIdentityModel;
+        this.project.analysisResultModel.branding = brand as BrandIdentityModel;
 
-          await this.projectService.editUserProject(this.id, this.project);
-        }
+        await this.projectService.editUserProject(this.id, this.project);
         this.branding =
           project.analysisResultModel.branding.globalCss.content +
           project.analysisResultModel.branding.logo.content.svg +
-
           project.analysisResultModel.branding.summary.content +
           project.analysisResultModel.branding.brandDefinition.content +
           project.analysisResultModel.branding.visualIdentityGuidelines
