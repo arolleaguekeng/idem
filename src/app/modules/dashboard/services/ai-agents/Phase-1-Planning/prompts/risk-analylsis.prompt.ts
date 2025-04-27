@@ -22,8 +22,7 @@ As a risk management expert, immediately generate a complete analysis in the fol
 **Instructions:**
 
 *   Use the ISO 31000 scale for assessment
-*   Include at least 5 risks per category
+*   Include at least 4 risks per category
 *   Prioritize by criticality level
 *   Provide concrete and quantified solutions
-*   Avoid generic formulations
 `;
