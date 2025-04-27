@@ -1,117 +1,133 @@
 @if(isPlanningLoaded()) {
-  <div class="w-full h-screen flex flex-col items-center justify-center">
-    <app-loader />
+<div class="w-full h-screen flex flex-col items-center justify-center">
+  <app-loader />
+</div>
+} @else {
+<div class="p-6">
+  <div class="w-full flex justify-end p-4">
+    <button class="inner-button" (click)="makePdf();">
+      <i class="pi pi-file-export"></i>
+      Export
+    </button>
   </div>
-  } @else {
-  <div class="p-6">
-    <p-tabs value="0">
-      <p-tablist class="fixed">
-        <!-- Feasibility Study Tab -->
-        <p-tab value="0">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-chart-line"></i>
-            <span>Feasibility Study</span>
-            <p-badge value="3" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-        
-        <!-- Requirements Gathering Tab -->
-        <p-tab value="1">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-list-check"></i>
-            <span>Requirements</span>
-            <p-badge value="4" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-        
-        <!-- Risk Analysis Tab -->
-        <p-tab value="2">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-exclamation-triangle"></i>
-            <span>Risk Analysis</span>
-            <p-badge value="2" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-        
-        <!-- Smart Objectives Tab -->
-        <p-tab value="3">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-bullseye"></i>
-            <span>Objectives</span>
-            <p-badge value="2" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-        
-        <!-- Stakeholders Meeting Tab -->
-        <p-tab value="4">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-users"></i>
-            <span>Stakeholders</span>
-            <p-badge value="2" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-        
-        <!-- UseCase Modeling Tab -->
-        <p-tab value="5">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-sitemap"></i>
-            <span>UseCase</span>
-            <p-badge value="2" severity="info" class="ml-2"></p-badge>
-          </div>
-        </p-tab>
-      </p-tablist>
-  
-      <div class="w-full mt-4">
-        <p-tabpanels class="w-full">
-          <!-- Feasibility Study Content -->
-          <p-tabpanel value="0">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.feasibilityStudy.content"
-            ></markdown>
-          </p-tabpanel>
-          
-          <!-- Requirements Gathering Content -->
-          <p-tabpanel value="1">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.requirementsGathering.content"
-            ></markdown>
-          </p-tabpanel>
-          
-          <!-- Risk Analysis Content -->
-          <p-tabpanel value="2">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.riskanalysis.content"
-            ></markdown>
-          </p-tabpanel>
-          
-          <!-- Smart Objectives Content -->
-          <p-tabpanel value="3">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.smartObjectives.content"
-            ></markdown>
-          </p-tabpanel>
-          
-          <!-- Stakeholders Meeting Content -->
-          <p-tabpanel value="4">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.stakeholdersMeeting.content"
-            ></markdown>
-          </p-tabpanel>
-          
-          <!-- UseCase Modeling Content -->
-          <p-tabpanel value="5">
-            <markdown
-              class="variable-binding"
-              [data]="project.analysisResultModel.planning.useCaseModeling.content"
-            ></markdown>
-          </p-tabpanel>
-        </p-tabpanels>
-      </div>
-    </p-tabs>
-  </div>
-  }
+  <p-tabs value="0">
+    <p-tablist class="fixed">
+      <!-- Feasibility Study Tab -->
+      <p-tab value="0">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-chart-line"></i>
+          <span>Feasibility Study</span>
+          <p-badge value="3" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+
+      <!-- Requirements Gathering Tab -->
+      <p-tab value="1">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-list-check"></i>
+          <span>Requirements</span>
+          <p-badge value="4" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+
+      <!-- Risk Analysis Tab -->
+      <p-tab value="2">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span>Risk Analysis</span>
+          <p-badge value="2" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+
+      <!-- Smart Objectives Tab -->
+      <p-tab value="3">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-bullseye"></i>
+          <span>Objectives</span>
+          <p-badge value="2" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+
+      <!-- Stakeholders Meeting Tab -->
+      <p-tab value="4">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-users"></i>
+          <span>Stakeholders</span>
+          <p-badge value="2" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+
+      <!-- UseCase Modeling Tab -->
+      <p-tab value="5">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-sitemap"></i>
+          <span>UseCase</span>
+          <p-badge value="2" severity="info" class="ml-2"></p-badge>
+        </div>
+      </p-tab>
+    </p-tablist>
+
+    <div class="w-full mt-4">
+      <p-tabpanels class="w-full">
+        <!-- Feasibility Study Content -->
+        <p-tabpanel value="0">
+          <markdown
+            class="variable-binding"
+            [data]="
+              project.analysisResultModel.planning.feasibilityStudy.content
+            "
+          ></markdown>
+        </p-tabpanel>
+
+        <!-- Requirements Gathering Content -->
+        <p-tabpanel value="1">
+          <markdown
+            class="variable-binding"
+            [data]="
+              project.analysisResultModel.planning.requirementsGathering.content
+            "
+          ></markdown>
+        </p-tabpanel>
+
+        <!-- Risk Analysis Content -->
+        <p-tabpanel value="2">
+          <markdown
+            class="variable-binding"
+            [data]="project.analysisResultModel.planning.riskanalysis.content"
+          ></markdown>
+        </p-tabpanel>
+
+        <!-- Smart Objectives Content -->
+        <p-tabpanel value="3">
+          <markdown
+            class="variable-binding"
+            [data]="
+              project.analysisResultModel.planning.smartObjectives.content
+            "
+          ></markdown>
+        </p-tabpanel>
+
+        <!-- Stakeholders Meeting Content -->
+        <p-tabpanel value="4">
+          <markdown
+            class="variable-binding"
+            [data]="
+              project.analysisResultModel.planning.stakeholdersMeeting.content
+            "
+          ></markdown>
+        </p-tabpanel>
+
+        <!-- UseCase Modeling Content -->
+        <p-tabpanel value="5">
+          <markdown
+            class="variable-binding"
+            [data]="
+              project.analysisResultModel.planning.useCaseModeling.content
+            "
+          ></markdown>
+        </p-tabpanel>
+      </p-tabpanels>
+    </div>
+  </p-tabs>
+</div>
+}

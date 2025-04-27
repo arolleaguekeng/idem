@@ -4,6 +4,12 @@
 </div>
 }@else {
 <div class="p-14">
+  <div class="w-full flex justify-end p-4">
+    <button class="inner-button" (click)="makePdf();">
+      <i class="pi pi-file-export"></i>
+      Export
+    </button>
+  </div>
   <markdown html class="variable-binding" [data]="branding"></markdown>
 </div>
 }

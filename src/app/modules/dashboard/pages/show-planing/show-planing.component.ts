@@ -1,8 +1,11 @@
+import { jsPDF } from 'jspdf';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { ProjectModel } from '../../models/project.model';
 import { MarkdownComponent } from 'ngx-markdown';
@@ -18,6 +21,7 @@ import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { PlanningModel } from '../../models/planning.model';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { generatePdf } from '../../../../utils/pdf-generator';
 
 @Component({
   selector: 'app-show-planing',
@@ -88,5 +92,16 @@ export class ShowPlaningComponent {
         error
       );
     }
+  }
+
+  makePdf() {
+    const allPlaningStapesContent =
+      this.project.analysisResultModel.planning.feasibilityStudy.content +
+      this.project.analysisResultModel.planning.requirementsGathering.content +
+      this.project.analysisResultModel.planning.riskanalysis +
+      this.project.analysisResultModel.planning.smartObjectives +
+      this.project.analysisResultModel.planning.stakeholdersMeeting +
+      this.project.analysisResultModel.planning.useCaseModeling;
+    generatePdf(allPlaningStapesContent,true);
   }
 }

@@ -16,6 +16,7 @@ import { ProjectService } from '../../services/project.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { first } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { generatePdf } from '../../../../utils/pdf-generator';
 
 @Component({
   selector: 'app-show-branding',
@@ -94,5 +95,9 @@ export class ShowBrandingComponent {
         error
       );
     }
+  }
+
+  makePdf() {
+    generatePdf(this.branding);
   }
 }
