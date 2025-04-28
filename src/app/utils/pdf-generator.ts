@@ -70,10 +70,10 @@ export async function generatePdf(
       callback: (pdf) => {
         pdf.save('document.pdf');
       },
-      margin: [0, 0, 0, 15],
-      width: 180,
-      windowWidth: 794,
-      x: 15,
+      margin: [0, 0, 15, 0],
+      width: 220,
+      windowWidth: 824,
+      x: 0,
       y: 15,
       fontFaces: [
         {
