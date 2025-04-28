@@ -86,6 +86,8 @@ export class ShowPlaningComponent {
 
         this.isPlanningLoaded.set(false);
       }
+
+      
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',

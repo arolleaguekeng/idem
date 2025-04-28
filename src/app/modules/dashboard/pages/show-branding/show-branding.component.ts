@@ -16,7 +16,7 @@ import { ProjectService } from '../../services/project.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { first } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
-import { generatePdf } from '../../../../utils/pdf-generator';
+import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
 
 @Component({
   selector: 'app-show-branding',
@@ -86,6 +86,8 @@ export class ShowBrandingComponent {
           project.analysisResultModel.branding.iconographyAndImagery.content +
           project.analysisResultModel.branding.layoutAndComposition.content +
           project.analysisResultModel.branding.toneOfVoice.content;
+
+        // this.branding = htmlToMarkdown(this.branding);
 
         this.isBrandingLoaded.set(false);
       }

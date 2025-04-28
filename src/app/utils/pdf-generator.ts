@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { marked } from 'marked';
-
+import TurndownService from 'turndown';
 async function convertSvgToBase64(svgElement: SVGSVGElement): Promise<string> {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
@@ -24,15 +24,12 @@ export async function generatePdf(
   content: string,
   isMarkdown: boolean = false
 ): Promise<void> {
-  // Conversion Markdown → HTML si nécessaire
   let htmlContent = isMarkdown ? await marked(content) : content;
 
-  // Création d'un élément temporaire pour le traitement
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = htmlContent;
   document.body.appendChild(tempDiv);
 
-  // Conversion des SVGs en base64
   const svgElements = tempDiv.querySelectorAll('svg');
   for (const svg of Array.from(svgElements)) {
     try {
@@ -47,7 +44,6 @@ export async function generatePdf(
     }
   }
 
-  // Application des styles de base
   const styledContent = `
     <div style="
       color: black !important;
@@ -74,10 +70,9 @@ export async function generatePdf(
       callback: (pdf) => {
         pdf.save('document.pdf');
       },
-      margin: [15, 15, 15, 15],
+      margin: [0, 0, 0, 15],
       width: 180,
       windowWidth: 794,
-      autoPaging: 'text',
       x: 15,
       y: 15,
       fontFaces: [
@@ -100,4 +95,14 @@ export async function generatePdf(
   } finally {
     document.body.removeChild(tempDiv);
   }
+}
+
+export async function markdownToHtml(markdown: string): Promise<string> {
+  return await marked(markdown);
+}
+
+const turndownService = new TurndownService();
+
+export function htmlToMarkdown(html: string): string {
+  return turndownService.turndown(html);
 }
