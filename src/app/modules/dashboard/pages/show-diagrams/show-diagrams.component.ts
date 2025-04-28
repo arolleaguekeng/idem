@@ -15,14 +15,10 @@ import { DiagramModel } from '../../models/diagram.model';
 import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
-import { LoaderComponent } from "../../../../components/loader/loader.component";
 
 @Component({
   selector: 'app-show-diagrams',
-  imports: [
-    MarkdownComponent,
-    LoaderComponent
-],
+  imports: [MarkdownComponent],
   templateUrl: './show-diagrams.component.html',
   styleUrl: './show-diagrams.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,20 +67,13 @@ export class ShowDiagramsComponent {
       if (project.selectedPhases.includes('design')) {
         if (!this.project.analysisResultModel.design) {
           console.log('Tray to generate diagrams...');
-          const diagrams =
-            await this.thirdPhaseService.executeThirdPhaseDiagrams(
-              this.project
-            );
-          this.project.analysisResultModel.design = diagrams as DiagramModel[];
+          const diagrams = await this.thirdPhaseService.generateFullDiagrams(
+            this.project
+          );
+          this.project.analysisResultModel.design = diagrams as DiagramModel;
 
           await this.projectService.editUserProject(this.id, this.project);
         }
-        for (let diagram of this.project.analysisResultModel.design) {
-          diagram.code = '```mermaid \n\n' + diagram.code + ' \n\n ```';
-          console.log(diagram);
-          this.formatedDiagrams.push(diagram);
-        }
-        project.analysisResultModel.design = this.formatedDiagrams;
         this.isDesignLoaded.set(false);
       }
     } catch (error) {

@@ -7,7 +7,7 @@ export interface AnalysisResultModel {
   id?: string;
   architectures: ArchitectureModel[];
   planning: PlanningModel;
-  design: DiagramModel[];
+  design: DiagramModel;
   development: string;
   branding: BrandIdentityModel;
   landing: string;

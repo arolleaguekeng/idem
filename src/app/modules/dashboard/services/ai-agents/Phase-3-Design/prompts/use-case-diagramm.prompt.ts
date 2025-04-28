@@ -1,1 +1,0 @@
-export const USECASE_DIAGRAM_PROMPT = ``;
