@@ -69,6 +69,6 @@ export class ProjectsListComponent implements OnInit {
 
   openProjectDashboard(projectId: string) {
     this.isDropdownOpen = false;
-    this.router.navigate([`console/dashboard/${projectId}`]);
+    this.router.navigate([`console/${projectId}/dashboard/${projectId}`]);
   }
 }

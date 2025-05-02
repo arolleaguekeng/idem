@@ -58,26 +58,21 @@ export class SidebarDashboardComponent implements OnInit {
   async ngOnInit() {
     this.userProjects = await this.projectService.getAllUserProjects();
 
-    if (this.userProjects.length > 0) {
-      this.selectedProject = {
-        name: this.userProjects[0].name,
-        code: this.userProjects[0].id!,
-      };
-    }
-
     this.id = this.route.snapshot.paramMap.get('id')!;
+    console.log(this.id);
     if (!this.id) {
       console.log('ID du projet introuvable');
-    }
+    } else {
+      const project = await this.projectService.getUserProjectById(this.id);
+      if (project) {
+        this.selectedProject = {
+          name: project.name,
+          code: project.id!,
+        };
 
-    const project = await this.projectService.getUserProjectById(this.id);
-    if (project) {
-      this.selectedProject = {
-        name: project.name,
-        code: project.id!,
-      };
+        console.log('prjct', this.selectedProject);
+      }
     }
-
     this.dropDownProjects = this.userProjects.map((project) => ({
       name: project.name,
       code: project.id!,
@@ -86,7 +81,6 @@ export class SidebarDashboardComponent implements OnInit {
     this.isLoading.set(false);
 
     if (this.dropDownProjects.length > 0) {
-      this.selectedProject = this.dropDownProjects[0];
       this.updateSidebarRoutes();
     }
   }
@@ -95,7 +89,9 @@ export class SidebarDashboardComponent implements OnInit {
     const selected = event.value as SelectElement;
     this.selectedProject = selected;
     this.updateSidebarRoutes();
-    this.router.navigate([`/console/dashboard/${selected.code}`]);
+    this.router.navigate([
+      `console/${selected.code}/dashboard/${selected.code}`,
+    ]);
   }
 
   updateSidebarRoutes() {

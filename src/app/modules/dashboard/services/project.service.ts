@@ -110,7 +110,9 @@ export class ProjectService implements OnInit {
         return null;
       }
 
-      return { id: projectDoc.id, ...projectDoc.data() } as ProjectModel;
+      console.log("datas",projectDoc.data())
+
+      return projectDoc.data() as ProjectModel;
     } catch (error) {
       console.error(
         `Erreur lors de la récupération du projet ${projectId} :`,

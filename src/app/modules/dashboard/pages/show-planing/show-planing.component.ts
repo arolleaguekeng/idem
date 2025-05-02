@@ -25,7 +25,7 @@ import { generatePdf } from '../../../../utils/pdf-generator';
 
 @Component({
   selector: 'app-show-planing',
-  imports: [TabsModule, MarkdownComponent, BadgeModule, LoaderComponent],
+  imports: [TabsModule, MarkdownComponent, BadgeModule],
   templateUrl: './show-planing.component.html',
   styleUrl: './show-planing.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

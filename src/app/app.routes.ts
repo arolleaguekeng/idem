@@ -34,7 +34,7 @@ export const routes: Routes = [
 
   // Layout dashboard (avec navbar spécifique)
   {
-    path: 'console',
+    path: 'console/:id',
     loadComponent: () =>
       import('./layouts/dashboard-layout/dashboard-layout.component').then(
         (m) => m.DashboardLayoutComponent
