@@ -1,0 +1,153 @@
+{
+  "name": "lexi-main",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "lm",
+  "sourceRoot": "apps/lexi-main/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/lexi-main/browser",
+        "index": "apps/lexi-main/src/index.html",
+        "main": "apps/lexi-main/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/lexi-main/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/lexi-main/public"
+          }
+        ],
+        "styles": ["apps/lexi-main/src/styles.css"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/lexi-main/webpack.config.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:module-federation-dev-server",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "lexi-main:build:production"
+        },
+        "development": {
+          "buildTarget": "lexi-main:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "lexi-main:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/lexi-main/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "lexi-main:build",
+        "port": 4200,
+        "spa": true
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/lexi-main/server",
+        "main": "apps/lexi-main/src/server.ts",
+        "tsConfig": "apps/lexi-main/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/lexi-main/webpack.server.config.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nx/angular:module-federation-dev-ssr",
+      "configurations": {
+        "development": {
+          "browserTarget": "lexi-main:build:development",
+          "serverTarget": "lexi-main:server:development"
+        },
+        "production": {
+          "browserTarget": "lexi-main:build:production",
+          "serverTarget": "lexi-main:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "executor": "@angular-devkit/build-angular:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "lexi-main:build:development",
+          "serverTarget": "lexi-main:server:development"
+        },
+        "production": {
+          "browserTarget": "lexi-main:build:production",
+          "serverTarget": "lexi-main:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    }
+  }
+}
