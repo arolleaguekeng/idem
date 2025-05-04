@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
-  selector: 'app-create-project',
+  selector: 'lm-create-project',
   imports: [
     FormsModule,
     Checkbox,

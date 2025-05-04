@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 @Component({
-  selector: 'app-header',
+  selector: 'lm-header',
   imports: [
     RouterLinkActive,
     RouterLink,

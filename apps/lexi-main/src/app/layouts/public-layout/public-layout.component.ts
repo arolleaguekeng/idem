@@ -4,7 +4,7 @@ import { FooterComponent } from '../../modules/landing/components/footer/footer.
 import { HeaderComponent } from '../../modules/landing/components/header/header.component';
 
 @Component({
-  selector: 'app-public-layout',
+  selector: 'lm-public-layout',
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css',

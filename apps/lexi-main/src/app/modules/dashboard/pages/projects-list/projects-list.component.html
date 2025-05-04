@@ -122,7 +122,8 @@
             >
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.content.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg
+                    | safeHtml
                 "
                 class="w-full h-full"
               ></div>
@@ -154,7 +155,7 @@
                 <div
                   class="flex justify-between items-center mt-2 text-xs text-gray-500"
                 >
-                  <span>{{ project.createdAt | date : "shortDate" }}</span>
+                  <span>{{ project.createdAt | date : 'shortDate' }}</span>
                   <button
                     class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400"
                   >
@@ -187,7 +188,8 @@
             <div class="absolute top-4 right-4 w-16 h-16">
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.content.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg
+                    | safeHtml
                 "
                 class="w-full h-full"
               ></div>
@@ -221,7 +223,7 @@
             <div
               class="flex justify-between items-center mt-4 text-xs text-gray-500"
             >
-              <span>{{ project.createdAt | date : "shortDate" }}</span>
+              <span>{{ project.createdAt | date : 'shortDate' }}</span>
               <button
                 class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400"
               >
@@ -234,7 +236,7 @@
 
         @if (isLoading()) {
         <div class="flex justify-center items-center h-64">
-          <app-loader />
+          <lm-loader />
         </div>
         } @else { @if (userProjects.length === 0) {
         <div

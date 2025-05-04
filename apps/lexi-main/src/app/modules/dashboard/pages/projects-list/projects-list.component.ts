@@ -16,8 +16,8 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-projects-list',
-  imports: [DatePipe, LoaderComponent, SafeHtmlPipe,AsyncPipe,RouterLink],
+  selector: 'lm-projects-list',
+  imports: [DatePipe, LoaderComponent, SafeHtmlPipe, AsyncPipe, RouterLink],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

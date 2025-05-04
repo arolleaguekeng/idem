@@ -17,7 +17,7 @@ import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 
 @Component({
-  selector: 'app-show-diagrams',
+  selector: 'lm-show-diagrams',
   imports: [MarkdownComponent],
   templateUrl: './show-diagrams.component.html',
   styleUrl: './show-diagrams.component.css',

@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-sidebar-dashboard',
+  selector: 'lm-sidebar-dashboard',
   templateUrl: './sidebar-dashboard.component.html',
   styleUrls: ['./sidebar-dashboard.component.css'],
   standalone: true,

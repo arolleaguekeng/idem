@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-home',
+  selector: 'lm-home',
   imports: [RouterLink, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

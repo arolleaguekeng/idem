@@ -24,7 +24,7 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 import { generatePdf } from '../../../../utils/pdf-generator';
 
 @Component({
-  selector: 'app-show-planing',
+  selector: 'lm-show-planing',
   imports: [TabsModule, MarkdownComponent, BadgeModule],
   templateUrl: './show-planing.component.html',
   styleUrl: './show-planing.component.css',
@@ -86,8 +86,6 @@ export class ShowPlaningComponent {
 
         this.isPlanningLoaded.set(false);
       }
-
-      
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',
@@ -104,6 +102,6 @@ export class ShowPlaningComponent {
       this.project.analysisResultModel.planning.smartObjectives +
       this.project.analysisResultModel.planning.stakeholdersMeeting +
       this.project.analysisResultModel.planning.useCaseModeling;
-    generatePdf(allPlaningStapesContent,true);
+    generatePdf(allPlaningStapesContent, true);
   }
 }

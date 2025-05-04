@@ -19,7 +19,7 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
 
 @Component({
-  selector: 'app-show-branding',
+  selector: 'lm-show-branding',
   imports: [MarkdownComponent, LoaderComponent],
   templateUrl: './show-branding.component.html',
   styleUrl: './show-branding.component.css',

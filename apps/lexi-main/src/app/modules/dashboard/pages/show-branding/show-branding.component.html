@@ -1,15 +1,15 @@
 @if(isBrandingLoaded()){
 <div class="w-full h-screen flex flex-col items-center justify-center">
-  <app-loader />
+  <lm-loader />
 </div>
 }@else {
 <div class="p-14">
   <div class="w-full flex justify-end p-4">
-    <button class="inner-button" (click)="makePdf();">
+    <button class="inner-button" (click)="makePdf()">
       <i class="pi pi-file-export"></i>
       Export
     </button>
   </div>
-  <markdown  [data]="branding"></markdown>
+  <markdown [data]="branding"></markdown>
 </div>
 }
