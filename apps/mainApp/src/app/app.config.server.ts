@@ -9,12 +9,13 @@ import { provideServerRendering } from '@angular/platform-server';
 import { provideServerRouting } from '@angular/ssr';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth } from '@angular/fire/auth';
 import { initializeApp, initializeServerApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { isPlatformBrowser } from '@angular/common';
+import { provideClientHydration } from '@angular/platform-browser';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -28,6 +29,7 @@ const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
     provideServerRouting(serverRoutes),
+    provideClientHydration(),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(firebaseConfig);

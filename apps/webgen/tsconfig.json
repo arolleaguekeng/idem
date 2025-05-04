@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["webpack-env"],
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,

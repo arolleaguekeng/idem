@@ -51,7 +51,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-
+    provideClientHydration(),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(firebaseConfig);

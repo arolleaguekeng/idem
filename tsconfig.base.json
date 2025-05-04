@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "webgen/Module": ["apps/webgen/src/remote-entry.ts"]
+      "webgen/Module": ["apps/webgen/src/remote-entry.ts"],
+      "~/*": ["apps/webgen/src/app/*"]
     }
   }
 }

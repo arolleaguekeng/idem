@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProjectsListComponent } from './modules/dashboard/pages/projects-list/projects-list.component';
+import { WrapperComponent } from './components/react-wrapper/react-wrapper-component';
 
 export const routes: Routes = [
   // Layout public (avec header et footer)
@@ -28,6 +29,14 @@ export const routes: Routes = [
           import('./modules/auth/pages/login/login.component').then(
             (m) => m.LoginComponent
           ),
+      },
+      {
+        path: 'webgen',
+        component: WrapperComponent,
+        data: {
+          elementName: 'lx-webgen',
+          loadChildren: () => import('webgen/Module'),
+        },
       },
     ],
   },

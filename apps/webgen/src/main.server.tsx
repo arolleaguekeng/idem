@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as ReactDOMServer from 'react-dom/server';
 import isbot from 'isbot';
 
-import App from './app/app';
+import App from './app/root';
 
 let indexHtml: null | string = null;
 

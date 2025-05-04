@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
+    "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

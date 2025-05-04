@@ -1,0 +1,135 @@
+:root {
+  --cm-backgroundColor: var(--lexi-elements-editor-backgroundColor, var(--lexi-elements-bg-depth-1));
+  --cm-textColor: var(--lexi-elements-editor-textColor, var(--lexi-elements-textPrimary));
+
+  /* Gutter */
+
+  --cm-gutter-backgroundColor: var(--lexi-elements-editor-gutter-backgroundColor, var(--cm-backgroundColor));
+  --cm-gutter-textColor: var(--lexi-elements-editor-gutter-textColor, var(--lexi-elements-textSecondary));
+  --cm-gutter-activeLineTextColor: var(--lexi-elements-editor-gutter-activeLineTextColor, var(--cm-gutter-textColor));
+
+  /* Fold Gutter */
+
+  --cm-foldGutter-textColor: var(--lexi-elements-editor-foldGutter-textColor, var(--cm-gutter-textColor));
+  --cm-foldGutter-textColorHover: var(--lexi-elements-editor-foldGutter-textColorHover, var(--cm-gutter-textColor));
+
+  /* Active Line */
+
+  --cm-activeLineBackgroundColor: var(--lexi-elements-editor-activeLineBackgroundColor, rgb(224 231 235 / 30%));
+
+  /* Cursor */
+
+  --cm-cursor-width: 2px;
+  --cm-cursor-backgroundColor: var(--lexi-elements-editor-cursorColor, var(--lexi-elements-textSecondary));
+
+  /* Matching Brackets */
+
+  --cm-matching-bracket: var(--lexi-elements-editor-matchingBracketBackgroundColor, rgb(50 140 130 / 0.3));
+
+  /* Selection */
+
+  --cm-selection-backgroundColorFocused: var(--lexi-elements-editor-selection-backgroundColor, #42b4ff);
+  --cm-selection-backgroundOpacityFocused: var(--lexi-elements-editor-selection-backgroundOpacity, 0.3);
+  --cm-selection-backgroundColorBlured: var(--lexi-elements-editor-selection-inactiveBackgroundColor, #c9e9ff);
+  --cm-selection-backgroundOpacityBlured: var(--lexi-elements-editor-selection-inactiveBackgroundOpacity, 0.3);
+
+  /* Panels */
+
+  --cm-panels-borderColor: var(--lexi-elements-editor-panels-borderColor, var(--lexi-elements-borderColor));
+
+  /* Search */
+
+  --cm-search-backgroundColor: var(--lexi-elements-editor-search-backgroundColor, var(--cm-backgroundColor));
+  --cm-search-textColor: var(--lexi-elements-editor-search-textColor, var(--lexi-elements-textSecondary));
+  --cm-search-closeButton-backgroundColor: var(--lexi-elements-editor-search-closeButton-backgroundColor, transparent);
+
+  --cm-search-closeButton-backgroundColorHover: var(
+    --lexi-elements-editor-search-closeButton-backgroundColorHover,
+    var(--lexi-elements-item-backgroundActive)
+  );
+
+  --cm-search-closeButton-textColor: var(
+    --lexi-elements-editor-search-closeButton-textColor,
+    var(--lexi-elements-item-contentDefault)
+  );
+
+  --cm-search-closeButton-textColorHover: var(
+    --lexi-elements-editor-search-closeButton-textColorHover,
+    var(--lexi-elements-item-contentActive)
+  );
+
+  --cm-search-button-backgroundColor: var(
+    --lexi-elements-editor-search-button-backgroundColor,
+    var(--lexi-elements-item-backgroundDefault)
+  );
+
+  --cm-search-button-backgroundColorHover: var(
+    --lexi-elements-editor-search-button-backgroundColorHover,
+    var(--lexi-elements-item-backgroundActive)
+  );
+
+  --cm-search-button-textColor: var(--lexi-elements-editor-search-button-textColor, var(--lexi-elements-textSecondary));
+
+  --cm-search-button-textColorHover: var(
+    --lexi-elements-editor-search-button-textColorHover,
+    var(--lexi-elements-textPrimary)
+  );
+
+  --cm-search-button-borderColor: var(--lexi-elements-editor-search-button-borderColor, transparent);
+  --cm-search-button-borderColorHover: var(--lexi-elements-editor-search-button-borderColorHover, transparent);
+
+  --cm-search-button-borderColorFocused: var(
+    --lexi-elements-editor-search-button-borderColorFocused,
+    var(--lexi-elements-borderColorActive)
+  );
+
+  --cm-search-input-backgroundColor: var(--lexi-elements-editor-search-input-backgroundColor, transparent);
+  --cm-search-input-textColor: var(--lexi-elements-editor-search-input-textColor, var(--lexi-elements-textPrimary));
+  --cm-search-input-borderColor: var(--lexi-elements-editor-search-input-borderColor, var(--lexi-elements-borderColor));
+
+  --cm-search-input-borderColorFocused: var(
+    --lexi-elements-editor-search-input-borderColorFocused,
+    var(--lexi-elements-borderColorActive)
+  );
+
+  /* Tooltip */
+
+  --cm-tooltip-backgroundColor: var(--lexi-elements-editor-tooltip-backgroundColor, var(--cm-backgroundColor));
+  --cm-tooltip-textColor: var(--lexi-elements-editor-tooltip-textColor, var(--lexi-elements-textPrimary));
+
+  --cm-tooltip-backgroundColorSelected: var(
+    --lexi-elements-editor-tooltip-backgroundColorSelected,
+    theme('colors.alpha.accent.30')
+  );
+
+  --cm-tooltip-textColorSelected: var(
+    --lexi-elements-editor-tooltip-textColorSelected,
+    var(--lexi-elements-textPrimary)
+  );
+
+  --cm-tooltip-borderColor: var(--lexi-elements-editor-tooltip-borderColor, var(--lexi-elements-borderColor));
+
+  --cm-searchMatch-backgroundColor: var(--lexi-elements-editor-searchMatch-backgroundColor, rgba(234, 92, 0, 0.33));
+}
+
+html[data-theme='light'] {
+  --lexi-elements-editor-gutter-textColor: #237893;
+  --lexi-elements-editor-gutter-activeLineTextColor: var(--lexi-elements-textPrimary);
+  --lexi-elements-editor-foldGutter-textColorHover: var(--lexi-elements-textPrimary);
+  --lexi-elements-editor-activeLineBackgroundColor: rgb(50 53 63 / 5%);
+  --lexi-elements-editor-tooltip-backgroundColorSelected: theme('colors.alpha.accent.20');
+  --lexi-elements-editor-search-button-backgroundColor: theme('colors.gray.100');
+  --lexi-elements-editor-search-button-backgroundColorHover: theme('colors.alpha.gray.10');
+}
+
+html[data-theme='dark'] {
+  --cm-backgroundColor: var(--lexi-elements-bg-depth-2);
+  --lexi-elements-editor-gutter-textColor: var(--lexi-elements-textTertiary);
+  --lexi-elements-editor-gutter-activeLineTextColor: var(--lexi-elements-textSecondary);
+  --lexi-elements-editor-selection-inactiveBackgroundOpacity: 0.3;
+  --lexi-elements-editor-activeLineBackgroundColor: rgb(50 53 63 / 50%);
+  --lexi-elements-editor-foldGutter-textColorHover: var(--lexi-elements-textPrimary);
+  --lexi-elements-editor-matchingBracketBackgroundColor: rgba(66, 180, 255, 0.3);
+  --lexi-elements-editor-search-button-backgroundColor: theme('colors.gray.800');
+  --lexi-elements-editor-search-button-backgroundColorHover: theme('colors.alpha.white.10');
+}
