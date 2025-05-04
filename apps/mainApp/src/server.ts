@@ -3,20 +3,17 @@ import 'zone.js/node';
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr/node';
 import * as express from 'express';
-import * as cors from 'cors';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import bootstrap from './bootstrap.server';
+import bootstrap from './main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-  const distFolder = join(process.cwd(), 'dist/apps/lexi-main/browser');
+  const distFolder = join(process.cwd(), 'dist/apps/mainApp/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
     ? join(distFolder, 'index.original.html')
     : join(distFolder, 'index.html');
-
-  server.use(cors());
 
   const commonEngine = new CommonEngine();
 
@@ -62,6 +59,14 @@ function run(): void {
   });
 }
 
-run();
+// Webpack will replace 'require' with '__webpack_require__'
+// '__non_webpack_require__' is a proxy to Node 'require'
+// The below code is to ensure that the server is run only when not requiring the bundle.
+declare const __non_webpack_require__: NodeRequire;
+const mainModule = __non_webpack_require__.main;
+const moduleFilename = (mainModule && mainModule.filename) || '';
+if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
+  run();
+}
 
 export default bootstrap;

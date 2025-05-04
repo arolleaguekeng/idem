@@ -1,0 +1,15 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "webgen/Module": ["apps/webgen/src/remote-entry.ts"]
+    }
+  }
+}

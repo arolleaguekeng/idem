@@ -14,7 +14,7 @@ import { Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root', 
 })
 export class AuthService {
   private auth = inject(Auth);

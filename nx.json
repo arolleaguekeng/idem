@@ -1,5 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "projects": {
+    "mainApp": "apps/mainApp",
+    "webgen": "apps/webgen"
+  },
+  "defaultProject": "mainApp",
   "targetDefaults": {
     "build": {
       "cache": true,
@@ -68,6 +73,28 @@
           "env": "NX_MF_DEV_REMOTES"
         }
       ]
+    },
+    "@nx/rspack:rspack": {
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "env": "NX_MF_DEV_REMOTES"
+        }
+      ],
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "@nx/webpack:webpack": {
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "env": "NX_MF_DEV_REMOTES"
+        }
+      ],
+      "dependsOn": ["^build"],
+      "cache": true
     }
   },
   "defaultBase": "main",
@@ -93,6 +120,21 @@
       "linter": "eslint",
       "style": "css",
       "unitTestRunner": "jest"
+    },
+    "@nx/react": {
+      "application": {
+        "babel": true,
+        "style": "scss",
+        "linter": "eslint",
+        "bundler": "rspack"
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     }
   }
 }

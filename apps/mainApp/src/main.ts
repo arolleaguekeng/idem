@@ -5,5 +5,5 @@ fetch('/module-federation.manifest.json')
   .then((remotes: Record<string, string>) =>
     Object.entries(remotes).map(([name, entry]) => ({ name, entry }))
   )
-  .then((remotes) => init({ name: 'lexi-main', remotes }))
+  .then((remotes) => init({ name: 'mainApp', remotes }))
   .then(() => import('./bootstrap').catch((err) => console.error(err)));
