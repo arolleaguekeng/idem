@@ -27,7 +27,7 @@ import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './modules/auth/services/auth.service';
