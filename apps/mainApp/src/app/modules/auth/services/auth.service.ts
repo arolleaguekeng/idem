@@ -102,7 +102,9 @@ export class AuthService {
           .post(`${this.apiUrl}/logout`, {}, { withCredentials: true })
           .toPromise();
       })
-      .then(() => {});
+      .then(() => {
+        console.log("Logout")
+      });
     return from(promise);
   }
 
