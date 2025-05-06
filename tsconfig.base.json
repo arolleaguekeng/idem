@@ -1,5 +1,6 @@
 {
   "compileOnSave": false,
+  "types": ["webpack-env"],
   "compilerOptions": {
     "moduleResolution": "bundler",
     "experimentalDecorators": true,

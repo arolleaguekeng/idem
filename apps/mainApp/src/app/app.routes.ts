@@ -30,14 +30,6 @@ export const routes: Routes = [
             (m) => m.LoginComponent
           ),
       },
-      {
-        path: 'webgen',
-        component: WrapperComponent,
-        data: {
-          elementName: 'lx-webgen',
-          loadChildren: () => import('webgen/Module'),
-        },
-      },
     ],
   },
 
