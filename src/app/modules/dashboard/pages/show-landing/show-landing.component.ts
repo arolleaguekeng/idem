@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ProjectService } from '../../services/project.service';
+import { initEmptyObject } from '../../../../utils/init-empty-object';
+import { ProjectModel } from '../../models/project.model';
+import { AuthService } from '../../../auth/services/auth.service';
+import { LandingModel } from '../../models/landing.model';
+import { AnalysisResultModel } from '../../models/analysisResult.model';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '@angular/fire/auth';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-show-landing',
@@ -8,10 +17,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowLandingComponent { 
+  auth = inject(AuthService);
+  user$ = this.auth.user$;
+  projectService = inject(ProjectService);
+  project: ProjectModel = initEmptyObject<ProjectModel>();
+
+  id = '';
+  analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
+  route = inject(ActivatedRoute);
+  isDesignLoaded = signal(true);
+  currentUser?: User | null;
 
   redirectToReactApp() {
     // URL de votre application React
-    const reactAppUrl = 'https://votre-app-react.com/generate';
+    const reactAppUrl = 'http://localhost:5173';
     
     // Option 1: Redirection simple
     window.location.href = reactAppUrl;
@@ -130,4 +149,69 @@ toggleOption(id: string) {
     option.enabled = !option.enabled;
   }
 }
+
+   async onGenerateLanding() {
+    this.isDesignLoaded.set(true);
+    
+    if (this.project.selectedPhases.includes('landing')) {
+      // Check if landing model already exists
+      if (this.project.analysisResultModel.landing) {
+        this.isDesignLoaded.set(false);
+        return;
+      }
+
+      // Create new landing model
+      const landingModel: LandingModel = {
+        selectedOptions: {
+          stack: this.selectedStackId || '',
+          seoEnabled: this.pageOptions.find(o => o.id === 'seo')?.enabled || false,
+          contactFormEnabled: this.pageOptions.find(o => o.id === 'contact')?.enabled || false,
+          analyticsEnabled: this.pageOptions.find(o => o.id === 'analytics')?.enabled || false,
+          i18nEnabled: this.pageOptions.find(o => o.id === 'i18n')?.enabled || false,
+          performanceOptimized: this.pageOptions.find(o => o.id === 'performance')?.enabled || false
+        }
+      };
+
+      // Update project with new landing model
+      this.project.analysisResultModel.landing = landingModel;
+      await this.projectService.editUserProject(this.id, this.project);
+      this.isDesignLoaded.set(false);
+    }
+   }
+
+   async ngOnInit() {
+    try {
+      this.isDesignLoaded.set(true);
+      const user = await this.auth.user$.pipe(first()).toPromise();
+      this.currentUser = user;
+
+      if (!this.currentUser) {
+        console.log('Utilisateur non connecté');
+        return;
+      }
+
+      this.id = this.route.snapshot.paramMap.get('id')!;
+      if (!this.id) {
+        console.log('ID du projet introuvable');
+        return;
+      }
+
+      const project = await this.projectService.getUserProjectById(this.id);
+      if (!project) {
+        console.log('Projet non trouvé');
+        return;
+      }
+
+      if (!project.analysisResultModel) {
+        project.analysisResultModel = this.analis as AnalysisResultModel;
+      }
+      this.project = project;
+
+    } catch (error) {
+      console.error(
+        'Erreur lors du chargement du projet ou de l’utilisateur',
+        error
+      );
+    }
+  }
 }
