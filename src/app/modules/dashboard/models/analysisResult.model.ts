@@ -1,6 +1,7 @@
 import { ArchitectureModel } from './architecture.model';
 import { BrandIdentityModel } from './brand-identity.model';
 import { DiagramModel } from './diagram.model';
+import { LandingModel } from './landing.model';
 import { PlanningModel } from './planning.model';
 
 export interface AnalysisResultModel {
@@ -10,7 +11,7 @@ export interface AnalysisResultModel {
   design: DiagramModel;
   development: string;
   branding: BrandIdentityModel;
-  landing: string;
+  landing: LandingModel;
   testing: string;
   createdAt: Date;
 }
