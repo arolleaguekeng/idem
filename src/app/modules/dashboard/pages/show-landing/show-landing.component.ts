@@ -8,10 +8,11 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@angular/fire/auth';
 import { first } from 'rxjs';
+import { LoaderComponent } from "../../../../components/loader/loader.component";
 
 @Component({
   selector: 'app-show-landing',
-  imports: [],
+  imports: [LoaderComponent],
   templateUrl: './show-landing.component.html',
   styleUrl: './show-landing.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,12 +26,12 @@ export class ShowLandingComponent {
   id = '';
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
-  isDesignLoaded = signal(true);
+  isLoaded = signal(true);
   currentUser?: User | null;
 
-  redirectToReactApp() {
+  redirectToReactApp(projectId: string) {
     // URL de votre application React
-    const reactAppUrl = 'http://localhost:5173';
+    const reactAppUrl = `http://localhost:5173/generate/${projectId}`;
     
     // Option 1: Redirection simple
     window.location.href = reactAppUrl;
@@ -151,37 +152,35 @@ toggleOption(id: string) {
 }
 
    async onGenerateLanding() {
-    this.isDesignLoaded.set(true);
+    this.isLoaded.set(true);
     
-    if (this.project.selectedPhases.includes('landing')) {
-      // Check if landing model already exists
-      if (this.project.analysisResultModel.landing) {
-        this.isDesignLoaded.set(false);
-        return;
-      }
-
-      // Create new landing model
-      const landingModel: LandingModel = {
-        selectedOptions: {
-          stack: this.selectedStackId || '',
-          seoEnabled: this.pageOptions.find(o => o.id === 'seo')?.enabled || false,
-          contactFormEnabled: this.pageOptions.find(o => o.id === 'contact')?.enabled || false,
-          analyticsEnabled: this.pageOptions.find(o => o.id === 'analytics')?.enabled || false,
-          i18nEnabled: this.pageOptions.find(o => o.id === 'i18n')?.enabled || false,
-          performanceOptimized: this.pageOptions.find(o => o.id === 'performance')?.enabled || false
-        }
-      };
-
-      // Update project with new landing model
-      this.project.analysisResultModel.landing = landingModel;
-      await this.projectService.editUserProject(this.id, this.project);
-      this.isDesignLoaded.set(false);
+    if (this.project.analysisResultModel.landing) {
+      this.isLoaded.set(false);
+      return;
     }
+
+    // Create new landing model
+    const landingModel: LandingModel = {
+      selectedOptions: {
+        stack: this.selectedStackId || '',
+        seoEnabled: this.pageOptions.find(o => o.id === 'seo')?.enabled || false,
+        contactFormEnabled: this.pageOptions.find(o => o.id === 'contact')?.enabled || false,
+        analyticsEnabled: this.pageOptions.find(o => o.id === 'analytics')?.enabled || false,
+        i18nEnabled: this.pageOptions.find(o => o.id === 'i18n')?.enabled || false,
+        performanceOptimized: this.pageOptions.find(o => o.id === 'performance')?.enabled || false
+      }
+    };
+
+    // Update project with new landing model
+    this.project.analysisResultModel.landing = landingModel;
+    await this.projectService.editUserProject(this.id, this.project);
+    this.isLoaded.set(false);
+    this.redirectToReactApp(this.id);
    }
 
    async ngOnInit() {
     try {
-      this.isDesignLoaded.set(true);
+      this.isLoaded.set(true);
       const user = await this.auth.user$.pipe(first()).toPromise();
       this.currentUser = user;
 
@@ -206,7 +205,7 @@ toggleOption(id: string) {
         project.analysisResultModel = this.analis as AnalysisResultModel;
       }
       this.project = project;
-
+      this.isLoaded.set(false);
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',
