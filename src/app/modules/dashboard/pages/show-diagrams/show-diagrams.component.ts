@@ -15,6 +15,7 @@ import { DiagramModel } from '../../models/diagram.model';
 import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-show-diagrams',
@@ -35,6 +36,7 @@ export class ShowDiagramsComponent {
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
+  diagenUrl = environment.services.diagen.url;
 
   async ngOnInit() {
     try {

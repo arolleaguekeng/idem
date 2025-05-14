@@ -67,7 +67,7 @@ export class SidebarDashboardComponent implements OnInit {
       if (project) {
         this.selectedProject = {
           name: project.name,
-          code: project.id!,
+          code: this.id,
         };
 
         console.log('prjct', this.selectedProject);

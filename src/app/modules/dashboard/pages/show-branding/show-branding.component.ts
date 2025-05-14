@@ -76,8 +76,7 @@ export class ShowBrandingComponent {
         await this.projectService.editUserProject(this.id, this.project);
         this.branding =
           project.analysisResultModel.branding.globalCss.content +
-          project.analysisResultModel.branding.logo.content.svg +
-          project.analysisResultModel.branding.summary.content +
+          project.analysisResultModel.branding.logo.content.variations?.darkBackground +
           project.analysisResultModel.branding.brandDefinition.content +
           project.analysisResultModel.branding.visualIdentityGuidelines
             .content +

@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '@angular/fire/auth';
 import { first } from 'rxjs';
 import { LoaderComponent } from "../../../../components/loader/loader.component";
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-show-landing',
@@ -28,10 +29,11 @@ export class ShowLandingComponent {
   route = inject(ActivatedRoute);
   isLoaded = signal(true);
   currentUser?: User | null;
+  webgenUrl = environment.services.webgen.url;
 
   redirectToReactApp(projectId: string) {
     // URL de votre application React
-    const reactAppUrl = `http://localhost:5173/generate/${projectId}`;
+    const reactAppUrl = `${this.webgenUrl}/generate/${projectId}`;
     
     // Option 1: Redirection simple
     window.location.href = reactAppUrl;

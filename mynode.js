@@ -12,6 +12,19 @@ const envFile = `export const environment = {
     messagingSenderId: '${process.env.FIREBASE_MESSAGING_SENDER_ID}',
     appId: '${process.env.FIREBASE_APP_ID}',
   },
+  services: {
+    api: {
+      url: '${process.env.API_URL}',
+      version: '${process.env.API_VERSION}',
+      llmModel: '${process.env.API_LLM_MODEL}',
+    },
+    webgen: {
+      url: '${process.env.WEBGEN_URL}',
+    },
+    diagen: {
+      url: '${process.env.DIAGEN_URL}',
+    },
+  },
 };`;
 
 // Définir le chemin du dossier
