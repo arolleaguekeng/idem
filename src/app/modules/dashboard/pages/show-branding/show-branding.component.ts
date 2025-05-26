@@ -11,12 +11,12 @@ import { ActivatedRoute } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { AuthService } from '../../../auth/services/auth.service';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
-import { BrandingOrchestratorService } from '../../services/ai-agents/Phase-2-Branding/branding-orchestrator.service';
 import { ProjectService } from '../../services/project.service';
-import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { first } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
+import { BrandingService } from '../../services/ai-agents/branding.service';
+import { BrandIdentityModel } from '../../models/brand-identity.model';
 
 @Component({
   selector: 'app-show-branding',
@@ -30,13 +30,13 @@ export class ShowBrandingComponent {
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
-  brandOrchestratorService = inject(BrandingOrchestratorService);
+  brandingService = inject(BrandingService);
   isBrandingLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
-  branding = '';
+  branding: BrandIdentityModel | null = null;
   async ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
@@ -67,27 +67,17 @@ export class ShowBrandingComponent {
       this.project = project;
       if (project.selectedPhases.includes('branding')) {
         console.log(this.project);
-        const brand = await this.brandOrchestratorService.generateFullBranding(
-          this.project
+        const brandModel = await this.brandingService.getBrandIdentityModelById(
+          this.id
         );
-
-        this.project.analysisResultModel.branding = brand as BrandIdentityModel;
-
-        await this.projectService.editUserProject(this.id, this.project);
-        this.branding =
-          project.analysisResultModel.branding.globalCss.content +
-          project.analysisResultModel.branding.logo.content.variations?.darkBackground +
-          project.analysisResultModel.branding.brandDefinition.content +
-          project.analysisResultModel.branding.visualIdentityGuidelines
-            .content +
-          project.analysisResultModel.branding.typographySystem.content +
-          project.analysisResultModel.branding.colorSystem.content +
-          project.analysisResultModel.branding.iconographyAndImagery.content +
-          project.analysisResultModel.branding.layoutAndComposition.content +
-          project.analysisResultModel.branding.toneOfVoice.content;
-
-        // this.branding = htmlToMarkdown(this.branding);
-
+        if (brandModel) {
+          this.branding = brandModel;
+        } else {
+          this.branding = null;
+          console.warn(
+            `Branding information not found for project ID: ${this.id}`
+          );
+        }
         this.isBrandingLoaded.set(false);
       }
     } catch (error) {
@@ -99,6 +89,10 @@ export class ShowBrandingComponent {
   }
 
   makePdf() {
-    generatePdf(this.branding);
+    if (this.branding) {
+      generatePdf(
+        this.branding.brandIdentity.map((item) => item.data).join('\n')
+      );
+    }
   }
 }

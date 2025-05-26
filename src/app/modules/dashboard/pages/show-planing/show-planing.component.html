@@ -94,131 +94,52 @@
   </div>
 </div>
 } @else {
-<div class="p-6">
-  <div class="w-full flex justify-end p-4">
-    <button class="inner-button" (click)="makePdf()">
-      <i class="pi pi-file-export"></i>
-      Export
-    </button>
+<div class="w-full min-h-screen bg-gray-50 p-6">
+  <div class="max-w-6xl mx-auto space-y-12">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">System Design Diagrams</h1>
+      <p class="text-gray-600 mt-2">
+        Visual representation of the project architecture
+      </p>
+    </header>
+
+    <!-- Diagram Cards Section -->
+    <section class="space-y-12">
+      @for (diagram of project.analysisResultModel.planning; track diagram.id) {
+      <div
+        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h2
+            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
+          >
+            <svg
+              class="w-5 h-5 text-blue-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              ></path>
+            </svg>
+            {{ diagram.name }}
+          </h2>
+        </div>
+        <div class="p-5 bg-gray-50">
+          <markdown
+            mermaid
+            [data]="diagram.data"
+            class="mermaid-diagram"
+          ></markdown>
+        </div>
+      </div>
+      }
+    </section>
   </div>
-  <p-tabs value="0">
-    <p-tablist class="fixed">
-      <!-- Feasibility Study Tab -->
-      <p-tab value="0">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-chart-line"></i>
-          <span>Feasibility Study</span>
-          <p-badge value="3" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-
-      <!-- Requirements Gathering Tab -->
-      <p-tab value="1">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-list-check"></i>
-          <span>Requirements</span>
-          <p-badge value="4" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-
-      <!-- Risk Analysis Tab -->
-      <p-tab value="2">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-exclamation-triangle"></i>
-          <span>Risk Analysis</span>
-          <p-badge value="2" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-
-      <!-- Smart Objectives Tab -->
-      <p-tab value="3">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-bullseye"></i>
-          <span>Objectives</span>
-          <p-badge value="2" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-
-      <!-- Stakeholders Meeting Tab -->
-      <p-tab value="4">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-users"></i>
-          <span>Stakeholders</span>
-          <p-badge value="2" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-
-      <!-- UseCase Modeling Tab -->
-      <p-tab value="5">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-sitemap"></i>
-          <span>UseCase</span>
-          <p-badge value="2" severity="info" class="ml-2"></p-badge>
-        </div>
-      </p-tab>
-    </p-tablist>
-
-    <div class="w-full mt-4">
-      <p-tabpanels class="w-full">
-        <!-- Feasibility Study Content -->
-        <p-tabpanel value="0">
-          <markdown
-            class="variable-binding"
-            [data]="
-              project.analysisResultModel.planning.feasibilityStudy.content
-            "
-          ></markdown>
-        </p-tabpanel>
-
-        <!-- Requirements Gathering Content -->
-        <p-tabpanel value="1">
-          <markdown
-            class="variable-binding"
-            [data]="
-              project.analysisResultModel.planning.requirementsGathering.content
-            "
-          ></markdown>
-        </p-tabpanel>
-
-        <!-- Risk Analysis Content -->
-        <p-tabpanel value="2">
-          <markdown
-            class="variable-binding"
-            [data]="project.analysisResultModel.planning.riskanalysis.content"
-          ></markdown>
-        </p-tabpanel>
-
-        <!-- Smart Objectives Content -->
-        <p-tabpanel value="3">
-          <markdown
-            class="variable-binding"
-            [data]="
-              project.analysisResultModel.planning.smartObjectives.content
-            "
-          ></markdown>
-        </p-tabpanel>
-
-        <!-- Stakeholders Meeting Content -->
-        <p-tabpanel value="4">
-          <markdown
-            class="variable-binding"
-            [data]="
-              project.analysisResultModel.planning.stakeholdersMeeting.content
-            "
-          ></markdown>
-        </p-tabpanel>
-
-        <!-- UseCase Modeling Content -->
-        <p-tabpanel value="5">
-          <markdown
-            class="variable-binding"
-            [data]="
-              project.analysisResultModel.planning.useCaseModeling.content
-            "
-          ></markdown>
-        </p-tabpanel>
-      </p-tabpanels>
-    </div>
-  </p-tabs>
 </div>
 }

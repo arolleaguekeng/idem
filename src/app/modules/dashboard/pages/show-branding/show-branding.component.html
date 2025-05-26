@@ -5,11 +5,15 @@
 }@else {
 <div class="p-14">
   <div class="w-full flex justify-end p-4">
-    <button class="inner-button" (click)="makePdf();">
+    <button class="inner-button" (click)="makePdf()">
       <i class="pi pi-file-export"></i>
       Export
     </button>
   </div>
-  <markdown  [data]="branding"></markdown>
+  @if (branding) {
+  <markdown [data]="branding.logo.content.svg"></markdown>
+  @for (brand of branding.brandIdentity; track brand.id) {
+  <markdown [data]="brand.data"></markdown>
+  } }
 </div>
 }

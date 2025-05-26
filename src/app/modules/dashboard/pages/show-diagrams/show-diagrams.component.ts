@@ -12,10 +12,12 @@ import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { AuthService } from '../../../auth/services/auth.service';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { DiagramModel } from '../../models/diagram.model';
-import { ThirdPhaseMainService } from '../../services/ai-agents/Phase-3-Design/third-phase-main.service';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import {
+  DiagramsService,
+} from '../../services/ai-agents/diagrams.service';
 
 @Component({
   selector: 'app-show-diagrams',
@@ -30,7 +32,7 @@ export class ShowDiagramsComponent {
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   formatedDiagrams: DiagramModel[] = [];
   route = inject(ActivatedRoute);
-  thirdPhaseService = inject(ThirdPhaseMainService);
+  diagramsService = inject(DiagramsService);
   isDesignLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
@@ -45,19 +47,16 @@ export class ShowDiagramsComponent {
       this.currentUser = user;
 
       if (!this.currentUser) {
-        console.log('Utilisateur non connecté');
         return;
       }
 
       this.id = this.route.snapshot.paramMap.get('id')!;
       if (!this.id) {
-        console.log('ID du projet introuvable');
         return;
       }
 
       const project = await this.projectService.getUserProjectById(this.id);
       if (!project) {
-        console.log('Projet non trouvé');
         return;
       }
 
@@ -69,14 +68,10 @@ export class ShowDiagramsComponent {
       if (project.selectedPhases.includes('design')) {
         if (!this.project.analysisResultModel.design) {
           console.log('Tray to generate diagrams...');
-          const diagrams = await this.thirdPhaseService.generateFullDiagrams(
-            this.project
-          );
-          this.project.analysisResultModel.design = diagrams as DiagramModel;
-
-          await this.projectService.editUserProject(this.id, this.project);
+          const diagrams = await this.diagramsService.getDiagrams(this.id);
+          this.formatedDiagrams = diagrams;
+          this.isDesignLoaded.set(false);
         }
-        this.isDesignLoaded.set(false);
       }
     } catch (error) {
       console.error(

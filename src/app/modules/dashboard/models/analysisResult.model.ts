@@ -7,8 +7,8 @@ import { PlanningModel } from './planning.model';
 export interface AnalysisResultModel {
   id?: string;
   architectures: ArchitectureModel[];
-  planning: PlanningModel;
-  design: DiagramModel;
+  planning: PlanningModel[];
+  design: DiagramModel[];
   development: string;
   branding: BrandIdentityModel;
   landing: LandingModel;

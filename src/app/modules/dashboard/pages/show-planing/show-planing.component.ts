@@ -1,11 +1,8 @@
-import { jsPDF } from 'jspdf';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   inject,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { ProjectModel } from '../../models/project.model';
 import { MarkdownComponent } from 'ngx-markdown';
@@ -16,18 +13,16 @@ import { ActivatedRoute } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { AuthService } from '../../../auth/services/auth.service';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
-import { FirstPhaseMainService } from '../../services/ai-agents/Phase-1-Planning/first-phase-main.service';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
-import { PlanningModel } from '../../models/planning.model';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { generatePdf } from '../../../../utils/pdf-generator';
+import { PlanningService } from '../../services/ai-agents/planning.service';
 
 @Component({
   selector: 'app-show-planing',
   imports: [TabsModule, MarkdownComponent, BadgeModule],
   templateUrl: './show-planing.component.html',
-  styleUrl: './show-planing.component.css',
+  styleUrls: ['./show-planing.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowPlaningComponent {
@@ -35,7 +30,7 @@ export class ShowPlaningComponent {
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
-  firstPhaseService = inject(FirstPhaseMainService);
+  planningService = inject(PlanningService);
   isPlanningLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
@@ -73,21 +68,18 @@ export class ShowPlaningComponent {
       if (this.project.selectedPhases.includes('planning')) {
         console.log('Executing first phase...');
 
-        const analysis = await this.firstPhaseService.executeFirstPhase(
-          this.project
+        const analysis = await this.planningService.getPlanningItems(
+          this.project.id!
         );
         if (!analysis) {
           console.log('error on anallysis');
           return;
         }
-        this.project.analysisResultModel.planning = analysis as PlanningModel;
 
         await this.projectService.editUserProject(this.id, this.project);
 
         this.isPlanningLoaded.set(false);
       }
-
-      
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',
@@ -97,13 +89,9 @@ export class ShowPlaningComponent {
   }
 
   makePdf() {
-    const allPlaningStapesContent =
-      this.project.analysisResultModel.planning.feasibilityStudy.content +
-      this.project.analysisResultModel.planning.requirementsGathering.content +
-      this.project.analysisResultModel.planning.riskanalysis +
-      this.project.analysisResultModel.planning.smartObjectives +
-      this.project.analysisResultModel.planning.stakeholdersMeeting +
-      this.project.analysisResultModel.planning.useCaseModeling;
-    generatePdf(allPlaningStapesContent,true);
+    const allPlaningStapesContent = this.project.analysisResultModel.planning
+      .map((item) => item.data)
+      .join('\n');
+    generatePdf(allPlaningStapesContent, true);
   }
 }

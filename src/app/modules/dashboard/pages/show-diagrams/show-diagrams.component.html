@@ -26,7 +26,7 @@
 
     <!-- Diagram Cards Section -->
     <section class="space-y-12">
-      <!-- Class Diagram Card -->
+      @for (diagram of formatedDiagrams; track diagram.id) {
       <div
         class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
       >
@@ -47,151 +47,18 @@
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               ></path>
             </svg>
-            Class Diagram
+            {{ diagram.name }}
           </h2>
         </div>
         <div class="p-5 bg-gray-50">
           <markdown
             mermaid
-            [data]="project.analysisResultModel.design.classDiagram.content"
+            [data]="diagram.content"
             class="mermaid-diagram"
           ></markdown>
         </div>
       </div>
-
-      <!-- Sequence Diagram Card -->
-      <div
-        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-      >
-        <div class="p-5 border-b border-gray-100">
-          <h2
-            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-purple-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 5h7m-7 7h7m-7 7h7M4 5h7m-7 7h7m-7 7h7"
-              ></path>
-            </svg>
-            Sequence Diagram
-          </h2>
-        </div>
-        <div class="p-5 bg-gray-50">
-          <markdown
-            mermaid
-            [data]="project.analysisResultModel.design.sequenceDiagram.content"
-            class="mermaid-diagram"
-          ></markdown>
-        </div>
-      </div>
-
-      <!-- Architecture Diagram Card -->
-      <div
-        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-      >
-        <div class="p-5 border-b border-gray-100">
-          <h2
-            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-green-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              ></path>
-            </svg>
-            Architecture Diagram
-          </h2>
-        </div>
-        <div class="p-5 bg-gray-50">
-          <markdown
-            mermaid
-            [data]="
-              project.analysisResultModel.design.architectureDiagram.content
-            "
-            class="mermaid-diagram"
-          ></markdown>
-        </div>
-      </div>
-
-      <!-- ER Diagram Card -->
-      <div
-        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-      >
-        <div class="p-5 border-b border-gray-100">
-          <h2
-            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-yellow-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-              ></path>
-            </svg>
-            Entity Relationship Diagram
-          </h2>
-        </div>
-        <div class="p-5 bg-gray-50">
-          <markdown
-            mermaid
-            [data]="project.analysisResultModel.design.erDiagram.content"
-            class="mermaid-diagram"
-          ></markdown>
-        </div>
-      </div>
-
-      <!-- Use Case Diagram Card -->
-      <div
-        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-      >
-        <div class="p-5 border-b border-gray-100">
-          <h2
-            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              ></path>
-            </svg>
-            Flow Diagram
-          </h2>
-        </div>
-        <div class="p-5 bg-gray-50">
-          <markdown
-            mermaid
-            [data]="project.analysisResultModel.design.useCaseDiagram.content"
-            class="mermaid-diagram"
-          ></markdown>
-        </div>
-      </div>
+      }
     </section>
   </div>
 </div>
