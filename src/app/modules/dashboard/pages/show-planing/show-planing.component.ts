@@ -36,7 +36,7 @@ export class ShowPlaningComponent {
   auth = inject(AuthService);
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
-
+  datas: string[] = [];
   async ngOnInit() {
     try {
       this.isPlanningLoaded.set(true);
@@ -65,21 +65,26 @@ export class ShowPlaningComponent {
       }
       this.project = project;
       console.log('project', this.project);
-      if (this.project.selectedPhases.includes('planning')) {
-        console.log('Executing first phase...');
+      this.datas = this.project.analysisResultModel.businessPlan!.sections!.map(
+        (item) => item.data
+      );
+      console.log('datas', this.datas);
+      this.isPlanningLoaded.set(false);
+      // if (this.project.selectedPhases.includes('planning')) {
+      //   console.log('Executing first phase...');
 
-        const analysis = await this.planningService.getPlanningItems(
-          this.project.id!
-        );
-        if (!analysis) {
-          console.log('error on anallysis');
-          return;
-        }
+      //   const analysis = await this.planningService.getPlanningItems(
+      //     this.project.id!
+      //   );
+      //   if (!analysis) {
+      //     console.log('error on anallysis');
+      //     return;
+      //   }
 
-        await this.projectService.editUserProject(this.id, this.project);
+      //   await this.projectService.editUserProject(this.id, this.project);
 
-        this.isPlanningLoaded.set(false);
-      }
+      //   this.isPlanningLoaded.set(false);
+      // }
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',
@@ -89,9 +94,7 @@ export class ShowPlaningComponent {
   }
 
   makePdf() {
-    const allPlaningStapesContent = this.project.analysisResultModel.planning
-      .map((item) => item.data)
-      .join('\n');
+    const allPlaningStapesContent = this.datas.join('\n');
     generatePdf(allPlaningStapesContent, true);
   }
 }

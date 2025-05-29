@@ -1,13 +1,6 @@
 export interface ArchitectureModel {
-  id?: string; 
-  projectId: string; 
-  type: 'basic' | 'recommended' | 'complex'; 
-  description: string; 
-  technologies: {
-    backend: string[]; 
-    frontend: string[]; 
-    database: string[]; 
-    cloud: string[]; 
-  };
-  createdAt: Date; 
+  id?: string;
+  content: string;
+  summary: string;
+  name: string;
 }

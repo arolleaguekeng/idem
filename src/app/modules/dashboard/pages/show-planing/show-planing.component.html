@@ -94,7 +94,7 @@
   </div>
 </div>
 } @else {
-<div class="w-full min-h-screen bg-gray-50 p-6">
+<div class="w-full min-h-screen p-6">
   <div class="max-w-6xl mx-auto space-y-12">
     <!-- Header -->
     <header class="mb-8">
@@ -106,9 +106,9 @@
 
     <!-- Diagram Cards Section -->
     <section class="space-y-12">
-      @for (diagram of project.analysisResultModel.planning; track diagram.id) {
+      @for (diagram of datas; track diagram) {
       <div
-        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+        class="rounded-xl shadow-sm border border-gray-100 overflow-hidden"
       >
         <div class="p-5 border-b border-gray-100">
           <h2
@@ -127,15 +127,11 @@
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               ></path>
             </svg>
-            {{ diagram.name }}
+            {{ diagram }}
           </h2>
         </div>
-        <div class="p-5 bg-gray-50">
-          <markdown
-            mermaid
-            [data]="diagram.data"
-            class="mermaid-diagram"
-          ></markdown>
+        <div class="p-5">
+          <markdown mermaid [data]="diagram" class="mermaid-diagram"></markdown>
         </div>
       </div>
       }
