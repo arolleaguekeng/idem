@@ -185,7 +185,7 @@ export class ShowLandingComponent {
 
     // Update project with new landing model
     this.project.analysisResultModel.landing = landingModel;
-    await this.projectService.editUserProject(this.id, this.project);
+    await this.projectService.updateProject(this.id, this.project);
     this.isLoaded.set(false);
     this.redirectToReactApp(this.id);
   }
@@ -207,17 +207,25 @@ export class ShowLandingComponent {
         return;
       }
 
-      const project = await this.projectService.getUserProjectById(this.id);
-      if (!project) {
-        console.log('Projet non trouvé');
-        return;
-      }
+      this.projectService.getProjectById(this.id).subscribe({
+        next: (project) => {
+          if (!project) {
+            console.log('Projet non trouvé');
+            this.isLoaded.set(false);
+            return;
+          }
 
-      if (!project.analysisResultModel) {
-        project.analysisResultModel = this.analis as AnalysisResultModel;
-      }
-      this.project = project;
-      this.isLoaded.set(false);
+          if (!project.analysisResultModel) {
+            project.analysisResultModel = this.analis as AnalysisResultModel;
+          }
+          this.project = project;
+          this.isLoaded.set(false);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération du projet:', err);
+          this.isLoaded.set(false);
+        },
+      });
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',

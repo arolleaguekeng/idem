@@ -1,169 +1,143 @@
-import { Injectable, OnInit, inject } from '@angular/core';
-
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  Firestore,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from '@angular/fire/firestore';
-import { AuthService } from '../../auth/services/auth.service';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Auth, authState } from '@angular/fire/auth';
+import { Observable, throwError, from } from 'rxjs';
+import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { ProjectModel } from '../models/project.model';
-import { User } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { first, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService implements OnInit {
-  authService = inject(AuthService);
-  currentUser?: User | null;
-  auth = inject(AuthService);
-  user$ = this.auth.user$;
-  userSubscription: Subscription;
-  router = inject(Router);
+export class ProjectService {
+  private apiUrl = `${environment.services.api.url}/projects`;
 
-  constructor(private firestore: Firestore) {
-    this.userSubscription = this.user$.subscribe((user: User | null) => {
-      this.currentUser = user;
-    });
-  }
-  ngOnInit(): void {
-    this.authService.getCurrentUser();
-  }
+  private http = inject(HttpClient);
+  private auth = inject(Auth);
 
-  async createUserProject(
-    projectData: ProjectModel
-  ): Promise<string | undefined> {
-    if (!this.currentUser) {
-      console.log('user is null');
+  constructor() {}
 
-      return undefined;
-    }
-
-    try {
-      const projectsCollectionRef = collection(
-        this.firestore,
-        `users/${this.currentUser!.uid}/projects`
-      );
-
-      const projectRef = await addDoc(projectsCollectionRef, {
-        ...projectData,
-        createdAt: new Date(),
-      });
-
-      console.log('Projet ajouté avec succès, ID:', projectRef.id);
-
-      return projectRef.id;
-    } catch (error) {
-      console.error('Erreur lors de la création du projet :', error);
-      throw error;
-    }
-  }
-
-  async getAllUserProjects(): Promise<ProjectModel[]> {
-    const user = await this.auth.user$.pipe(first()).toPromise();
-    this.currentUser = user;
-
-    if (!this.currentUser) {
-      console.log('Utilisateur non connecté');
-      return [];
-    }
-
-    try {
-      const projectsCollectionRef = collection(
-        this.firestore,
-        `users/${this.currentUser.uid}/projects`
-      );
-
-      const querySnapshot = await getDocs(projectsCollectionRef);
-      console.log('pjts', querySnapshot.docs);
-      return querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as ProjectModel[];
-    } catch (error) {
-      console.error('Erreur lors de la récupération des projets :', error);
-      throw error;
-    }
+  private getAuthHeaders(): Observable<HttpHeaders> {
+    return authState(this.auth).pipe(
+      take(1),
+      switchMap((user) => {
+        if (!user) {
+          return throwError(
+            () =>
+              new Error('User not authenticated for ProjectService operation')
+          );
+        }
+        return from(user.getIdToken());
+      }),
+      map((token) => {
+        if (!token) {
+          throw new Error(
+            'Failed to retrieve ID token. User authenticated but token is null.'
+          );
+        }
+        return new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      }),
+      catchError((error) => {
+        console.error(
+          'Error in getAuthHeaders for ProjectService:',
+          error.message
+        );
+        return throwError(
+          () =>
+            new Error(
+              'Authentication header could not be generated for ProjectService: ' +
+                error.message
+            )
+        );
+      })
+    );
   }
 
-  async getUserProjectById(projectId: string): Promise<ProjectModel | null> {
-    try {
-      if (!this.currentUser) {
-        console.log('currentUser is null');
-        return null;
-      }
-
-      const projectDocRef = doc(
-        this.firestore,
-        `users/${this.currentUser.uid}/projects/${projectId}`
-      );
-
-      const projectDoc = await getDoc(projectDocRef);
-
-      if (!projectDoc.exists()) {
-        return null;
-      }
-
-      console.log("datas",projectDoc.data())
-
-      return projectDoc.data() as ProjectModel;
-    } catch (error) {
-      console.error(
-        `Erreur lors de la récupération du projet ${projectId} :`,
-        error
-      );
-      throw error;
-    }
+  createProject(projectData: ProjectModel): Observable<ProjectModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.post<ProjectModel>(this.apiUrl, projectData, {
+          headers,
+        });
+      }),
+      tap((response) => console.log('createProject response:', response)),
+      catchError((error) => {
+        console.error('Error in createProject:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  async deleteUserProject(projectId: string): Promise<void> {
-    if (!this.currentUser) return;
-
-    try {
-      const projectDocRef = doc(
-        this.firestore,
-        `users/${this.currentUser.uid}/projects/${projectId}`
-      );
-
-      await deleteDoc(projectDocRef);
-      console.log(`Projet ${projectId} supprimé avec succès`);
-    } catch (error) {
-      console.error(
-        `Erreur lors de la suppression du projet ${projectId} :`,
-        error
-      );
-      throw error;
-    }
+  getProjects(): Observable<ProjectModel[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.get<ProjectModel[]>(this.apiUrl, { headers });
+      }),
+      tap((response) => console.log('getProjects response:', response)),
+      catchError((error) => {
+        console.error('Error in getProjects:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  async editUserProject(
+  getProjectById(projectId: string): Observable<ProjectModel | null> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.get<ProjectModel>(`${this.apiUrl}/${projectId}`, {
+          headers,
+        });
+      }),
+      tap((response) =>
+        console.log(`getProjectById response for ${projectId}:`, response)
+      ),
+      catchError((error) => {
+        console.error(`Error in getProjectById for ${projectId}:`, error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateProject(
     projectId: string,
     updatedData: Partial<ProjectModel>
-  ): Promise<void> {
-    if (!this.currentUser) return;
+  ): Observable<ProjectModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.put<ProjectModel>(
+          `${this.apiUrl}/${projectId}`,
+          updatedData,
+          { headers }
+        );
+      }),
+      tap((response) =>
+        console.log(`updateProject response for ${projectId}:`, response)
+      ),
+      catchError((error) => {
+        console.error(`Error in updateProject for ${projectId}:`, error);
+        return throwError(() => error);
+      })
+    );
+  }
 
-    try {
-      const projectDocRef = doc(
-        this.firestore,
-        `users/${this.currentUser.uid}/projects/${projectId}`
-      );
-
-      await updateDoc(projectDocRef, { ...updatedData, updatedAt: new Date() });
-
-      console.log(`Projet ${projectId} mis à jour avec succès`);
-    } catch (error) {
-      console.error(
-        `Erreur lors de la mise à jour du projet ${projectId} :`,
-        error
-      );
-      throw error;
-    }
+  deleteProject(projectId: string): Observable<void> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.delete<void>(`${this.apiUrl}/${projectId}`, {
+          headers,
+        });
+      }),
+      tap((response) =>
+        console.log(`deleteProject response for ${projectId}:`, response)
+      ),
+      catchError((error) => {
+        console.error(`Error in deleteProject for ${projectId}:`, error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getProjectDescriptionForPrompt(project: ProjectModel) {

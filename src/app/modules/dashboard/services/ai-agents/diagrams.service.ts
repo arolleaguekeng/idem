@@ -1,17 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Auth } from '@angular/fire/auth';
-import { firstValueFrom } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { Observable, throwError, from } from 'rxjs';
+import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { DiagramModel } from '../../models/diagram.model';
-
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class DiagramsService {
-  // Renamed class to DiagramsService to match filename
   private apiUrl = `${environment.services.api.url}/project/diagrams`;
 
   private http = inject(HttpClient);
@@ -19,59 +17,105 @@ export class DiagramsService {
 
   constructor() {}
 
-  private async getAuthHeaders(): Promise<HttpHeaders> {
-    const user = this.auth.currentUser;
-    if (!user)
-      throw new Error('User not authenticated for DiagramsService operation');
-    const token = await user.getIdToken();
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+  private getAuthHeaders(): Observable<HttpHeaders> {
+    return authState(this.auth).pipe(
+      take(1),
+      switchMap((user) => {
+        if (!user) {
+          return throwError(
+            () =>
+              new Error('User not authenticated for DiagramsService operation')
+          );
+        }
+        return from(user.getIdToken());
+      }),
+      map((token) => {
+        return new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      })
+    );
   }
 
   // Create a new diagram item
-  async createDiagram(item: DiagramModel): Promise<DiagramModel> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(
-      this.http.post<DiagramModel>(this.apiUrl, item, { headers })
+  createDiagram(item: DiagramModel): Observable<DiagramModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.post<DiagramModel>(this.apiUrl, item, { headers });
+      }),
+      tap((response) => console.log('createDiagram response:', response)),
+      catchError((error) => {
+        console.error('Error in createDiagram:', error);
+        return throwError(() => error);
+      })
     );
   }
 
   // Get all diagram items (optionally by projectId)
-  async getDiagrams(projectId?: string): Promise<DiagramModel[]> {
-    const headers = await this.getAuthHeaders();
-    let url = this.apiUrl;
-    if (projectId) {
-      url += `?projectId=${projectId}`;
-    }
-    return firstValueFrom(this.http.get<DiagramModel[]>(url, { headers }));
+  getDiagrams(projectId?: string): Observable<DiagramModel[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        let url = this.apiUrl;
+        if (projectId) {
+          url += `?projectId=${projectId}`;
+        }
+        return this.http.get<DiagramModel[]>(url, { headers });
+      }),
+      tap((response) => console.log('getDiagrams response:', response)),
+      catchError((error) => {
+        console.error('Error in getDiagrams:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   // Get a specific diagram item by ID
-  async getDiagramById(id: string): Promise<DiagramModel> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(
-      this.http.get<DiagramModel>(`${this.apiUrl}/${id}`, { headers })
+  getDiagramById(id: string): Observable<DiagramModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.get<DiagramModel>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap((response) => console.log('getDiagramById response:', response)),
+      catchError((error) => {
+        console.error(`Error in getDiagramById for ID ${id}:`, error);
+        return throwError(() => error);
+      })
     );
   }
 
   // Update a specific diagram item
-  async updateDiagram(
+  updateDiagram(
     id: string,
     item: Partial<DiagramModel>
-  ): Promise<DiagramModel> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(
-      this.http.put<DiagramModel>(`${this.apiUrl}/${id}`, item, { headers })
+  ): Observable<DiagramModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.put<DiagramModel>(`${this.apiUrl}/${id}`, item, {
+          headers,
+        });
+      }),
+      tap((response) => console.log('updateDiagram response:', response)),
+      catchError((error) => {
+        console.error(`Error in updateDiagram for ID ${id}:`, error);
+        return throwError(() => error);
+      })
     );
   }
 
   // Delete a specific diagram item
-  async deleteDiagram(id: string): Promise<void> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(
-      this.http.delete<void>(`${this.apiUrl}/${id}`, { headers })
+  deleteDiagram(id: string): Observable<void> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap((response) =>
+        console.log(`deleteDiagram response for ID ${id}:`, response)
+      ),
+      catchError((error) => {
+        console.error(`Error in deleteDiagram for ID ${id}:`, error);
+        return throwError(() => error);
+      })
     );
   }
 }

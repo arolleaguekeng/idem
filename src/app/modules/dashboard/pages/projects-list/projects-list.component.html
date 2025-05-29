@@ -122,7 +122,8 @@
             >
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.content.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg
+                    | safeHtml
                 "
                 class="w-full h-full"
               ></div>
@@ -178,7 +179,7 @@
         </div>
 
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          @for (project of userProjects; track $index) {
+          @for (project of userProjects$ | async; track $index) {
           <div
             class="bg-gray-800 hover:cursor-pointer rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
             (click)="openProjectDashboard(project.id!)"
@@ -187,7 +188,8 @@
             <div class="absolute top-4 right-4 w-16 h-16">
               <div
                 [innerHTML]="
-                  project.analysisResultModel.branding.logo.content.svg | safeHtml
+                  project.analysisResultModel.branding.logo.content.svg
+                    | safeHtml
                 "
                 class="w-full h-full"
               ></div>
@@ -236,7 +238,7 @@
         <div class="flex justify-center items-center h-64">
           <app-loader />
         </div>
-        } @else { @if (userProjects.length === 0) {
+        } @else { @if ((userProjects$ | async)?.length === 0) {
         <div
           class="text-center py-16 border-2 border-dashed border-gray-800 rounded-xl"
         >

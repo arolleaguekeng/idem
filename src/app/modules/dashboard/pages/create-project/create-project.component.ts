@@ -94,8 +94,21 @@ export class CreateProjectComponent {
     try {
       this.isLoaded.set(true);
       this.project.selectedPhases = this.selectedPhases;
-      this.projectService.createUserProject(this.project).then((projectId) => {
-        this.router.navigate([`/console/planing/${projectId}`]);
+      this.projectService.createProject(this.project).subscribe({
+        next: (createdProject: ProjectModel) => {
+          if (createdProject && createdProject.id) {
+            this.router.navigate([`/console/planing/${createdProject.id}`]);
+          } else {
+            console.error('Project creation successful but ID is missing in the response.');
+            // Optionally, navigate to an error page or show a message to the user
+          }
+        },
+        error: (err) => {
+          console.error('Error creating project:', err);
+          this.isLoaded.set(false); // Ensure loading state is reset on error
+        }
+        // No need for a complete callback here as navigation handles success
+        // and isLoaded is reset in finally or error block.
       });
     } catch (e) {
       console.error('error', e);

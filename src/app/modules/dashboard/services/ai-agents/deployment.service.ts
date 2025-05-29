@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Auth } from '@angular/fire/auth';
-import { firstValueFrom } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { Observable, throwError, from } from 'rxjs';
+import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 
 // Define a basic interface for Deployment items
@@ -24,43 +25,91 @@ export class DeploymentService {
 
   constructor() {}
 
-  private async getAuthHeaders(): Promise<HttpHeaders> {
-    const user = this.auth.currentUser;
-    if (!user) throw new Error('User not authenticated for DeploymentService operation');
-    const token = await user.getIdToken();
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+  private getAuthHeaders(): Observable<HttpHeaders> {
+    return authState(this.auth).pipe(
+      take(1),
+      switchMap(user => {
+        if (!user) {
+          return throwError(() => new Error('User not authenticated for DeploymentService operation'));
+        }
+        return from(user.getIdToken()); // Convert Promise<string> to Observable<string>
+      }),
+      map(token => {
+        return new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      })
+    );
   }
 
   // Create a new deployment item
-  async createDeploymentItem(item: DeploymentItem): Promise<DeploymentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.post<DeploymentItem>(this.apiUrl, item, { headers }));
+  createDeploymentItem(item: DeploymentItem): Observable<DeploymentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.post<DeploymentItem>(this.apiUrl, item, { headers });
+      }),
+      tap(response => console.log('createDeploymentItem response:', response)),
+      catchError(error => {
+        console.error('Error in createDeploymentItem:', error);
+        throw error;
+      })
+    );
   }
 
   // Get all deployment items
-  async getDeploymentItems(): Promise<DeploymentItem[]> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.get<DeploymentItem[]>(this.apiUrl, { headers }));
+  getDeploymentItems(): Observable<DeploymentItem[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<DeploymentItem[]>(this.apiUrl, { headers });
+      }),
+      tap(response => console.log('getDeploymentItems response:', response)),
+      catchError(error => {
+        console.error('Error in getDeploymentItems:', error);
+        throw error;
+      })
+    );
   }
 
   // Get a specific deployment item by ID
-  async getDeploymentItemById(id: string): Promise<DeploymentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.get<DeploymentItem>(`${this.apiUrl}/${id}`, { headers }));
+  getDeploymentItemById(id: string): Observable<DeploymentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<DeploymentItem>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap(response => console.log('getDeploymentItemById response:', response)),
+      catchError(error => {
+        console.error(`Error in getDeploymentItemById for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 
   // Update a specific deployment item
-  async updateDeploymentItem(id: string, item: Partial<DeploymentItem>): Promise<DeploymentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.put<DeploymentItem>(`${this.apiUrl}/${id}`, item, { headers }));
+  updateDeploymentItem(id: string, item: Partial<DeploymentItem>): Observable<DeploymentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.put<DeploymentItem>(`${this.apiUrl}/${id}`, item, { headers });
+      }),
+      tap(response => console.log('updateDeploymentItem response:', response)),
+      catchError(error => {
+        console.error(`Error in updateDeploymentItem for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 
   // Delete a specific deployment item
-  async deleteDeploymentItem(id: string): Promise<void> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`, { headers }));
+  deleteDeploymentItem(id: string): Observable<void> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap(response => console.log(`deleteDeploymentItem response for ID ${id}:`, response)),
+      catchError(error => {
+        console.error(`Error in deleteDeploymentItem for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 }

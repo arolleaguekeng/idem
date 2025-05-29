@@ -14,16 +14,17 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 import { SafeHtmlPipe } from './safehtml.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { first, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [DatePipe, LoaderComponent, SafeHtmlPipe,AsyncPipe,RouterLink],
+  imports: [DatePipe, LoaderComponent, SafeHtmlPipe, AsyncPipe, RouterLink],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsListComponent implements OnInit {
-  userProjects: ProjectModel[] = [];
+  userProjects$: Observable<ProjectModel[]> = of([]);
   recentProjects: ProjectModel[] = [];
   projectService = inject(ProjectService);
   auth = inject(AuthService);
@@ -33,15 +34,22 @@ export class ProjectsListComponent implements OnInit {
   isDropdownOpen = false;
   router = inject(Router);
   @ViewChild('menu') menuRef!: ElementRef;
-  async ngOnInit() {
+  ngOnInit() {
     try {
-      this.userProjects = await this.projectService.getAllUserProjects();
-      this.recentProjects = this.userProjects
-        .slice()
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-        .slice(0, 3);
-      console.log('userProjects', this.userProjects);
-      this.isLoading.set(false);
+      this.user$.pipe(first()).subscribe((user) => {
+        if (user) {
+          this.userProjects$ = this.projectService.getProjects();
+          this.userProjects$.subscribe((projects) => {
+            this.recentProjects = projects
+              .slice()
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+              .slice(0, 3);
+          });
+        } else {
+          console.log('User not found');
+        }
+        this.isLoading.set(false);
+      });
     } catch (error) {
       console.error('Error fetching projects:', error);
       this.isLoading.set(false);

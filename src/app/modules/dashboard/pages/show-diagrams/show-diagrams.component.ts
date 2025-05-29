@@ -15,9 +15,7 @@ import { DiagramModel } from '../../models/diagram.model';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import {
-  DiagramsService,
-} from '../../services/ai-agents/diagrams.service';
+import { DiagramsService } from '../../services/ai-agents/diagrams.service';
 
 @Component({
   selector: 'app-show-diagrams',
@@ -55,24 +53,50 @@ export class ShowDiagramsComponent {
         return;
       }
 
-      const project = await this.projectService.getUserProjectById(this.id);
-      if (!project) {
-        return;
-      }
+      this.projectService.getProjectById(this.id).subscribe({
+        next: (project) => {
+          if (!project) {
+            console.log('Projet non trouvé');
+            this.isDesignLoaded.set(false);
+            return;
+          }
 
-      if (!project.analysisResultModel) {
-        project.analysisResultModel = this.analis as AnalysisResultModel;
-      }
-      this.project = project;
-      console.log('project', this.project);
-      if (project.selectedPhases.includes('design')) {
-        if (!this.project.analysisResultModel.design) {
-          console.log('Tray to generate diagrams...');
-          const diagrams = await this.diagramsService.getDiagrams(this.id);
-          this.formatedDiagrams = diagrams;
+          if (!project.analysisResultModel) {
+            project.analysisResultModel = this.analis as AnalysisResultModel;
+          }
+          this.project = project;
+          console.log('project', this.project);
+
+          if (project.selectedPhases.includes('design')) {
+            if (!this.project.analysisResultModel.design) {
+              console.log('Trying to generate diagrams...');
+              this.diagramsService.getDiagrams(this.id).subscribe({
+                next: (diagrams) => {
+                  this.formatedDiagrams = diagrams;
+                  this.isDesignLoaded.set(false);
+                },
+                error: (err) => {
+                  console.error(
+                    'Erreur lors de la récupération des diagrammes:',
+                    err
+                  );
+                  this.isDesignLoaded.set(false);
+                },
+              });
+            } else {
+              // Design exists, no need to fetch diagrams
+              this.isDesignLoaded.set(false);
+            }
+          } else {
+            // Design phase not selected, no need to fetch diagrams
+            this.isDesignLoaded.set(false);
+          }
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération du projet:', err);
           this.isDesignLoaded.set(false);
-        }
-      }
+        },
+      });
     } catch (error) {
       console.error(
         'Erreur lors du chargement du projet ou de l’utilisateur',

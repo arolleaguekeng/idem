@@ -54,16 +54,23 @@ export class ShowPlaningComponent {
         return;
       }
 
-      const project = await this.projectService.getUserProjectById(this.id);
-      if (!project) {
-        console.log('Projet non trouvé');
-        return;
-      }
+      this.projectService.getProjectById(this.id).subscribe({
+        next: (project) => {
+          if (!project) {
+            console.log('Projet non trouvé');
+            return;
+          }
 
-      if (!project.analysisResultModel) {
-        project.analysisResultModel = this.analis as AnalysisResultModel;
-      }
-      this.project = project;
+          if (!project.analysisResultModel) {
+            project.analysisResultModel = this.analis as AnalysisResultModel;
+          }
+          this.project = project;
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération du projet:', err);
+          // Optionally, set a user-facing error message or navigate away
+        }
+      });
       console.log('project', this.project);
       this.datas = this.project.analysisResultModel.businessPlan!.sections!.map(
         (item) => item.data

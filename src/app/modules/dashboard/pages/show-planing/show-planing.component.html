@@ -105,33 +105,35 @@
     </header>
 
     <!-- Diagram Cards Section -->
-    <section class="space-y-12">
-      @for (diagram of datas; track diagram) {
-      <div
-        class="rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+    <div class="flex justify-end">
+      <button
+        type="button"
+        class="flex items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+        (click)="makePdf()"
       >
-        <div class="p-5 border-b border-gray-100">
-          <h2
-            class="text-xl font-semibold text-gray-800 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-blue-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              ></path>
-            </svg>
-            {{ diagram }}
-          </h2>
-        </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M4 4h10a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"
+          />
+        </svg>
+        Download PDF
+      </button>
+    </div>
+
+    <section class="space-y-12">
+      @for (section of datas; track section) {
+      <div class="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-5">
-          <markdown mermaid [data]="diagram" class="mermaid-diagram"></markdown>
+          <markdown mermaid [data]="section" class="mermaid-diagram"></markdown>
         </div>
       </div>
       }

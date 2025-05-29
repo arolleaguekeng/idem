@@ -37,12 +37,17 @@ export class ShowBrandingComponent {
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
   branding: BrandIdentityModel | null = null;
-  async ngOnInit() {
+   ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
 
-      const user = await this.auth.user$.pipe(first()).toPromise();
-      this.currentUser = user;
+      this.auth.user$.pipe(first()).subscribe((user) => {
+        if (user) {
+          this.currentUser = user;
+        } else {
+          console.log('Utilisateur non connecté');
+        }
+      });
 
       if (!this.currentUser) {
         console.log('Utilisateur non connecté');
@@ -55,29 +60,35 @@ export class ShowBrandingComponent {
         return;
       }
 
-      const project = await this.projectService.getUserProjectById(this.id);
-      if (!project) {
-        console.log('Projet non trouvé');
-        return;
-      }
-
-      if (!project.analysisResultModel) {
-        project.analysisResultModel = this.analis as AnalysisResultModel;
-      }
-      this.project = project;
-      if (project.selectedPhases.includes('branding')) {
-        console.log(this.project);
-        const brandModel = await this.brandingService.getBrandIdentityModelById(
-          this.id
-        );
-        if (brandModel) {
-          this.branding = brandModel;
-        } else {
-          this.branding = null;
-          console.warn(
-            `Branding information not found for project ID: ${this.id}`
-          );
+      this.projectService.getProjectById(this.id).subscribe((project: ProjectModel | null) => {
+        if (!project) {
+          console.log('Projet non trouvé');
+          return;
         }
+        if (!project.analysisResultModel) {
+          project.analysisResultModel = this.analis as AnalysisResultModel;
+        }
+        this.project = project;
+      });
+
+      
+      
+      if (this.project.selectedPhases.includes('branding')) {
+        console.log(this.project);
+        this.brandingService.getBrandIdentityModelById(this.id).subscribe({
+          next: (brandModelData) => {
+            this.branding = brandModelData; // Assuming API returns the model or errors out if not found
+            this.isBrandingLoaded.set(false);
+          },
+          error: (err) => {
+            console.error(`Error fetching branding information for project ID: ${this.id}:`, err);
+            this.branding = null;
+            this.isBrandingLoaded.set(false);
+          }
+        });
+      } else {
+        // If branding is not a selected phase, no attempt to load its specific data.
+        // Ensure the general loading indicator for this section is turned off.
         this.isBrandingLoaded.set(false);
       }
     } catch (error) {

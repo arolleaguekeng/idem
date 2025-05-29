@@ -19,6 +19,7 @@ import { ProjectModel } from '../../models/project.model';
 import { SelectElement } from '../../pages/create-project/datas';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { first, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar-dashboard',
@@ -41,7 +42,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class SidebarDashboardComponent implements OnInit {
   items: MenuItem[] = [];
-  userProjects: ProjectModel[] = [];
+  userProjects$: Observable<ProjectModel[]> = of([]);
   dropDownProjects: SelectElement[] = [];
   selectedProject: SelectElement | undefined;
   isLoading = signal(true);
@@ -55,28 +56,41 @@ export class SidebarDashboardComponent implements OnInit {
   router = inject(Router);
   @ViewChild('menu') menuRef!: ElementRef;
 
+  constructor() {}
+
   async ngOnInit() {
-    this.userProjects = await this.projectService.getAllUserProjects();
+    this.user$.pipe(first()).subscribe((user) => {
+      if (user) {
+        this.userProjects$ = this.projectService.getProjects();
+        this.id = this.route.snapshot.paramMap.get('id')!;
+        console.log(this.id);
+        if (!this.id) {
+          console.log('Project id not found');
+        } else {
+          const projectObservable = this.projectService.getProjectById(this.id);
+          projectObservable.subscribe((project: ProjectModel | null) => {
+            if (project) {
+              this.selectedProject = {
+                name: project.name,
+                code: this.id,
+              };
 
-    this.id = this.route.snapshot.paramMap.get('id')!;
-    console.log(this.id);
-    if (!this.id) {
-      console.log('ID du projet introuvable');
-    } else {
-      const project = await this.projectService.getUserProjectById(this.id);
-      if (project) {
-        this.selectedProject = {
-          name: project.name,
-          code: this.id,
-        };
-
-        console.log('prjct', this.selectedProject);
+              console.log('prjct', this.selectedProject);
+            } else {
+              console.log('Project not found');
+            }
+          });
+        }
+        this.userProjects$.subscribe((projects) => {
+          this.dropDownProjects = projects.map((project) => ({
+            name: project.name,
+            code: project.id!,
+          }));
+        });
+      } else {
+        console.log('Utilisateur non connecté');
       }
-    }
-    this.dropDownProjects = this.userProjects.map((project) => ({
-      name: project.name,
-      code: project.id!,
-    }));
+    });
 
     this.isLoading.set(false);
 

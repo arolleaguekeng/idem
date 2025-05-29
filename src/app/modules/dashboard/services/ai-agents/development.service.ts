@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Auth } from '@angular/fire/auth';
-import { firstValueFrom } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { Observable, throwError, from } from 'rxjs';
+import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 
 // Define a basic interface for Development items
@@ -23,43 +24,91 @@ export class DevelopmentService {
 
   constructor() {}
 
-  private async getAuthHeaders(): Promise<HttpHeaders> {
-    const user = this.auth.currentUser;
-    if (!user) throw new Error('User not authenticated for DevelopmentService operation');
-    const token = await user.getIdToken();
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+  private getAuthHeaders(): Observable<HttpHeaders> {
+    return authState(this.auth).pipe(
+      take(1),
+      switchMap(user => {
+        if (!user) {
+          return throwError(() => new Error('User not authenticated for DevelopmentService operation'));
+        }
+        return from(user.getIdToken()); // Convert Promise<string> to Observable<string>
+      }),
+      map(token => {
+        return new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      })
+    );
   }
 
   // Create a new development item
-  async createDevelopmentItem(item: DevelopmentItem): Promise<DevelopmentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.post<DevelopmentItem>(this.apiUrl, item, { headers }));
+  createDevelopmentItem(item: DevelopmentItem): Observable<DevelopmentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.post<DevelopmentItem>(this.apiUrl, item, { headers });
+      }),
+      tap(response => console.log('createDevelopmentItem response:', response)),
+      catchError(error => {
+        console.error('Error in createDevelopmentItem:', error);
+        throw error;
+      })
+    );
   }
 
   // Get all development items
-  async getDevelopmentItems(): Promise<DevelopmentItem[]> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.get<DevelopmentItem[]>(this.apiUrl, { headers }));
+  getDevelopmentItems(): Observable<DevelopmentItem[]> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<DevelopmentItem[]>(this.apiUrl, { headers });
+      }),
+      tap(response => console.log('getDevelopmentItems response:', response)),
+      catchError(error => {
+        console.error('Error in getDevelopmentItems:', error);
+        throw error;
+      })
+    );
   }
 
   // Get a specific development item by ID
-  async getDevelopmentItemById(id: string): Promise<DevelopmentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.get<DevelopmentItem>(`${this.apiUrl}/${id}`, { headers }));
+  getDevelopmentItemById(id: string): Observable<DevelopmentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<DevelopmentItem>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap(response => console.log('getDevelopmentItemById response:', response)),
+      catchError(error => {
+        console.error(`Error in getDevelopmentItemById for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 
   // Update a specific development item
-  async updateDevelopmentItem(id: string, item: Partial<DevelopmentItem>): Promise<DevelopmentItem> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.put<DevelopmentItem>(`${this.apiUrl}/${id}`, item, { headers }));
+  updateDevelopmentItem(id: string, item: Partial<DevelopmentItem>): Observable<DevelopmentItem> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.put<DevelopmentItem>(`${this.apiUrl}/${id}`, item, { headers });
+      }),
+      tap(response => console.log('updateDevelopmentItem response:', response)),
+      catchError(error => {
+        console.error(`Error in updateDevelopmentItem for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 
   // Delete a specific development item
-  async deleteDevelopmentItem(id: string): Promise<void> {
-    const headers = await this.getAuthHeaders();
-    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`, { headers }));
+  deleteDevelopmentItem(id: string): Observable<void> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+      }),
+      tap(response => console.log(`deleteDevelopmentItem response for ID ${id}:`, response)),
+      catchError(error => {
+        console.error(`Error in deleteDevelopmentItem for ID ${id}:`, error);
+        throw error;
+      })
+    );
   }
 }
