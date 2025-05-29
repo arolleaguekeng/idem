@@ -40,24 +40,28 @@ export class BusinessPlanService {
     );
   }
 
-  // Create a new project planning item
-  createPlanningItem(item: BusinessPlanModel): Observable<BusinessPlanModel> {
+  // Create a new project businessplan item
+  createBusinessplanItem(
+    item: BusinessPlanModel
+  ): Observable<BusinessPlanModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.post<BusinessPlanModel>(this.apiUrl, item, {
           headers,
         });
       }),
-      tap((response) => console.log('createPlanningItem response:', response)),
+      tap((response) =>
+        console.log('createBusinessplanItem response:', response)
+      ),
       catchError((error) => {
-        console.error('Error in createPlanningItem:', error);
+        console.error('Error in createBusinessplanItem:', error);
         throw error;
       })
     );
   }
 
-  // Get all project planning items (optionally by projectId)
-  getPlanningItems(projectId?: string): Observable<BusinessPlanModel[]> {
+  // Get all project businessplan items (optionally by projectId)
+  getBusinessplanItems(projectId?: string): Observable<BusinessPlanModel[]> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         let url = this.apiUrl;
@@ -66,32 +70,36 @@ export class BusinessPlanService {
         }
         return this.http.get<BusinessPlanModel[]>(url, { headers });
       }),
-      tap((response) => console.log('getPlanningItems response:', response)),
+      tap((response) =>
+        console.log('getBusinessplanItems response:', response)
+      ),
       catchError((error) => {
-        console.error('Error in getPlanningItems:', error);
+        console.error('Error in getBusinessplanItems:', error);
         throw error;
       })
     );
   }
 
-  // Get a specific project planning item by ID
-  getPlanningItemById(id: string): Observable<BusinessPlanModel> {
+  // Get a specific project businessplan item by ID
+  getBusinessplanItemById(id: string): Observable<BusinessPlanModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.get<BusinessPlanModel>(`${this.apiUrl}/${id}`, {
           headers,
         });
       }),
-      tap((response) => console.log('getPlanningItemById response:', response)),
+      tap((response) =>
+        console.log('getBusinessplanItemById response:', response)
+      ),
       catchError((error) => {
-        console.error(`Error in getPlanningItemById for ID ${id}:`, error);
+        console.error(`Error in getBusinessplanItemById for ID ${id}:`, error);
         throw error;
       })
     );
   }
 
-  // Update a specific project planning item
-  updatePlanningItem(
+  // Update a specific project businessplan item
+  updateBusinessplanItem(
     id: string,
     item: Partial<BusinessPlanModel>
   ): Observable<BusinessPlanModel> {
@@ -101,25 +109,27 @@ export class BusinessPlanService {
           headers,
         });
       }),
-      tap((response) => console.log('updatePlanningItem response:', response)),
+      tap((response) =>
+        console.log('updateBusinessplanItem response:', response)
+      ),
       catchError((error) => {
-        console.error(`Error in updatePlanningItem for ID ${id}:`, error);
+        console.error(`Error in updateBusinessplanItem for ID ${id}:`, error);
         throw error;
       })
     );
   }
 
-  // Delete a specific project planning item
-  deletePlanningItem(id: string): Observable<void> {
+  // Delete a specific project businessplan item
+  deleteBusinessplanItem(id: string): Observable<void> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
       }),
       tap((response) =>
-        console.log(`deletePlanningItem response for ID ${id}:`, response)
+        console.log(`deleteBusinessplanItem response for ID ${id}:`, response)
       ),
       catchError((error) => {
-        console.error(`Error in deletePlanningItem for ID ${id}:`, error);
+        console.error(`Error in deleteBusinessplanItem for ID ${id}:`, error);
         throw error;
       })
     );

@@ -31,7 +31,7 @@ export class ShowPlaningComponent {
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
   businessPlanService = inject(BusinessPlanService);
-  isPlanningLoaded = signal(true);
+  isBusinessplanLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
@@ -39,7 +39,7 @@ export class ShowPlaningComponent {
   datas: string[] = [];
   async ngOnInit() {
     try {
-      this.isPlanningLoaded.set(true);
+      this.isBusinessplanLoaded.set(true);
       const user = await this.auth.user$.pipe(first()).toPromise();
       this.currentUser = user;
 
@@ -76,11 +76,11 @@ export class ShowPlaningComponent {
         (item) => item.data
       );
       console.log('datas', this.datas);
-      this.isPlanningLoaded.set(false);
-      // if (this.project.selectedPhases.includes('planning')) {
+      this.isBusinessplanLoaded.set(false);
+      // if (this.project.selectedPhases.includes('businessplan')) {
       //   console.log('Executing first phase...');
 
-      //   const analysis = await this.businessPlanService.getPlanningItems(
+      //   const analysis = await this.businessPlanService.getBusinessplanItems(
       //     this.project.id!
       //   );
       //   if (!analysis) {
@@ -90,7 +90,7 @@ export class ShowPlaningComponent {
 
       //   await this.projectService.editUserProject(this.id, this.project);
 
-      //   this.isPlanningLoaded.set(false);
+      //   this.isBusinessplanLoaded.set(false);
       // }
     } catch (error) {
       console.error(

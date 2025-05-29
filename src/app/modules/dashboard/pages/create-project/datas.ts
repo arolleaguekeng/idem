@@ -60,7 +60,7 @@ export default class CreateProjectDatas {
 
   static phases: DevelopmentPhase[] = [
     {
-      id: 'planning',
+      id: 'businessplan',
       label: 'Business plan',
       tier: 'free',
       subItems: [

@@ -9,7 +9,7 @@ fi
 
 # Définition des phases et sous-étapes
 phases=(
-    "Phase-1-Planning:FeasibilityStudy RiskAnalysis SmartObjectives RequirementsGathering StakeholderMeetings UseCaseModeling"
+    "Phase-1-Businessplan:FeasibilityStudy RiskAnalysis SmartObjectives RequirementsGathering StakeholderMeetings UseCaseModeling"
     "Phase-2-Design:ArchitectureChoice MonolithicArchitecture MicroservicesArchitecture EventDrivenArchitecture HexagonalArchitecture ComponentDesign UMLModeling DesignPatterns TechnologySelection BackendTechnologies FrontendTechnologies DatabaseTechnologies InfrastructureTechnologies"
     "Phase-3-Development:ProjectSetup GitInitialization CICDSetup DirectoryStructure BackendDevelopment APIImplementation DataAccessLayer ErrorHandling SecurityImplementation FrontendDevelopment UIComponents StateManagement ResponsiveDesign Authentication DatabaseDesign SchemaModeling QueryOptimization DataMigration"
     "Phase-4-Testing:UnitTesting IntegrationTesting FunctionalTesting PerformanceTesting SecurityTesting TestAutomation MockingStrategies"

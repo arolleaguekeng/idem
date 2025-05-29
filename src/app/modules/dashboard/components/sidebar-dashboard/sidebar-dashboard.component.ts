@@ -116,7 +116,7 @@ export class SidebarDashboardComponent implements OnInit {
         routerLink: [`dashboard/${this.selectedProject?.code}`],
       },
       {
-        label: 'Planning',
+        label: 'Businessplan',
         icon: 'pi pi-calendar',
         routerLink: [`planing/${this.selectedProject?.code}`],
       },
