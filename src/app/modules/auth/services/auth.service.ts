@@ -12,6 +12,7 @@ import {
 } from '@angular/fire/auth';
 import { Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +20,8 @@ import { from, Observable } from 'rxjs';
 export class AuthService {
   private auth = inject(Auth);
   user$: Observable<User | null>;
-  private http = inject(HttpClient); 
-  private apiUrl = 'http://localhost:3000/api';
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.services.api.url}/auth`;
   constructor(private firestore: Firestore) {
     this.user$ = user(this.auth);
   }

@@ -16,7 +16,7 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { generatePdf } from '../../../../utils/pdf-generator';
-import { PlanningService } from '../../services/ai-agents/planning.service';
+import { BusinessPlanService } from '../../services/ai-agents/business-plan.service';
 
 @Component({
   selector: 'app-show-planing',
@@ -30,7 +30,7 @@ export class ShowPlaningComponent {
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
-  planningService = inject(PlanningService);
+  businessPlanService = inject(BusinessPlanService);
   isPlanningLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
@@ -69,7 +69,7 @@ export class ShowPlaningComponent {
         error: (err) => {
           console.error('Erreur lors de la récupération du projet:', err);
           // Optionally, set a user-facing error message or navigate away
-        }
+        },
       });
       console.log('project', this.project);
       this.datas = this.project.analysisResultModel.businessPlan!.sections!.map(
@@ -80,7 +80,7 @@ export class ShowPlaningComponent {
       // if (this.project.selectedPhases.includes('planning')) {
       //   console.log('Executing first phase...');
 
-      //   const analysis = await this.planningService.getPlanningItems(
+      //   const analysis = await this.businessPlanService.getPlanningItems(
       //     this.project.id!
       //   );
       //   if (!analysis) {

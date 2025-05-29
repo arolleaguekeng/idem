@@ -59,9 +59,13 @@ export class ProjectService {
   createProject(projectData: ProjectModel): Observable<ProjectModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.post<ProjectModel>(this.apiUrl, projectData, {
-          headers,
-        });
+        return this.http.post<ProjectModel>(
+          `${this.apiUrl}/create`,
+          projectData,
+          {
+            headers,
+          }
+        );
       }),
       tap((response) => console.log('createProject response:', response)),
       catchError((error) => {
@@ -74,7 +78,7 @@ export class ProjectService {
   getProjects(): Observable<ProjectModel[]> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.get<ProjectModel[]>(this.apiUrl, { headers });
+        return this.http.get<ProjectModel[]>(`${this.apiUrl}/getAll`, { headers });
       }),
       tap((response) => console.log('getProjects response:', response)),
       catchError((error) => {
@@ -87,7 +91,7 @@ export class ProjectService {
   getProjectById(projectId: string): Observable<ProjectModel | null> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.get<ProjectModel>(`${this.apiUrl}/${projectId}`, {
+        return this.http.get<ProjectModel>(`${this.apiUrl}/get/${projectId}`, {
           headers,
         });
       }),
@@ -108,7 +112,7 @@ export class ProjectService {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.put<ProjectModel>(
-          `${this.apiUrl}/${projectId}`,
+          `${this.apiUrl}/update/${projectId}`,
           updatedData,
           { headers }
         );
@@ -126,7 +130,7 @@ export class ProjectService {
   deleteProject(projectId: string): Observable<void> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.delete<void>(`${this.apiUrl}/${projectId}`, {
+        return this.http.delete<void>(`${this.apiUrl}/delete/${projectId}`, {
           headers,
         });
       }),
