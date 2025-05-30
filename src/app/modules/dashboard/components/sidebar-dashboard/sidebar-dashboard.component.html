@@ -14,7 +14,7 @@
             alt=""
             class="w-[50px] h-[50px] font-bold"
           />
-          LEXI
+          IDEM
         </a>
       </div>
 
@@ -24,7 +24,7 @@
         <p-select
           [options]="dropDownProjects"
           (onChange)="onProjectChange($event)"
-          placeholder={{selectedProject?.name}}
+          placeholder="{{ selectedProject?.name }}"
           [editable]="false"
           optionLabel="name"
           styleClass=" w-full input"

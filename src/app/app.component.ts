@@ -11,5 +11,5 @@ export class AppComponent {
   resetPosition() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  title = 'lexi';
+  title = 'idem';
 }

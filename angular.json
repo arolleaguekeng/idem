@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "lexis": {
+    "idems": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/lexis",
+            "outputPath": "dist/idems",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -36,7 +36,6 @@
             ],
             "scripts": [
               "node_modules/mermaid/dist/mermaid.min.js"
-
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -78,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "lexis:build:production"
+              "buildTarget": "idems:build:production"
             },
             "development": {
-              "buildTarget": "lexis:build:development"
+              "buildTarget": "idems:build:development"
             }
           },
           "defaultConfiguration": "development"
