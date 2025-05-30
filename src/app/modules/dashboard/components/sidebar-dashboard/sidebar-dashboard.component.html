@@ -12,19 +12,25 @@
           <img
             src="/assets/icons/logo_white.png"
             alt=""
-            class="w-[50px] h-[50px] font-bold"
+            class="w-[120px] h-auto font-bold"
           />
-          IDEM
         </a>
       </div>
 
-      @if (isLoading()) { } @else {
+      @if (isLoading()) {
+      <div class="flex items-center h-16">
+        <div class="w-1/3 h-6 bg-gray-700 rounded-lg"></div>
+        <div class="w-1/3 mx-2 h-6 bg-gray-700 rounded-lg"></div>
+        <div class="w-1/3 h-6 bg-gray-700 rounded-lg"></div>
+      </div>
+
+      } @else {
 
       <div class="w-[300px] z-50 fixed left-64 h-[30px]">
         <p-select
-          [options]="dropDownProjects"
+          [options]="dropDownProjects()"
           (onChange)="onProjectChange($event)"
-          placeholder="{{ selectedProject?.name }}"
+          [placeholder]="selectedProject()?.name || 'Select Project'"
           [editable]="false"
           optionLabel="name"
           styleClass=" w-full input"
@@ -34,37 +40,36 @@
 
       <!-- Bouton de connexion (visible sur desktop) -->
       <div class="hidden md:flex items-center relative z-50">
-        @if (user$ | async) {
+        @if (user()) {
         <div class="relative">
           <!-- Avatar -->
           <button (click)="toggleDropdown()" class="flex items-center">
             <img
-              [src]="(user$ | async)!.photoURL"
+              [src]="user()!.photoURL"
               alt="Avatar"
               class="w-10 h-10 rounded-full cursor-pointer"
             />
           </button>
 
           <!-- Dropdown Menu -->
-          @if (isDropdownOpen) {
+          @if (isDropdownOpen()) {
           <div
             class="fixed right-0 mt-2 w-48 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-200 rounded-lg shadow-lg flex flex-col z-50 mr-[38px] p-2 [&_.child]:cursor-pointer"
           >
             <a
               routerLink="/profile"
+              (click)="navigateTo('/profile')"
               class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Profil</a
-            >
+              >Profil</a>
             <a
               routerLink="settings"
+              (click)="navigateTo('settings')"
               class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Settings</a
-            >
+              >Settings</a>
             <a
               (click)="logout()"
               class="dropdown-item border-t p-3 hover:bg-primary cursor-pointer"
-              >Logout</a
-            >
+              >Logout</a>
           </div>
           }
         </div>
@@ -103,11 +108,11 @@
   </div>
 
   <!-- Menu mobile (ouvert/fermé) -->
-  @if (isMenuOpen) {
+  @if (isMenuOpen()) {
   <div
     class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
     #menu
-    [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
+    [@slideInOut]="isMenuOpen() ? 'open' : 'closed'"
   >
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a
@@ -154,5 +159,5 @@
   }
 </nav>
 <div class="p-4 pt-[80px] h-screen fixed bg-gray-950 w-[260px]">
-  <p-panelMenu [model]="items" [style]="{ width: '100%' }"></p-panelMenu>
+  <p-panelMenu [model]="items()" [style]="{ width: '100%' }"></p-panelMenu>
 </div>
