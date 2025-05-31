@@ -1,71 +1,6 @@
 <nav
   class="bg-gray-900 text-white overflow-hidden shadow-2xl fixed w-full z-50 top-0 shadow-primary/35 px-0"
 >
-  <div class="max-w-8xl mx-auto px-4">
-    <div class="flex justify-between h-16">
-      <!-- Logo -->
-      <div class="flex-shrink-0 flex items-center">
-        <a
-          routerLink="/"
-          class="text-2xl font-bold hover:text-blue-700 transition duration-300 flex items-center gap-1"
-        >
-          <img
-            src="/assets/icons/logo_white.png"
-            alt=""
-            class="w-[50px] h-[50px] font-bold"
-          />
-          IDEM
-        </a>
-      </div>
-
-      <!-- Bouton de connexion (visible sur desktop) -->
-      <div class="flex items-center relative z-50">
-        @if (user$ | async) {
-        <div class="relative">
-          <!-- Avatar -->
-          <button (click)="toggleDropdown()" class="flex items-center">
-            <img
-              [src]="(user$ | async)!.photoURL"
-              alt="Avatar"
-              class="w-10 h-10 rounded-full cursor-pointer"
-            />
-          </button>
-
-          <!-- Dropdown Menu -->
-          @if (isDropdownOpen) {
-          <div
-            class="fixed right-0 mt-2 w-48 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-200 rounded-lg shadow-lg flex flex-col z-50 mr-[38px] p-2 [&_.child]:cursor-pointer"
-          >
-            <a
-              routerLink="/profile"
-              class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Profil</a
-            >
-            <a
-              routerLink="settings"
-              class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Settings</a
-            >
-            <a
-              (click)="logout()"
-              class="dropdown-item border-t p-3 hover:bg-primary cursor-pointer"
-              >Logout</a
-            >
-          </div>
-          }
-        </div>
-        } @else {
-        <div>
-          <div
-            class="w-[50px] rounded-full h-10 bg-gray-300 animate-pulse"
-          ></div>
-        </div>
-        }
-      </div>
-    </div>
-  </div>
-
-  <!-- Menu mobile (ouvert/fermé) -->
   @if (isMenuOpen) {
   <div
     class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
@@ -144,12 +79,12 @@
 
               <div class="mt-auto">
                 <div class="flex flex-wrap gap-1 text-xs text-gray-300">
-                  <span class="bg-gray-700 px-2 py-1 rounded">{{
-                    project.type.toString()
-                  }}</span>
-                  <span class="bg-gray-700 px-2 py-1 rounded">{{
-                    project.targets
-                  }}</span>
+                  <span class="bg-gray-700 px-2 py-1 rounded"
+                    >{{ project.type.toString() }}</span
+                  >
+                  <span class="bg-gray-700 px-2 py-1 rounded"
+                    >{{ project.targets }}</span
+                  >
                 </div>
 
                 <div
