@@ -8,7 +8,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Select } from 'primeng/select';
 import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
 import { ProjectService } from '../../services/project.service';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { Loader } from '../../../../components/loader/loader';
 import { Router } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,10 +24,10 @@ import { FloatLabel } from 'primeng/floatlabel';
     Select,
     InputTextModule,
     FloatLabel,
-    LoaderComponent,
+    Loader,
   ],
-  templateUrl: './create-project.component.html',
-  styleUrl: './create-project.component.css',
+  templateUrl: './create-project.html',
+  styleUrl: './create-project.css',
 })
 export class CreateProjectComponent {
   onConstraintsChange() {

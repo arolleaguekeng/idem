@@ -21,11 +21,11 @@ import { BusinessPlanService } from '../../services/ai-agents/business-plan.serv
 @Component({
   selector: 'app-show-planing',
   imports: [TabsModule, MarkdownComponent, BadgeModule],
-  templateUrl: './show-planing.component.html',
-  styleUrls: ['./show-planing.component.css'],
+  templateUrl: './show-planing.html',
+  styleUrls: ['./show-planing.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShowPlaningComponent {
+export class ShowPlaning {
   id = '';
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();

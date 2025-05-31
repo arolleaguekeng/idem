@@ -20,8 +20,8 @@ import { DiagramsService } from '../../services/ai-agents/diagrams.service';
 @Component({
   selector: 'app-show-diagrams',
   imports: [MarkdownComponent],
-  templateUrl: './show-diagrams.component.html',
-  styleUrl: './show-diagrams.component.css',
+  templateUrl: './show-diagrams.html',
+  styleUrl: './show-diagrams.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowDiagramsComponent {

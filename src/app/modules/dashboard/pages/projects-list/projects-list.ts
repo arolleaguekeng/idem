@@ -10,7 +10,7 @@ import {
 import { ProjectModel } from '../../models/project.model';
 import { ProjectService } from '../../services/project.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { Loader } from '../../../../components/loader/loader';
 import { SafeHtmlPipe } from './safehtml.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
@@ -18,12 +18,12 @@ import { first, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [DatePipe, LoaderComponent, SafeHtmlPipe, AsyncPipe, RouterLink],
-  templateUrl: './projects-list.component.html',
-  styleUrl: './projects-list.component.css',
+  imports: [DatePipe, Loader, SafeHtmlPipe, AsyncPipe, RouterLink],
+  templateUrl: './projects-list.html',
+  styleUrl: './projects-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectsListComponent implements OnInit {
+export class ProjectsList implements OnInit {
   userProjects$: Observable<ProjectModel[]> = of([]);
   recentProjects: ProjectModel[] = [];
   projectService = inject(ProjectService);

@@ -7,8 +7,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-home',
   imports: [RouterLink, FormsModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: './home.html',
+  styleUrl: './home.css',
   animations: [
     trigger('fadeIn', [
       transition(':enter', [
@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
     ]),
   ],
 })
-export class HomeComponent {
+export class Home {
   constructor(private viewportScroller: ViewportScroller) {}
 
   scrollToSection(sectionId: string) {

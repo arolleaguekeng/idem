@@ -13,14 +13,14 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@angular/fire/auth';
 import { first } from 'rxjs';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { Loader } from '../../../../components/loader/loader';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-show-landing',
-  imports: [LoaderComponent],
-  templateUrl: './show-landing.component.html',
-  styleUrl: './show-landing.component.css',
+  imports: [Loader],
+  templateUrl: './show-landing.html',
+  styleUrl: './show-landing.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowLandingComponent {

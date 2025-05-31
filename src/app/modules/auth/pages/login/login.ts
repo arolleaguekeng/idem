@@ -5,10 +5,10 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   imports: [],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  templateUrl: './login.html',
+  styleUrl: './login.css',
 })
-export class LoginComponent {
+export class Login {
   authService = inject(AuthService);
 
   loginWithGoogle() {

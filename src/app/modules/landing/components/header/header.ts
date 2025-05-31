@@ -24,8 +24,8 @@ import { MenuItem } from 'primeng/api';
     InputTextModule,
     CommonModule,
   ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  templateUrl: './header.html',
+  styleUrl: './header.css',
   animations: [
     trigger('slideInOut', [
       transition(':enter', [
@@ -38,7 +38,7 @@ import { MenuItem } from 'primeng/api';
     ]),
   ],
 })
-export class HeaderComponent implements OnInit {
+export class Header implements OnInit {
   items: MenuItem[] | undefined = [
     {
       label: 'Home',

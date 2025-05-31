@@ -13,16 +13,16 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { Loader } from '../../../../components/loader/loader';
 import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
 import { BrandingService } from '../../services/ai-agents/branding.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 
 @Component({
   selector: 'app-show-branding',
-  imports: [MarkdownComponent, LoaderComponent],
-  templateUrl: './show-branding.component.html',
-  styleUrl: './show-branding.component.css',
+  imports: [MarkdownComponent, Loader],
+  templateUrl: './show-branding.html',
+  styleUrl: './show-branding.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowBrandingComponent {

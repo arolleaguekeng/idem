@@ -28,8 +28,8 @@ import { EMPTY, from, iif, of } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar-dashboard',
-  templateUrl: './sidebar-dashboard.component.html',
-  styleUrls: ['./sidebar-dashboard.component.css'],
+  templateUrl: './sidebar-dashboard.html',
+  styleUrls: ['./sidebar-dashboard.css'],
   standalone: true,
   imports: [PanelMenu, Select, CommonModule, FormsModule],
   animations: [
@@ -45,7 +45,7 @@ import { EMPTY, from, iif, of } from 'rxjs';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidebarDashboardComponent implements OnInit {
+export class SidebarDashboard implements OnInit {
   // Services and Router
   private auth = inject(AuthService);
   private projectService = inject(ProjectService);
