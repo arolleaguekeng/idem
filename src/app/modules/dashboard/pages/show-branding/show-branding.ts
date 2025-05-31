@@ -37,7 +37,7 @@ export class ShowBrandingComponent {
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
   branding: BrandIdentityModel | null = null;
-   ngOnInit() {
+  ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
 
@@ -60,19 +60,19 @@ export class ShowBrandingComponent {
         return;
       }
 
-      this.projectService.getProjectById(this.id).subscribe((project: ProjectModel | null) => {
-        if (!project) {
-          console.log('Projet non trouvé');
-          return;
-        }
-        if (!project.analysisResultModel) {
-          project.analysisResultModel = this.analis as AnalysisResultModel;
-        }
-        this.project = project;
-      });
+      this.projectService
+        .getProjectById(this.id)
+        .subscribe((project: ProjectModel | null) => {
+          if (!project) {
+            console.log('Projet non trouvé');
+            return;
+          }
+          if (!project.analysisResultModel) {
+            project.analysisResultModel = this.analis as AnalysisResultModel;
+          }
+          this.project = project;
+        });
 
-      
-      
       if (this.project.selectedPhases.includes('branding')) {
         console.log(this.project);
         this.brandingService.getBrandIdentityModelById(this.id).subscribe({
@@ -81,10 +81,13 @@ export class ShowBrandingComponent {
             this.isBrandingLoaded.set(false);
           },
           error: (err) => {
-            console.error(`Error fetching branding information for project ID: ${this.id}:`, err);
+            console.error(
+              `Error fetching branding information for project ID: ${this.id}:`,
+              err
+            );
             this.branding = null;
             this.isBrandingLoaded.set(false);
-          }
+          },
         });
       } else {
         // If branding is not a selected phase, no attempt to load its specific data.
