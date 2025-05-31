@@ -9,16 +9,16 @@ import {
 } from '@angular/core';
 import { ProjectModel } from '../../models/project.model';
 import { ProjectService } from '../../services/project.service';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Loader } from '../../../../components/loader/loader';
-import { SafeHtmlPipe } from './safehtml.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
-import { first, Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { first, Observable } from 'rxjs';
+import { ProjectCard } from '../../components/project-card/project-card';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [Loader, AsyncPipe, DatePipe, SafeHtmlPipe],
+  imports: [Loader, AsyncPipe, ProjectCard],
   templateUrl: './projects-list.html',
   styleUrl: './projects-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +30,7 @@ export class ProjectsList implements OnInit {
   private readonly router = inject(Router);
 
   // Data signals and state
-  protected readonly userProjects$ = signal<Observable<ProjectModel[]>>(of([]));
+  userProjects$!: Observable<ProjectModel[]>;
   protected readonly recentProjects = signal<ProjectModel[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly isMenuOpen = signal(false);
@@ -41,7 +41,8 @@ export class ProjectsList implements OnInit {
     try {
       this.user$.pipe(first()).subscribe((user) => {
         if (user) {
-          this.projectService.getProjects().subscribe((projects) => {
+          this.userProjects$ = this.projectService.getProjects();
+          this.userProjects$.subscribe((projects) => {
             console.log('projects', projects);
             this.recentProjects.set(
               projects
