@@ -9,7 +9,6 @@ import {
   signal,
   computed,
   effect,
-  Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MenuItem } from 'primeng/api';
@@ -22,9 +21,10 @@ import { ProjectService } from '../../services/project.service';
 import { ProjectModel } from '../../models/project.model';
 import { SelectElement } from '../../pages/create-project/datas';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, from, iif, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { first, switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-sidebar-dashboard',
@@ -47,10 +47,10 @@ import { EMPTY, from, iif, of } from 'rxjs';
 })
 export class SidebarDashboard implements OnInit {
   // Services and Router
-  private auth = inject(AuthService);
-  private projectService = inject(ProjectService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private readonly auth = inject(AuthService);
+  private readonly projectService = inject(ProjectService);
+  private readonly router = inject(Router);
+  private readonly cookieService = inject(CookieService);
 
   // Signals for UI State
   items = signal<MenuItem[]>([]);
@@ -59,10 +59,12 @@ export class SidebarDashboard implements OnInit {
   isDropdownOpen = signal(false);
 
   // User and Project Data Signals
-  user = toSignal(this.auth.user$);
-  private _userProjects = signal<ProjectModel[]>([]);
-  selectedProject = signal<SelectElement | undefined>(undefined);
-  readonly projectIdFromRoute: Signal<string | null>; // Defined in constructor
+  protected readonly user = toSignal(this.auth.user$);
+  private readonly _userProjects = signal<ProjectModel[]>([]);
+  protected readonly selectedProject = signal<SelectElement | undefined>(
+    undefined
+  );
+  protected readonly projectIdFromCookie = signal<string | null>(null);
 
   // Computed signal for dropdown project list
   dropDownProjects = computed(() => {
@@ -75,10 +77,11 @@ export class SidebarDashboard implements OnInit {
   @ViewChild('menu') menuRef!: ElementRef;
 
   constructor() {
-    this.projectIdFromRoute = toSignal(
-      this.route.paramMap.pipe(map(params => params.get('id'))),
-      { initialValue: this.route.snapshot.paramMap.get('id') } // Sync initial value from snapshot
-    );
+    // Initialize projectIdFromCookie from saved cookie
+    const savedProjectId = this.cookieService.get('projectId');
+    if (savedProjectId) {
+      this.projectIdFromCookie.set(savedProjectId);
+    }
 
     // Effect to update sidebar menu when selectedProject changes
     effect(() => {
@@ -87,136 +90,199 @@ export class SidebarDashboard implements OnInit {
       }
     });
 
-    // Effect to react to projectIdFromRoute changes and user's projects list
-    effect(() => {
-      const projects = this._userProjects();
-      const routeId = this.projectIdFromRoute();
-      const isLoadingProjects = this.isLoading();
+    // Effect to react to projectIdFromCookie changes and user's projects list
+    effect(
+      () => {
+        const projects = this._userProjects();
+        const cookieId = this.projectIdFromCookie();
+        const isLoadingProjects = this.isLoading();
 
-      if (isLoadingProjects) {
-        return; // Wait for projects to load
-      }
+        if (isLoadingProjects) {
+          return; // Wait for projects to load
+        }
 
-      if (routeId) {
-        const projectFromRoute = projects.find(p => p.id === routeId);
-        if (projectFromRoute) {
-          this.selectedProject.set({ name: projectFromRoute.name, code: routeId });
-        } else {
-          // Invalid project ID in route
-          if (projects.length > 0) {
-            console.warn(`Project ID '${routeId}' from route not found. Navigating to first project.`);
-            const firstProject = projects[0];
-            // Set selected project and navigate to a valid route to correct URL
-            this.selectedProject.set({ name: firstProject.name, code: firstProject.id! });
-            if (routeId !== firstProject.id!) { // Avoid navigation loop if already corrected by another instance
-                this.router.navigate([`console/${firstProject.id!}/dashboard/${firstProject.id!}`], { replaceUrl: true });
-            }
+        if (cookieId) {
+          const projectFromCookie = projects.find((p) => p.id === cookieId);
+          if (projectFromCookie) {
+            // Valid project from cookie - set it as selected
+            this.selectedProject.set({
+              name: projectFromCookie.name,
+              code: cookieId,
+            });
           } else {
-            // No projects available, and route ID is invalid
+            // Invalid project ID in cookie
+            if (projects.length > 0) {
+              console.warn(
+                `Project ID '${cookieId}' from cookie not found. Using first project instead.`
+              );
+              const firstProject = projects[0];
+              // Set first project as selected and save to cookie
+              this.selectedProject.set({
+                name: firstProject.name,
+                code: firstProject.id!,
+              });
+              this.cookieService.set('projectId', firstProject.id!);
+            } else {
+              // No projects available, and cookie ID is invalid
+              this.selectedProject.set(undefined);
+              this.cookieService.remove('projectId');
+            }
+          }
+        } else {
+          // No project ID in cookie
+          if (projects.length > 0) {
+            // Select the first project by default if no specific project in cookie
+            const firstProject = projects[0];
+            this.selectedProject.set({
+              name: firstProject.name,
+              code: firstProject.id!,
+            });
+            this.cookieService.set('projectId', firstProject.id!);
+          } else {
+            // No projects and no cookie ID
             this.selectedProject.set(undefined);
           }
         }
-      } else {
-        // No project ID in route
-        if (projects.length > 0) {
-          // Select the first project by default if no specific project in URL
-          const firstProject = projects[0];
-          this.selectedProject.set({ name: firstProject.name, code: firstProject.id! });
-          // Do not navigate here; ngOnInit handles initial navigation if no routeId
-        } else {
-          // No projects and no route ID
-          this.selectedProject.set(undefined);
-        }
-      }
-    }, { allowSignalWrites: true });
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   ngOnInit() {
     this.isLoading.set(true);
-    this.auth.user$.pipe(
-      first(),
-      switchMap(user => {
-        if (!user) {
-          console.log('User not authenticated.');
+    this.auth.user$
+      .pipe(
+        first(),
+        switchMap((user) => {
+          if (!user) {
+            console.log('User not authenticated.');
+            this._userProjects.set([]);
+            this.isLoading.set(false);
+            return EMPTY;
+          }
+          return this.projectService.getProjects(); // Fetches projects
+        })
+      )
+      .subscribe({
+        next: (projects) => {
+          this._userProjects.set(projects);
+          const initialCookieId = this.cookieService.get('projectId'); // Get ID from cookie
+
+
+          if (projects.length > 0) {
+            if (!initialCookieId) {
+              // No project ID in cookie on initial load, save to cookie and navigate to the first project
+              console.log(
+                'No initial project ID in cookie, navigating to first project.'
+              );
+              const firstProject = projects[0];
+              this.cookieService.set('projectId', firstProject.id!);
+              this.router.navigate([`console/dashboard/${firstProject.id!}`], {
+                replaceUrl: true,
+              });
+            } else {
+              const projectExists = projects.find(
+                (p) => p.id === initialCookieId
+              );
+              if (!projectExists) {
+                // Initial project ID from URL is invalid (not in user's list)
+                console.warn(
+                  `Initial project ID '${initialCookieId}' not found. Navigating to first project.`
+                );
+                const firstProject = projects[0];
+                this.cookieService.set('projectId', firstProject.id!);
+                this.router.navigate(
+                  [`console/dashboard/${firstProject.id!}`],
+                  { replaceUrl: true }
+                );
+              }
+              // If initialCookieId is valid, the effect will handle setting selectedProject.
+            }
+          } else {
+            // No projects for the user
+            console.log('User has no projects.');
+            // If there was an initialCookieId, it's effectively invalid now.
+            // The effect will set selectedProject to undefined.
+          }
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Error fetching projects in ngOnInit:', err);
           this._userProjects.set([]);
           this.isLoading.set(false);
-          return EMPTY;
-        }
-        return this.projectService.getProjects(); // Fetches projects
-      })
-    ).subscribe({
-      next: (projects) => {
-        this._userProjects.set(projects);
-        const initialRouteId = this.route.snapshot.paramMap.get('id'); // Get ID at the time of init
-
-        if (projects.length > 0) {
-          if (!initialRouteId) {
-            // No project ID in URL on initial load, navigate to the first project
-            console.log('No initial project ID in route, navigating to first project.');
-            const firstProject = projects[0];
-            this.router.navigate([`console/${firstProject.id!}/dashboard/${firstProject.id!}`], { replaceUrl: true });
-          } else {
-            const projectExists = projects.find(p => p.id === initialRouteId);
-            if (!projectExists) {
-              // Initial project ID from URL is invalid (not in user's list)
-              console.warn(`Initial project ID '${initialRouteId}' not found. Navigating to first project.`);
-              const firstProject = projects[0];
-              this.router.navigate([`console/${firstProject.id!}/dashboard/${firstProject.id!}`], { replaceUrl: true });
-            }
-            // If initialRouteId is valid, the effect will handle setting selectedProject.
-          }
-        } else {
-          // No projects for the user
-          console.log('User has no projects.');
-          // If there was an initialRouteId, it's effectively invalid now.
-          // The effect will set selectedProject to undefined.
-        }
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Error fetching projects in ngOnInit:', err);
-        this._userProjects.set([]);
-        this.isLoading.set(false);
-        // The effect will set selectedProject to undefined due to empty _userProjects
-      }
-    });
+        },
+      });
   }
 
   onProjectChange(event: SelectChangeEvent) {
-    const selected = event.value as SelectElement;
-    this.selectedProject.set(selected);
-    this.router.navigate([`console/${selected.code}/dashboard/${selected.code}`]);
+    const projectId = event.value?.code;
+    if (projectId) {
+      // Save selected project to cookie
+      this.cookieService.set('projectId', projectId);
+      this.projectIdFromCookie.set(projectId);
+
+      // Navigate to the project dashboard
+      this.router.navigate([`/console/dashboard/${projectId}`]);
+    }
   }
 
   updateSidebarRoutes() {
-    const currentSelectedProject = this.selectedProject();
-    if (!currentSelectedProject?.code) {
-      this.items.set([]);
-      return;
-    }
-    const code = currentSelectedProject.code;
+    const selectedProjectId = this.selectedProject()?.code;
+    if (!selectedProjectId) return;
+
     this.items.set([
-      { label: 'Dashboard', icon: 'pi pi-home', routerLink: [`dashboard/${code}`] },
-      { label: 'Businessplan', icon: 'pi pi-calendar', routerLink: [`planing/${code}`] },
-      { label: 'Branding', icon: 'pi pi-star', routerLink: [`branding/${code}`] },
-      { label: 'Diagrams', icon: 'pi pi-palette', routerLink: [`diagrams/${code}`] },
-      { label: 'Development', icon: 'pi pi-code', routerLink: [`developement/${code}`] },
-      { label: 'Landing Page', icon: 'pi pi-globe', routerLink: [`landing/${code}`] },
-      { label: 'Tests', icon: 'pi pi-check-square', routerLink: [`tests/${code}`] },
+      {
+        label: 'Dashboard',
+        icon: 'pi pi-fw pi-home',
+        command: () =>
+          this.navigateTo(`console/dashboard/${selectedProjectId}`),
+      },
+      {
+        label: 'Branding',
+        icon: 'pi pi-fw pi-palette',
+        command: () => this.navigateTo(`console/branding/${selectedProjectId}`),
+      },
+      {
+        label: 'Planing',
+        icon: 'pi pi-fw pi-calendar',
+        command: () => this.navigateTo(`console/planing/${selectedProjectId}`),
+      },
+      {
+        label: 'Diagrams',
+        icon: 'pi pi-fw pi-chart-line',
+        command: () => this.navigateTo(`console/diagrams/${selectedProjectId}`),
+      },
+      {
+        label: 'Landing',
+        icon: 'pi pi-fw pi-desktop',
+        command: () => this.navigateTo(`console/landing/${selectedProjectId}`),
+      },
+      {
+        label: 'Tests',
+        icon: 'pi pi-fw pi-check-square',
+        command: () => this.navigateTo(`console/tests/${selectedProjectId}`),
+      },
+      {
+        label: 'Developement',
+        icon: 'pi pi-fw pi-code',
+        command: () =>
+          this.navigateTo(`console/developement/${selectedProjectId}`),
+      },
     ]);
   }
 
   toggleMenu() {
-    this.isMenuOpen.update(open => !open);
+    this.isMenuOpen.update((open) => !open);
   }
 
   toggleDropdown() {
-    this.isDropdownOpen.update(open => !open);
+    this.isDropdownOpen.update((open) => !open);
   }
 
   navigateTo(path: string) {
     this.isDropdownOpen.set(false);
-    this.router.navigate([`/${path}`]);
+    // Ne pas ajouter de slash car les chemins de menu incluent déjà 'console/'
+    this.router.navigate([path]);
   }
 
   logout() {
@@ -227,7 +293,11 @@ export class SidebarDashboard implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (this.isMenuOpen() && this.menuRef && !this.menuRef.nativeElement.contains(event.target)) {
+    if (
+      this.isMenuOpen() &&
+      this.menuRef &&
+      !this.menuRef.nativeElement.contains(event.target)
+    ) {
       this.isMenuOpen.set(false);
     }
   }

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { provideServerRendering } from '@angular/ssr';
 import { appConfig } from './app.config';
-import { serverRoutes } from './app.routes.server';
 import { environment } from '../environments/environment';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth } from '@angular/fire/auth';

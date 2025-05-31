@@ -6,4 +6,8 @@
 <app-dashboard-layout>
   <router-outlet (activate)="resetPosition()"></router-outlet>
 </app-dashboard-layout>
+} @else if (layout === 'empty') {
+<app-empty-layout>
+  <router-outlet (activate)="resetPosition()"></router-outlet>
+</app-empty-layout>
 } }

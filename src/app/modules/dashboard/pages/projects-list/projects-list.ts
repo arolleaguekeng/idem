@@ -18,32 +18,37 @@ import { first, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [DatePipe, Loader, SafeHtmlPipe, AsyncPipe, RouterLink],
+  imports: [Loader, AsyncPipe, DatePipe, SafeHtmlPipe],
   templateUrl: './projects-list.html',
   styleUrl: './projects-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsList implements OnInit {
-  userProjects$: Observable<ProjectModel[]> = of([]);
-  recentProjects: ProjectModel[] = [];
-  projectService = inject(ProjectService);
-  auth = inject(AuthService);
-  user$ = this.auth.user$;
-  isLoading = signal(true);
-  isMenuOpen = false;
-  isDropdownOpen = false;
-  router = inject(Router);
+  // Services
+  private readonly projectService = inject(ProjectService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  // Data signals and state
+  protected readonly userProjects$ = signal<Observable<ProjectModel[]>>(of([]));
+  protected readonly recentProjects = signal<ProjectModel[]>([]);
+  protected readonly isLoading = signal(true);
+  protected readonly isMenuOpen = signal(false);
+  protected readonly isDropdownOpen = signal(false);
+  protected readonly user$ = this.auth.user$;
   @ViewChild('menu') menuRef!: ElementRef;
   ngOnInit() {
     try {
       this.user$.pipe(first()).subscribe((user) => {
         if (user) {
-          this.userProjects$ = this.projectService.getProjects();
-          this.userProjects$.subscribe((projects) => {
-            this.recentProjects = projects
-              .slice()
-              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-              .slice(0, 3);
+          this.projectService.getProjects().subscribe((projects) => {
+            console.log('projects', projects);
+            this.recentProjects.set(
+              projects
+                .slice()
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                .slice(0, 3)
+            );
           });
         } else {
           console.log('User not found');
@@ -56,27 +61,35 @@ export class ProjectsList implements OnInit {
     }
   }
 
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+  /**
+   * Toggle main menu visibility
+   */
+  protected toggleMenu() {
+    this.isMenuOpen.update((open) => !open);
   }
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  /**
+   * Toggle user dropdown menu visibility
+   */
+  protected toggleDropdown() {
+    this.isDropdownOpen.update((open) => !open);
   }
 
-  // navigateTo(path: string) {
-  //   this.isDropdownOpen = false;
-  //   this.router.navigate([`/${path}`]);
-  // }
-
-  logout() {
-    this.isDropdownOpen = false;
+  /**
+   * Logout user and navigate to login page
+   */
+  protected logout() {
     this.auth.logout();
-    // this.router.navigate(['/login']);
+    this.router.navigate(['/login']);
   }
 
-  openProjectDashboard(projectId: string) {
-    this.isDropdownOpen = false;
-    this.router.navigate([`console/${projectId}/dashboard/${projectId}`]);
+  /**
+   * Navigate to project dashboard and set project cookie
+   */
+  protected openProjectDashboard(projectId: string) {
+    this.isDropdownOpen.set(false);
+
+    // Navigate to updated route format (simplified path)
+    this.router.navigate([`console/dashboard/${projectId}`]);
   }
 }

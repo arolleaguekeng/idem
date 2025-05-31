@@ -1,14 +1,3 @@
-<nav
-  class="bg-gray-900 text-white overflow-hidden shadow-2xl fixed w-full z-50 top-0 shadow-primary/35 px-0"
->
-  @if (isMenuOpen) {
-  <div
-    class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
-    #menu
-    [@slideInOut]="isMenuOpen ? 'open' : 'closed'"
-  ></div>
-  }
-</nav>
 <div
   class="min-h-screen bg-gray-950 text-white flex flex-col mt-[65px] sm:mt-0"
 >
@@ -46,7 +35,7 @@
           </a>
 
           <!-- Cartes projets récents -->
-          @for (project of recentProjects; track $index) {
+          @for (project of recentProjects(); track $index) {
           <div
             class="h-[180px] hover:cursor-pointer bg-gradient-to-br from-gray-800/80 to-gray-800 rounded-xl p-4 border border-gray-700 hover:border-primary-500 transition hover:shadow-lg hover:scale-[1.01] duration-300 relative overflow-hidden group"
             (click)="openProjectDashboard(project.id!)"
@@ -114,7 +103,7 @@
         </div>
 
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          @for (project of userProjects$ | async; track $index) {
+          @for (project of userProjects$() | async; track $index) {
           <div
             class="bg-gray-800 hover:cursor-pointer rounded-xl p-5 border border-gray-700 hover:border-primary-500 transition hover:shadow-xl hover:scale-[1.01] duration-300 relative group"
             (click)="openProjectDashboard(project.id!)"
@@ -173,7 +162,7 @@
         <div class="flex justify-center items-center h-64">
           <app-loader />
         </div>
-        } @else { @if ((userProjects$ | async)?.length === 0) {
+        } @else { @if ((userProjects$() | async)?.length === 0) {
         <div
           class="text-center py-16 border-2 border-dashed border-gray-800 rounded-xl"
         >

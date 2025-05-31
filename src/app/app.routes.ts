@@ -22,7 +22,7 @@ export const routes: Routes = [
 
   // Dashboard layout routes
   {
-    path: 'console/dashboard/:id',
+    path: 'console/dashboard',
     loadComponent: () =>
       import('./modules/dashboard/pages/dashboard/dashboard').then(
         (m) => m.Dashboard
@@ -78,12 +78,20 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/projects',
+    path: 'console',
     loadComponent: () =>
       import('./modules/dashboard/pages/projects-list/projects-list').then(
         (m) => m.ProjectsList
       ),
-    data: { layout: 'dashboard' },
+    data: { layout: 'empty' },
+  },
+  {
+    path: 'projects',
+    loadComponent: () =>
+      import('./modules/dashboard/pages/projects-list/projects-list').then(
+        (m) => m.ProjectsList
+      ),
+    data: { layout: 'empty' },
   },
 
   // Redirection par défaut

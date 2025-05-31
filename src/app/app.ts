@@ -10,6 +10,7 @@ import { filter, map, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout';
 import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout';
+import { EmptyLayout } from "./layouts/empty-layout/empty-layout";
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-l
     PublicLayoutComponent,
     DashboardLayoutComponent,
     CommonModule,
-  ],
+    EmptyLayout
+],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -28,22 +30,25 @@ export class App {
   protected readonly activatedRoute = inject(ActivatedRoute);
 
   /** Layout courant selon la route active */
-  protected readonly currentLayout$: Observable<'public' | 'dashboard'> =
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      startWith(null),
-      map(() => {
-        let route = this.activatedRoute.firstChild;
-        while (route?.firstChild) {
-          route = route.firstChild;
-        }
-        return (
-          (route?.snapshot.data?.['layout'] as 'public' | 'dashboard') ||
-          'public'
-        );
-      }),
-      distinctUntilChanged()
-    );
+  protected readonly currentLayout$: Observable<
+    'public' | 'dashboard' | 'empty'
+  > = this.router.events.pipe(
+    filter((event) => event instanceof NavigationEnd),
+    startWith(null),
+    map(() => {
+      let route = this.activatedRoute.firstChild;
+      while (route?.firstChild) {
+        route = route.firstChild;
+      }
+      return (
+        (route?.snapshot.data?.['layout'] as
+          | 'public'
+          | 'dashboard'
+          | 'empty') || 'public'
+      );
+    }),
+    distinctUntilChanged()
+  );
 
   protected resetPosition() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
