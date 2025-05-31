@@ -41,14 +41,16 @@ export class BusinessPlanService {
   }
 
   // Create a new project businessplan item
-  createBusinessplanItem(
-    item: BusinessPlanModel
-  ): Observable<BusinessPlanModel> {
+  createBusinessplanItem(projectId: string): Observable<BusinessPlanModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.post<BusinessPlanModel>(this.apiUrl, item, {
-          headers,
-        });
+        return this.http.post<BusinessPlanModel>(
+          `${this.apiUrl}/${projectId}`,
+          {},
+          {
+            headers,
+          }
+        );
       }),
       tap((response) =>
         console.log('createBusinessplanItem response:', response)

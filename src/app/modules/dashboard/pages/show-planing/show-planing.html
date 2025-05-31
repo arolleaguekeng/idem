@@ -93,6 +93,11 @@
     </div>
   </div>
 </div>
+} @else { @if(!isBusinessplanExists()) {
+<button class="inner-button" (click)="generateBusinessPlan()">
+  <i class="pi pi-file-export"></i>
+  Generate
+</button>
 } @else {
 <div class="w-full min-h-screen p-6">
   <div class="max-w-6xl mx-auto space-y-12">
@@ -141,4 +146,4 @@
     </section>
   </div>
 </div>
-}
+}}

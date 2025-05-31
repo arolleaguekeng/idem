@@ -36,10 +36,10 @@ export class BrandingService {
   }
 
   // Create a new branding item
-  createBrandIdentityModel(item: BrandIdentityModel): Observable<BrandIdentityModel> {
+  createBrandIdentityModel(projectId: string): Observable<BrandIdentityModel> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        return this.http.post<BrandIdentityModel>(this.apiUrl, item, { headers });
+        return this.http.post<BrandIdentityModel>(`${this.apiUrl}/generate/${projectId}`, {}, { headers });
       }),
       tap(response => console.log('createBrandIdentityModel response:', response)),
       catchError(error => {
@@ -69,14 +69,14 @@ export class BrandingService {
   }
 
   // Get a specific branding item by ID
-  getBrandIdentityModelById(id: string): Observable<BrandIdentityModel> {
+  getBrandIdentityModelById(projectId: string): Observable<BrandIdentityModel> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        return this.http.get<BrandIdentityModel>(`${this.apiUrl}/${id}`, { headers });
+        return this.http.get<BrandIdentityModel>(`${this.apiUrl}/${projectId}`, { headers });
       }),
       tap(response => console.log('getBrandIdentityModelById response:', response)),
       catchError(error => {
-        console.error(`Error in getBrandIdentityModelById for ID ${id}:`, error);
+        console.error(`Error in getBrandIdentityModelById for ID ${projectId}:`, error);
         throw error;
       })
     );

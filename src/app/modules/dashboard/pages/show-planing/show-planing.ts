@@ -9,7 +9,6 @@ import { MarkdownComponent } from 'ngx-markdown';
 import { BadgeModule } from 'primeng/badge';
 import { TabsModule } from 'primeng/tabs';
 import { User } from '@angular/fire/auth';
-import { ActivatedRoute } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { AuthService } from '../../../auth/services/auth.service';
 import { AnalysisResultModel } from '../../models/analysisResult.model';
@@ -17,6 +16,7 @@ import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { generatePdf } from '../../../../utils/pdf-generator';
 import { BusinessPlanService } from '../../services/ai-agents/business-plan.service';
+import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-show-planing',
@@ -26,10 +26,8 @@ import { BusinessPlanService } from '../../services/ai-agents/business-plan.serv
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowPlaning {
-  id = '';
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
-  route = inject(ActivatedRoute);
   businessPlanService = inject(BusinessPlanService);
   isBusinessplanLoaded = signal(true);
   currentUser?: User | null;
@@ -37,6 +35,13 @@ export class ShowPlaning {
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
   datas: string[] = [];
+  cookiesService = inject(CookieService);
+  protected readonly projectIdFromCookie = signal<string | null>(null);
+  isBusinessplanExists = signal(false);
+
+  constructor() {
+    this.projectIdFromCookie.set(this.cookiesService.get('projectId'));
+  }
   async ngOnInit() {
     // isBusinessplanLoaded is initialized to true by default
     try {
@@ -49,46 +54,53 @@ export class ShowPlaning {
         return;
       }
 
-      this.id = this.route.snapshot.paramMap.get('id')!;
-      if (!this.id) {
+      if (this.projectIdFromCookie() == null) {
         console.log('ID du projet introuvable');
         this.isBusinessplanLoaded.set(false);
         return;
+      } else {
+        this.projectService
+          .getProjectById(this.projectIdFromCookie()!)
+          .subscribe({
+            next: (project) => {
+              if (!project) {
+                console.log('Projet non trouvé');
+                this.isBusinessplanLoaded.set(false);
+                return;
+              }
+
+              if (!project.analysisResultModel) {
+                project.analysisResultModel = this
+                  .analis as AnalysisResultModel;
+              }
+              this.project = project;
+              console.log('project', this.project);
+
+              // Ensure businessPlan and sections exist before mapping
+              if (this.project.analysisResultModel?.businessPlan?.sections) {
+                this.datas =
+                  this.project.analysisResultModel.businessPlan.sections.map(
+                    (item) => item.data
+                  );
+                console.log('datas', this.datas);
+              } else {
+                console.log(
+                  'Business plan sections not available for mapping.'
+                );
+                this.isBusinessplanExists.set(false);
+                this.datas = []; // Initialize to empty array if not available
+              }
+              this.isBusinessplanLoaded.set(false);
+            },
+            error: (err) => {
+              console.error('Erreur lors de la récupération du projet:', err);
+              this.isBusinessplanLoaded.set(false);
+              this.isBusinessplanExists.set(false);
+              // Optionally, set a user-facing error message or navigate away
+            },
+          });
       }
 
-      this.projectService.getProjectById(this.id).subscribe({
-        next: (project) => {
-          if (!project) {
-            console.log('Projet non trouvé');
-            this.isBusinessplanLoaded.set(false);
-            return;
-          }
-
-          if (!project.analysisResultModel) {
-            project.analysisResultModel = this.analis as AnalysisResultModel;
-          }
-          this.project = project;
-          console.log('project', this.project);
-
-          // Ensure businessPlan and sections exist before mapping
-          if (this.project.analysisResultModel?.businessPlan?.sections) {
-            this.datas =
-              this.project.analysisResultModel.businessPlan.sections.map(
-                (item) => item.data
-              );
-            console.log('datas', this.datas);
-          } else {
-            console.log('Business plan sections not available for mapping.');
-            this.datas = []; // Initialize to empty array if not available
-          }
-          this.isBusinessplanLoaded.set(false);
-        },
-        error: (err) => {
-          console.error('Erreur lors de la récupération du projet:', err);
-          this.isBusinessplanLoaded.set(false);
-          // Optionally, set a user-facing error message or navigate away
-        },
-      });
       // The following lines were moved inside the 'next' callback or are handled by the loader logic:
       // console.log('project', this.project); // Moved
       // this.datas = this.project.analysisResultModel.businessPlan!.sections!.map(...); // Moved
@@ -120,5 +132,26 @@ export class ShowPlaning {
   makePdf() {
     const allPlaningStapesContent = this.datas.join('\n');
     generatePdf(allPlaningStapesContent, true);
+  }
+
+  generateBusinessPlan() {
+    this.isBusinessplanLoaded.set(true);
+    this.businessPlanService
+      .createBusinessplanItem(this.projectIdFromCookie()!)
+      .subscribe({
+        next: (businessPlanData) => {
+          this.project.analysisResultModel!.businessPlan = businessPlanData;
+          this.isBusinessplanExists.set(true);
+          this.isBusinessplanLoaded.set(false);
+        },
+        error: (err) => {
+          console.error(
+            `Error generating business plan for project ID: ${this.projectIdFromCookie()}:`,
+            err
+          );
+          this.isBusinessplanExists.set(false);
+          this.isBusinessplanLoaded.set(false);
+        },
+      });
   }
 }

@@ -17,6 +17,7 @@ import { Loader } from '../../../../components/loader/loader';
 import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
 import { BrandingService } from '../../services/ai-agents/branding.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
+import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-show-branding',
@@ -26,7 +27,6 @@ import { BrandIdentityModel } from '../../models/brand-identity.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowBrandingComponent {
-  id = '';
   project: ProjectModel = initEmptyObject<ProjectModel>();
   analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
@@ -37,6 +37,12 @@ export class ShowBrandingComponent {
   user$ = this.auth.user$;
   projectService = inject(ProjectService);
   branding: BrandIdentityModel | null = null;
+  isBrandExists = signal(false);
+  cookiesService = inject(CookieService);
+  constructor() {
+    this.projectIdFromCookie.set(this.cookiesService.get('projectId'));
+  }
+  protected readonly projectIdFromCookie = signal<string | null>(null);
   ngOnInit() {
     try {
       this.isBrandingLoaded.set(true);
@@ -46,53 +52,48 @@ export class ShowBrandingComponent {
           this.currentUser = user;
         } else {
           console.log('Utilisateur non connecté');
+          return;
         }
       });
 
-      if (!this.currentUser) {
-        console.log('Utilisateur non connecté');
-        return;
-      }
-
-      this.id = this.route.snapshot.paramMap.get('id')!;
-      if (!this.id) {
+      if (this.projectIdFromCookie() == null) {
         console.log('ID du projet introuvable');
         return;
-      }
-
-      this.projectService
-        .getProjectById(this.id)
-        .subscribe((project: ProjectModel | null) => {
-          if (!project) {
-            console.log('Projet non trouvé');
-            return;
-          }
-          if (!project.analysisResultModel) {
-            project.analysisResultModel = this.analis as AnalysisResultModel;
-          }
-          this.project = project;
-        });
-
-      if (this.project.selectedPhases.includes('branding')) {
-        console.log(this.project);
-        this.brandingService.getBrandIdentityModelById(this.id).subscribe({
-          next: (brandModelData) => {
-            this.branding = brandModelData; // Assuming API returns the model or errors out if not found
-            this.isBrandingLoaded.set(false);
-          },
-          error: (err) => {
-            console.error(
-              `Error fetching branding information for project ID: ${this.id}:`,
-              err
-            );
-            this.branding = null;
-            this.isBrandingLoaded.set(false);
-          },
-        });
       } else {
-        // If branding is not a selected phase, no attempt to load its specific data.
-        // Ensure the general loading indicator for this section is turned off.
-        this.isBrandingLoaded.set(false);
+        this.projectService
+          .getProjectById(this.projectIdFromCookie()!)
+          .subscribe((project: ProjectModel | null) => {
+            if (!project) {
+              console.log('Projet non trouvé');
+              return;
+            }
+            if (!project.analysisResultModel) {
+              project.analysisResultModel = this.analis as AnalysisResultModel;
+            }
+            this.project = project;
+          });
+
+        console.log(this.project);
+        this.brandingService
+          .getBrandIdentityModelById(this.projectIdFromCookie()!)
+          .subscribe({
+            next: (brandModelData) => {
+              this.branding = brandModelData;
+              if (this.branding) {
+                this.isBrandExists.set(true);
+              }
+              this.isBrandingLoaded.set(false);
+            },
+            error: (err) => {
+              console.error(
+                `Error fetching branding information for project ID: ${this.projectIdFromCookie()}:`,
+                err
+              );
+              this.branding = null;
+              this.isBrandingLoaded.set(false);
+              this.isBrandExists.set(false);
+            },
+          });
       }
     } catch (error) {
       console.error(
@@ -108,5 +109,28 @@ export class ShowBrandingComponent {
         this.branding.brandIdentity.map((item) => item.data).join('\n')
       );
     }
+  }
+
+  generateBranding() {
+    this.isBrandingLoaded.set(true);
+    console.log('generateBranding...');
+    this.brandingService
+      .createBrandIdentityModel(this.projectIdFromCookie()!)
+      .subscribe({
+        next: (brandModelData) => {
+          this.branding = brandModelData;
+          this.isBrandExists.set(true);
+          this.isBrandingLoaded.set(false);
+        },
+        error: (err) => {
+          console.error(
+            `Error generating branding information for project ID: ${this.projectIdFromCookie()}:`,
+            err
+          );
+          this.branding = null;
+          this.isBrandingLoaded.set(false);
+          this.isBrandExists.set(false);
+        },
+      });
   }
 }
