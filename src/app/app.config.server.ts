@@ -5,8 +5,7 @@ import {
   PLATFORM_ID,
   REQUEST,
 } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
-import { provideServerRouting } from '@angular/ssr';
+import { provideServerRendering } from '@angular/ssr';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
 import { environment } from '../environments/environment';
@@ -27,7 +26,6 @@ const firebaseConfig = {
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    provideServerRouting(serverRoutes),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(firebaseConfig);
