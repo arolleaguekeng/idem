@@ -5,17 +5,14 @@ import {
   signal,
 } from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
-import { ProjectModel } from '../../models/project.model';
 import { User } from '@angular/fire/auth';
-import { ActivatedRoute } from '@angular/router';
-import { initEmptyObject } from '../../../../utils/init-empty-object';
 import { AuthService } from '../../../auth/services/auth.service';
-import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { DiagramModel } from '../../models/diagram.model';
-import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { DiagramsService } from '../../services/ai-agents/diagrams.service';
+import { CookieService } from '../../../../shared/services/cookie.service';
+import { generatePdf } from '../../../../utils/pdf-generator';
 
 @Component({
   selector: 'app-show-diagrams',
@@ -25,83 +22,98 @@ import { DiagramsService } from '../../services/ai-agents/diagrams.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowDiagramsComponent {
-  id = '';
-  project: ProjectModel = initEmptyObject<ProjectModel>();
-  analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
-  formatedDiagrams: DiagramModel[] = [];
-  route = inject(ActivatedRoute);
   diagramsService = inject(DiagramsService);
-  isDesignLoaded = signal(true);
+  isDiagramsLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
-  projectService = inject(ProjectService);
+  diagram: DiagramModel | null = null;
+  isDiagramExists = signal(false);
+  cookiesService = inject(CookieService);
   diagenUrl = environment.services.diagen.url;
 
-  async ngOnInit() {
+  constructor() {
+    this.projectIdFromCookie.set(this.cookiesService.get('projectId'));
+  }
+
+  protected readonly projectIdFromCookie = signal<string | null>(null);
+
+  ngOnInit() {
     try {
-      this.isDesignLoaded.set(true);
-      const user = await this.auth.user$.pipe(first()).toPromise();
-      this.currentUser = user;
+      this.isDiagramsLoaded.set(true);
 
-      if (!this.currentUser) {
+      this.auth.user$.pipe(first()).subscribe((user) => {
+        if (user) {
+          this.currentUser = user;
+        } else {
+          console.log('User not logged in');
+          return;
+        }
+      });
+
+      if (this.projectIdFromCookie() == null) {
+        console.log('Project ID not found');
         return;
+      } else {
+        this.diagramsService
+          .getDiagramModelById(this.projectIdFromCookie()!)
+          .subscribe({
+            next: (diagramData) => {
+              this.diagram = diagramData;
+              console.log('this.diagram', this.diagram.sections);
+              if (this.diagram) {
+                this.isDiagramExists.set(true);
+                this.diagram.sections.forEach((section) => {
+                  section.data = `\`\`\`${section.data}\n\`\`\``;
+                });
+              }
+              this.isDiagramsLoaded.set(false);
+            },
+            error: (err) => {
+              console.error(
+                `Error fetching diagrams for project ID: ${this.projectIdFromCookie()}:`,
+                err
+              );
+              this.diagram = null;
+              this.isDiagramsLoaded.set(false);
+              this.isDiagramExists.set(false);
+            },
+          });
       }
+    } catch (error) {
+      console.error('Error while loading project or user', error);
+    }
+  }
 
-      this.id = this.route.snapshot.paramMap.get('id')!;
-      if (!this.id) {
-        return;
-      }
+  makePdf() {
+    if (this.diagram && this.diagram.sections) {
+      const diagramContent = this.diagram.sections
+        .map((section) => section.data || '')
+        .join('\n');
+      generatePdf(diagramContent);
+    }
+  }
 
-      this.projectService.getProjectById(this.id).subscribe({
-        next: (project) => {
-          if (!project) {
-            console.log('Projet non trouvé');
-            this.isDesignLoaded.set(false);
-            return;
-          }
-
-          if (!project.analysisResultModel) {
-            project.analysisResultModel = this.analis as AnalysisResultModel;
-          }
-          this.project = project;
-          console.log('project', this.project);
-
-          if (project.selectedPhases.includes('design')) {
-            if (!this.project.analysisResultModel.design) {
-              console.log('Trying to generate diagrams...');
-              this.diagramsService.getDiagrams(this.id).subscribe({
-                next: (diagrams) => {
-                  this.formatedDiagrams = diagrams;
-                  this.isDesignLoaded.set(false);
-                },
-                error: (err) => {
-                  console.error(
-                    'Erreur lors de la récupération des diagrammes:',
-                    err
-                  );
-                  this.isDesignLoaded.set(false);
-                },
-              });
-            } else {
-              // Design exists, no need to fetch diagrams
-              this.isDesignLoaded.set(false);
-            }
-          } else {
-            // Design phase not selected, no need to fetch diagrams
-            this.isDesignLoaded.set(false);
-          }
+  generateDiagrams() {
+    this.isDiagramsLoaded.set(true);
+    console.log('generateDiagrams...');
+    this.diagramsService
+      .createDiagramModel(this.projectIdFromCookie()!)
+      .subscribe({
+        next: (diagramData) => {
+          this.diagram = diagramData;
+          this.isDiagramExists.set(true);
+          this.isDiagramsLoaded.set(false);
         },
         error: (err) => {
-          console.error('Erreur lors de la récupération du projet:', err);
-          this.isDesignLoaded.set(false);
+          console.error(
+            `Error generating diagrams for project ID: ${this.projectIdFromCookie()}:`,
+            err
+          );
+          this.diagram = null;
+          this.isDiagramsLoaded.set(false);
+          this.isDiagramExists.set(false);
         },
       });
-    } catch (error) {
-      console.error(
-        'Erreur lors du chargement du projet ou de l’utilisateur',
-        error
-      );
-    }
   }
 }

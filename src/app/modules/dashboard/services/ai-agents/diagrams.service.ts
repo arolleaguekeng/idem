@@ -38,54 +38,63 @@ export class DiagramsService {
     );
   }
 
-  // Create a new diagram item
-  createDiagram(item: DiagramModel): Observable<DiagramModel> {
+  // Create a new diagram
+  createDiagramModel(projectId: string): Observable<DiagramModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.post<DiagramModel>(this.apiUrl, item, { headers });
+        return this.http.post<DiagramModel>(
+          `${this.apiUrl}/generate/${projectId}`,
+          {},
+          { headers }
+        );
       }),
-      tap((response) => console.log('createDiagram response:', response)),
+      tap((response) => console.log('createDiagramModel response:', response)),
       catchError((error) => {
-        console.error('Error in createDiagram:', error);
-        return throwError(() => error);
+        console.error('Error in createDiagramModel:', error);
+        throw error;
       })
     );
   }
 
-  // Get all diagram items (optionally by projectId)
-  getDiagrams(projectId?: string): Observable<DiagramModel[]> {
+  // Get all diagrams for a project
+  getDiagramModels(projectId: string): Observable<DiagramModel[]> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        let url = this.apiUrl;
-        if (projectId) {
-          url += `?projectId=${projectId}`;
-        }
-        return this.http.get<DiagramModel[]>(url, { headers });
+        return this.http.get<DiagramModel[]>(
+          `${this.apiUrl}?projectId=${projectId}`,
+          { headers }
+        );
       }),
-      tap((response) => console.log('getDiagrams response:', response)),
+      tap((response) => console.log('getDiagramModels response:', response)),
       catchError((error) => {
-        console.error('Error in getDiagrams:', error);
-        return throwError(() => error);
+        console.error('Error in getDiagramModels:', error);
+        throw error;
       })
     );
   }
 
-  // Get a specific diagram item by ID
-  getDiagramById(id: string): Observable<DiagramModel> {
+  // Get a specific diagram by project ID
+  getDiagramModelById(projectId: string): Observable<DiagramModel> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.get<DiagramModel>(`${this.apiUrl}/${id}`, { headers });
+        return this.http.get<DiagramModel>(
+          `${this.apiUrl}/getAll/${projectId}`,
+          { headers }
+        );
       }),
-      tap((response) => console.log('getDiagramById response:', response)),
+      tap((response) => console.log('getDiagramModelById response:', response)),
       catchError((error) => {
-        console.error(`Error in getDiagramById for ID ${id}:`, error);
-        return throwError(() => error);
+        console.error(
+          `Error in getDiagramModelById for ID ${projectId}:`,
+          error
+        );
+        throw error;
       })
     );
   }
 
-  // Update a specific diagram item
-  updateDiagram(
+  // Update a specific diagram
+  updateDiagramModel(
     id: string,
     item: Partial<DiagramModel>
   ): Observable<DiagramModel> {
@@ -95,26 +104,26 @@ export class DiagramsService {
           headers,
         });
       }),
-      tap((response) => console.log('updateDiagram response:', response)),
+      tap((response) => console.log('updateDiagramModel response:', response)),
       catchError((error) => {
-        console.error(`Error in updateDiagram for ID ${id}:`, error);
-        return throwError(() => error);
+        console.error(`Error in updateDiagramModel for ID ${id}:`, error);
+        throw error;
       })
     );
   }
 
-  // Delete a specific diagram item
-  deleteDiagram(id: string): Observable<void> {
+  // Delete a specific diagram
+  deleteDiagramModel(id: string): Observable<void> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
       }),
       tap((response) =>
-        console.log(`deleteDiagram response for ID ${id}:`, response)
+        console.log(`deleteDiagramModel response for ID ${id}:`, response)
       ),
       catchError((error) => {
-        console.error(`Error in deleteDiagram for ID ${id}:`, error);
-        return throwError(() => error);
+        console.error(`Error in deleteDiagramModel for ID ${id}:`, error);
+        throw error;
       })
     );
   }

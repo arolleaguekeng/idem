@@ -1,6 +1,8 @@
+import { SectionModel } from './section.model';
+
 export interface DiagramModel {
   id?: string;
-  content: string;
-  summary: string;
-  name: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  sections: SectionModel[];
 }
