@@ -136,7 +136,7 @@
     </div>
 
     <section class="space-y-12">
-      @for (section of datas; track section) {
+      @for (section of datas(); track section) {
       <div class="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-5">
           <markdown mermaid [data]="section" class="mermaid-diagram"></markdown>

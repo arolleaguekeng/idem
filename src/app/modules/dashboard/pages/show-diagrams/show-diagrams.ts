@@ -102,7 +102,12 @@ export class ShowDiagramsComponent {
       .subscribe({
         next: (diagramData) => {
           this.diagram = diagramData;
-          this.isDiagramExists.set(true);
+          if (this.diagram) {
+            this.isDiagramExists.set(true);
+            this.diagram.sections.forEach((section) => {
+              section.data = `\`\`\`${section.data}\n\`\`\``;
+            });
+          }
           this.isDiagramsLoaded.set(false);
         },
         error: (err) => {
