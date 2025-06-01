@@ -1,22 +1,56 @@
 import { jsPDF } from 'jspdf';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
-async function convertSvgToBase64(svgElement: SVGSVGElement): Promise<string> {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const data = new XMLSerializer().serializeToString(svgElement);
-    const img = new Image();
 
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
-      resolve(canvas.toDataURL('image/png'));
-    };
+async function convertSvgToBase64(svg: SVGSVGElement): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      // Get SVG data
+      const xml = new XMLSerializer().serializeToString(svg);
 
-    img.src =
-      'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(data)));
+      // Make SVG data URI-friendly
+      const svgBlob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        // Set dimensions with a minimum size
+        canvas.width = Math.max(img.width, 10);
+        canvas.height = Math.max(img.height, 10);
+
+        // Fill with white background to prevent transparency issues
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+
+        // Convert to PNG data URL
+        const dataUrl = canvas.toDataURL('image/png');
+
+        // Clean up
+        URL.revokeObjectURL(url);
+
+        resolve(dataUrl);
+      };
+
+      img.onerror = (error) => {
+        URL.revokeObjectURL(url);
+        reject(new Error(`Failed to load SVG as image: ${error}`));
+      };
+
+      img.src = url;
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
@@ -30,8 +64,9 @@ export async function generatePdf(
   tempDiv.innerHTML = htmlContent;
   document.body.appendChild(tempDiv);
 
+  // Process SVG elements - convert to PNG images
   const svgElements = tempDiv.querySelectorAll('svg');
-  for (const svg of Array.from(svgElements)) {
+  const svgPromises = Array.from(svgElements).map(async (svg) => {
     try {
       const base64 = await convertSvgToBase64(svg as SVGSVGElement);
       const img = document.createElement('img');
@@ -40,9 +75,17 @@ export async function generatePdf(
       svg.parentNode?.replaceChild(img, svg);
     } catch (error) {
       console.warn('Échec de la conversion SVG:', error);
-      svg.remove();
+      // Instead of removing, replace with placeholder
+      const placeholder = document.createElement('div');
+      placeholder.textContent = '[Image non disponible]';
+      placeholder.style.padding = '10px';
+      placeholder.style.border = '1px solid #ccc';
+      svg.parentNode?.replaceChild(placeholder, svg);
     }
-  }
+  });
+
+  // Wait for all SVG conversions to complete
+  await Promise.all(svgPromises);
 
   const styledContent = `
     <div style="
@@ -66,6 +109,7 @@ export async function generatePdf(
       hotfixes: ['px_scaling'],
     });
 
+    // Add default font - no need to specify custom font faces
     await doc.html(tempDiv, {
       callback: (pdf) => {
         pdf.save('document.pdf');
@@ -75,19 +119,7 @@ export async function generatePdf(
       windowWidth: 824,
       x: 0,
       y: 15,
-      fontFaces: [
-        {
-          family: 'Arial',
-          style: 'normal',
-          weight: 'normal',
-          src: [
-            {
-              url: '',
-              format: 'truetype',
-            },
-          ],
-        },
-      ],
+      // Removed fontFaces configuration that was causing issues
     });
   } catch (error) {
     console.error('Erreur lors de la génération du PDF:', error);

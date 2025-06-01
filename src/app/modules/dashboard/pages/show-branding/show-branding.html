@@ -11,9 +11,9 @@
     </button>
   </div>
   @if (branding) {
-  <markdown [data]="branding.logo.content.svg"></markdown>
+  <div [innerHTML]="branding.logo.content.svg | safeHtml"></div>
   @for (brand of branding.brandIdentity; track brand.id) {
-  <markdown [data]="brand.data"></markdown>
+  <div [innerHTML]="brand.data | safeHtml"></div>
   } }@else {
   <div class="w-full h-screen flex flex-col items-center justify-center">
     <button class="inner-button" (click)="generateBranding()">

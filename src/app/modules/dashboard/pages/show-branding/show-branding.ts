@@ -4,7 +4,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MarkdownComponent } from 'ngx-markdown';
 import { User } from '@angular/fire/auth';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -18,7 +17,7 @@ import { SafeHtmlPipe } from '../projects-list/safehtml.pipe';
 
 @Component({
   selector: 'app-show-branding',
-  imports: [MarkdownComponent, Loader, SafeHtmlPipe],
+  imports: [Loader, SafeHtmlPipe],
   templateUrl: './show-branding.html',
   styleUrl: './show-branding.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
