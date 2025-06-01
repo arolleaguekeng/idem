@@ -20,13 +20,16 @@ export class BrandingService {
   private getAuthHeaders(): Observable<HttpHeaders> {
     return authState(this.auth).pipe(
       take(1),
-      switchMap(user => {
+      switchMap((user) => {
         if (!user) {
-          return throwError(() => new Error('User not authenticated for BrandingService operation'));
+          return throwError(
+            () =>
+              new Error('User not authenticated for BrandingService operation')
+          );
         }
         return from(user.getIdToken()); // Convert Promise<string> to Observable<string>
       }),
-      map(token => {
+      map((token) => {
         return new HttpHeaders({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -38,11 +41,17 @@ export class BrandingService {
   // Create a new branding item
   createBrandIdentityModel(projectId: string): Observable<BrandIdentityModel> {
     return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        return this.http.post<BrandIdentityModel>(`${this.apiUrl}/generate/${projectId}`, {}, { headers });
+      switchMap((headers) => {
+        return this.http.post<BrandIdentityModel>(
+          `${this.apiUrl}/generate/${projectId}`,
+          {},
+          { headers }
+        );
       }),
-      tap(response => console.log('createBrandIdentityModel response:', response)),
-      catchError(error => {
+      tap((response) =>
+        console.log('createBrandIdentityModel response:', response)
+      ),
+      catchError((error) => {
         console.error('Error in createBrandIdentityModel:', error);
         throw error;
       })
@@ -57,11 +66,16 @@ export class BrandingService {
     // For now, let's assume the GET to this.apiUrl returns all accessible items.
     // If it needs a projectId in the path or query, this URL formation needs to change.
     return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        return this.http.get<BrandIdentityModel[]>(`${this.apiUrl}?projectId=${projectId}`, { headers }); // Example: using projectId as query param
+      switchMap((headers) => {
+        return this.http.get<BrandIdentityModel[]>(
+          `${this.apiUrl}?projectId=${projectId}`,
+          { headers }
+        ); // Example: using projectId as query param
       }),
-      tap(response => console.log('getBrandIdentityModels response:', response)),
-      catchError(error => {
+      tap((response) =>
+        console.log('getBrandIdentityModels response:', response)
+      ),
+      catchError((error) => {
         console.error('Error in getBrandIdentityModels:', error);
         throw error;
       })
@@ -71,25 +85,40 @@ export class BrandingService {
   // Get a specific branding item by ID
   getBrandIdentityModelById(projectId: string): Observable<BrandIdentityModel> {
     return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        return this.http.get<BrandIdentityModel>(`${this.apiUrl}/${projectId}`, { headers });
+      switchMap((headers) => {
+        return this.http.get<BrandIdentityModel>(
+          `${this.apiUrl}/getAll/${projectId}`,
+          { headers }
+        );
       }),
-      tap(response => console.log('getBrandIdentityModelById response:', response)),
-      catchError(error => {
-        console.error(`Error in getBrandIdentityModelById for ID ${projectId}:`, error);
+      tap((response) =>
+        console.log('getBrandIdentityModelById response:', response)
+      ),
+      catchError((error) => {
+        console.error(
+          `Error in getBrandIdentityModelById for ID ${projectId}:`,
+          error
+        );
         throw error;
       })
     );
   }
 
   // Update a specific branding item
-  updateBrandIdentityModel(id: string, item: Partial<BrandIdentityModel>): Observable<BrandIdentityModel> {
+  updateBrandIdentityModel(
+    id: string,
+    item: Partial<BrandIdentityModel>
+  ): Observable<BrandIdentityModel> {
     return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        return this.http.put<BrandIdentityModel>(`${this.apiUrl}/${id}`, item, { headers });
+      switchMap((headers) => {
+        return this.http.put<BrandIdentityModel>(`${this.apiUrl}/${id}`, item, {
+          headers,
+        });
       }),
-      tap(response => console.log('updateBrandIdentityModel response:', response)),
-      catchError(error => {
+      tap((response) =>
+        console.log('updateBrandIdentityModel response:', response)
+      ),
+      catchError((error) => {
         console.error(`Error in updateBrandIdentityModel for ID ${id}:`, error);
         throw error;
       })
@@ -99,11 +128,13 @@ export class BrandingService {
   // Delete a specific branding item
   deleteBrandIdentityModel(id: string): Observable<void> {
     return this.getAuthHeaders().pipe(
-      switchMap(headers => {
+      switchMap((headers) => {
         return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
       }),
-      tap(response => console.log('deleteBrandIdentityModel response for ID ${id}:', response)),
-      catchError(error => {
+      tap((response) =>
+        console.log('deleteBrandIdentityModel response for ID ${id}:', response)
+      ),
+      catchError((error) => {
         console.error(`Error in deleteBrandIdentityModel for ID ${id}:`, error);
         throw error;
       })

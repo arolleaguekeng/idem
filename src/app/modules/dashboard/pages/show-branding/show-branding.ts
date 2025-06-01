@@ -14,7 +14,7 @@ import { AnalysisResultModel } from '../../models/analysisResult.model';
 import { ProjectService } from '../../services/project.service';
 import { first } from 'rxjs';
 import { Loader } from '../../../../components/loader/loader';
-import { generatePdf, htmlToMarkdown } from '../../../../utils/pdf-generator';
+import { generatePdf } from '../../../../utils/pdf-generator';
 import { BrandingService } from '../../services/ai-agents/branding.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { CookieService } from '../../../../shared/services/cookie.service';
@@ -27,15 +27,12 @@ import { CookieService } from '../../../../shared/services/cookie.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowBrandingComponent {
-  project: ProjectModel = initEmptyObject<ProjectModel>();
-  analis: AnalysisResultModel = initEmptyObject<AnalysisResultModel>();
   route = inject(ActivatedRoute);
   brandingService = inject(BrandingService);
   isBrandingLoaded = signal(true);
   currentUser?: User | null;
   auth = inject(AuthService);
   user$ = this.auth.user$;
-  projectService = inject(ProjectService);
   branding: BrandIdentityModel | null = null;
   isBrandExists = signal(false);
   cookiesService = inject(CookieService);
@@ -60,20 +57,6 @@ export class ShowBrandingComponent {
         console.log('ID du projet introuvable');
         return;
       } else {
-        this.projectService
-          .getProjectById(this.projectIdFromCookie()!)
-          .subscribe((project: ProjectModel | null) => {
-            if (!project) {
-              console.log('Projet non trouvé');
-              return;
-            }
-            if (!project.analysisResultModel) {
-              project.analysisResultModel = this.analis as AnalysisResultModel;
-            }
-            this.project = project;
-          });
-
-        console.log(this.project);
         this.brandingService
           .getBrandIdentityModelById(this.projectIdFromCookie()!)
           .subscribe({
