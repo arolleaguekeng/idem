@@ -1,0 +1,145 @@
+<section
+  class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
+>
+  <h1
+    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+  >
+    Before continuing, we need more information about your project
+  </h1>
+  <div class="max-w-3xl mx-auto p-6 w-full">
+    <h2 class="text-xl font-semibold text-gray-100 mb-4">Project Details</h2>
+
+    <div class="mb-4 w-full">
+      <p-floatlabel variant="in">
+        <input
+          pInputText
+          id="in_label"
+          [(ngModel)]="project.name"
+          autocomplete="off"
+          class="w-full input"
+        />
+        <label for="in_label">Project Name</label>
+      </p-floatlabel>
+    </div>
+
+    <div class="mb-4">
+      <label for="projectType" class="block text-sm font-medium">
+        Project Type
+      </label>
+      <div class="card flex justify-start w-full">
+        <p-select
+          [options]="groupedProjectTypes()"
+          [(ngModel)]="project()!.type"
+          placeholder="Select a type"
+          [editable]="false"
+          optionLabel="name"
+          styleClass="w-full input"
+        />
+      </div>
+    </div>
+
+    <h2 class="text-xl font-semibold text-gray-100 mb-4">Planning Options</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4">
+        <label for="teamSize" class="block text-sm font-medium">
+          Team Size
+        </label>
+        <div class="card flex justify-start w-full">
+          <p-select
+            [options]="groupedTeamSizes()"
+            [(ngModel)]="project()!.teamSize"
+            placeholder="Select team size"
+            [editable]="true"
+            optionLabel="name"
+            styleClass="w-full input"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="projectScope" class="block text-sm font-medium">
+          Project Scope
+        </label>
+        <div class="card flex justify-start w-full">
+          <p-select
+            [options]="groupedScopes()"
+            [(ngModel)]="project()!.scope"
+            placeholder="Select a scope"
+            [editable]="true"
+            optionLabel="name"
+            styleClass="w-full input"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4">
+        <label for="projectBudget" class="block text-sm font-medium">
+          Project Budget
+        </label>
+        <div class="card flex justify-start w-full">
+          <p-select
+            [options]="groupedBudgets()"
+            [(ngModel)]="project()!.budgetIntervals"
+            placeholder="Select a budget"
+            [editable]="true"
+            optionLabel="name"
+            styleClass="w-full input"
+          />
+        </div>
+      </div>
+      <div class="mb-4">
+        <label for="projectTargets" class="block text-sm font-medium">
+          Main Project Target
+        </label>
+        <div class="relative mt-1 rounded-md shadow-sm">
+          <div class="card flex justify-start w-full">
+            <p-select
+              [options]="groupedTargets()"
+              [(ngModel)]="project()!.targets"
+              placeholder="Select a target"
+              [editable]="true"
+              optionLabel="name"
+              styleClass="w-full input"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium"> Technical Constraints </label>
+        <div class="flex justify-start w-full">
+          <div class="card flex justify-center w-full">
+            <p-multiselect
+              [options]="groupedConstraints()"
+              [group]="true"
+              [(ngModel)]="selectedConstraints"
+              placeholder="Select constraints"
+              (onChange)="onConstraintsChange()"
+              scrollHeight="350px"
+              display="chip"
+              styleClass="w-full input"
+            >
+              <ng-template let-group #group>
+                <div class="flex items-center">
+                  <img
+                    src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'mr-2 flag flag-' + group.value"
+                    style="width: 20px"
+                  />
+                  <span class="font-bold">{{ group.label }}</span>
+                </div>
+              </ng-template>
+            </p-multiselect>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex w-full justify-end gap-4">
+      <button (click)="goToPreviousStep()" class="outer-button">
+        Previous
+      </button>
+      <button (click)="goToNextStep()" class="cta-button">Next</button>
+    </div>
+  </div>
+</section>

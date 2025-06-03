@@ -1,0 +1,29 @@
+<section class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full">
+  <h1 class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]">
+    Select colors that match your brand
+  </h1>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+    @for (palette of colorPalettes(); track palette.id) {
+      <div 
+        class="color-option p-6 rounded-lg cursor-pointer flex flex-col transition-all duration-200" 
+        [class.selected]="selectedColor() === palette.id" 
+        (click)="selectColor(palette.id)">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <div 
+            class="w-12 h-12 rounded-lg shadow-sm" 
+            [style.background-color]="palette.colors.primary">
+          </div>
+          <div 
+            class="w-12 h-12 rounded-lg shadow-sm" 
+            [style.background-color]="palette.colors.secondary">
+          </div>
+          <div 
+            class="w-12 h-12 rounded-lg shadow-sm" 
+            [style.background-color]="palette.colors.accent">
+          </div>
+        </div>
+        <h3 class="text-lg font-medium text-gray-200">{{ palette.name }}</h3>
+      </div>
+    }
+  </div>
+</section>

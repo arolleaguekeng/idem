@@ -1,42 +1,45 @@
 import {
   Component,
   ElementRef,
+  inject,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ProjectModel } from '../../models/project.model';
-import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { Select } from 'primeng/select';
-import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
+import { ProjectModel } from '../../models/project.model';
+import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { Loader } from '../../../../components/loader/loader';
-import { Router } from '@angular/router';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
-import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabel } from 'primeng/floatlabel';
+import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
 import {
   LogoOption,
   ColorPalette,
   TypographyOption,
   VisualIdentityData,
 } from './data';
-import { SafeHtmlPipe } from '../projects-list/safehtml.pipe';
+
+// Import new components
+import { ProjectDescriptionComponent } from './components/project-description/project-description';
+import { ProjectDetailsComponent } from './components/project-details/project-details';
+import { LogoSelectionComponent } from './components/logo-selection/logo-selection';
+import { ColorSelectionComponent } from './components/color-selection/color-selection';
+import { TypographySelectionComponent } from './components/typography-selection/typography-selection';
+import { ProjectSummaryComponent } from './components/project-summary/project-summary';
 
 @Component({
   selector: 'app-create-project',
+  standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
-    MultiSelectModule,
-    Select,
-    InputTextModule,
-    FloatLabel,
     Loader,
-    SafeHtmlPipe
+    ProjectDescriptionComponent,
+    ProjectDetailsComponent,
+    LogoSelectionComponent,
+    ColorSelectionComponent,
+    TypographySelectionComponent,
+    ProjectSummaryComponent,
   ],
   templateUrl: './create-project.html',
   styleUrl: './create-project.css',
@@ -47,18 +50,17 @@ export class CreateProjectComponent implements OnInit {
   protected readonly router = inject(Router);
 
   // Angular template signal states
-  protected isLoaded = signal(false);
-  protected isFirstStep = signal(true);
-  protected isSecondStep = signal(false);
-  protected isLogoStep = signal(false);
-  protected isColorStep = signal(false);
-  protected isTypographyStep = signal(false);
-  protected isSummaryStep = signal(false);
+  protected readonly isLoaded = signal(false);
+  protected readonly isFirstStep = signal(true);
+  protected readonly isSecondStep = signal(false);
+  protected readonly isLogoStep = signal(false);
+  protected readonly isColorStep = signal(false);
+  protected readonly isTypographyStep = signal(false);
+  protected readonly isSummaryStep = signal(false);
 
   // ViewChild references
   @ViewChild('projectDescription') readonly projectDescription!: ElementRef;
   @ViewChild('projectDetails') readonly projectDetails!: ElementRef;
-  @ViewChild('selectFeatures') readonly selectFeatures!: ElementRef;
   @ViewChild('logoSelection') readonly logoSelection!: ElementRef;
   @ViewChild('colorSelection') readonly colorSelection!: ElementRef;
   @ViewChild('typographySelection') readonly typographySelection!: ElementRef;
@@ -75,10 +77,10 @@ export class CreateProjectComponent implements OnInit {
   protected selectedTarget: SelectElement | undefined;
   protected selectedScope: SelectElement | undefined;
   protected selectedBudget: SelectElement | undefined;
-  protected selectedConstraints: SelectElement[] = [];
-  protected visible = false;
-  protected privacyPolicyAccepted = false;
-  protected marketingConsentAccepted = false;
+  protected selectedConstraints = signal<SelectElement[]>([]);
+  protected visible = signal<boolean>(false);
+  protected privacyPolicyAccepted = signal<boolean>(false);
+  protected marketingConsentAccepted = signal<boolean>(false);
 
   // Visual identity selections
   protected logos: LogoOption[] = VisualIdentityData.logos;
@@ -103,7 +105,11 @@ export class CreateProjectComponent implements OnInit {
 
   constructor() {}
 
-  protected scrollToSection(section: ElementRef) {
+  /**
+   * Scrolls to the specified section element with a smooth animation
+   * @param section ElementRef to scroll to
+   */
+  protected scrollToSection(section: ElementRef): void {
     if (section && section.nativeElement) {
       section.nativeElement.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => {
@@ -125,6 +131,76 @@ export class CreateProjectComponent implements OnInit {
 
     const newHeight = Math.min(textarea.scrollHeight, 400);
     textarea.style.height = newHeight + 'px';
+  }
+
+  /**
+   * Handles navigation to the next step in the project creation flow
+   * Updates relevant signals and scrolls to the appropriate section
+   */
+  protected goToNextStep(): void {
+    if (this.isFirstStep()) {
+      this.isFirstStep.set(false);
+      this.isSecondStep.set(true);
+      this.scrollToSection(this.projectDetails.nativeElement);
+    } else if (this.isSecondStep()) {
+      this.isSecondStep.set(false);
+      this.isLogoStep.set(true);
+      this.scrollToSection(this.logoSelection.nativeElement);
+    } else if (this.isLogoStep()) {
+      this.isLogoStep.set(false);
+      this.isColorStep.set(true);
+      this.scrollToSection(this.colorSelection.nativeElement);
+    } else if (this.isColorStep()) {
+      this.isColorStep.set(false);
+      this.isTypographyStep.set(true);
+      this.scrollToSection(this.typographySelection.nativeElement);
+    } else if (this.isTypographyStep()) {
+      this.isTypographyStep.set(false);
+      this.isSummaryStep.set(true);
+      this.scrollToSection(this.summarySelection.nativeElement);
+    }
+  }
+
+  /**
+   * Handles navigation to the previous step in the project creation flow
+   * Updates relevant signals and scrolls to the appropriate section
+   */
+  protected goToPreviousStep(): void {
+    if (this.isSecondStep()) {
+      this.isSecondStep.set(false);
+      this.isFirstStep.set(true);
+      this.scrollToSection(this.projectDescription.nativeElement);
+    } else if (this.isLogoStep()) {
+      this.isLogoStep.set(false);
+      this.isSecondStep.set(true);
+      this.scrollToSection(this.projectDetails.nativeElement);
+    } else if (this.isColorStep()) {
+      this.isColorStep.set(false);
+      this.isLogoStep.set(true);
+      this.scrollToSection(this.logoSelection.nativeElement);
+    } else if (this.isTypographyStep()) {
+      this.isTypographyStep.set(false);
+      this.isColorStep.set(true);
+      this.scrollToSection(this.colorSelection.nativeElement);
+    } else if (this.isSummaryStep()) {
+      this.isSummaryStep.set(false);
+      this.isTypographyStep.set(true);
+      this.scrollToSection(this.typographySelection.nativeElement);
+    }
+  }
+
+  /**
+   * Handles privacy policy acceptance changes from the summary component
+   */
+  protected handlePrivacyPolicyChange(accepted: boolean): void {
+    this.privacyPolicyAccepted.set(accepted);
+  }
+
+  /**
+   * Handles marketing consent changes from the summary component
+   */
+  protected handleMarketingConsentChange(accepted: boolean): void {
+    this.marketingConsentAccepted.set(accepted);
   }
 
   // Method to create project with selected visual identity
@@ -207,20 +283,27 @@ export class CreateProjectComponent implements OnInit {
 
   protected goToThirdStep() {
     console.log('Project: ', this.project);
-    this.visible = true;
+    this.visible.set(true);
     this.isLoaded.set(false);
   }
 
+  /**
+   * Handles constraint selection changes from the project details component
+   * Updates the project model with selected constraints
+   */
   protected onConstraintsChange(): void {
-    if (this.selectedConstraints && this.selectedConstraints.length > 0) {
+    const constraints = this.selectedConstraints();
+    if (constraints && constraints.length > 0) {
       // Make sure to convert SelectElement[] to string[] if needed
-      this.project.constraints = this.selectedConstraints.map(
+      this.project.constraints = constraints.map(
         (item: SelectElement | string) =>
           typeof item === 'string' ? item : String(item)
       );
     } else {
       this.project.constraints = [];
     }
+    // Log for debugging purposes
+    console.log('Constraints updated:', this.selectedConstraints());
   }
 
   // Helper methods for template
