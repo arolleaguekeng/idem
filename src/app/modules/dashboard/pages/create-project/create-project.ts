@@ -83,7 +83,7 @@ export class CreateProjectComponent implements OnInit {
   protected marketingConsentAccepted = signal<boolean>(false);
 
   // Visual identity selections
-  protected logos: LogoOption[] = VisualIdentityData.logos;
+  logos: LogoOption[] = VisualIdentityData.logos;
   protected colorPalettes: ColorPalette[] = VisualIdentityData.colorPalettes;
   protected typographyOptions: TypographyOption[] =
     VisualIdentityData.typographyOptions;

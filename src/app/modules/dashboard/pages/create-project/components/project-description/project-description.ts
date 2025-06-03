@@ -11,8 +11,8 @@ import { ProjectModel } from '../../../../models/project.model';
   styleUrl: './project-description.css',
 })
 export class ProjectDescriptionComponent {
-  protected readonly project = input<ProjectModel>();
-  protected readonly nextStep = output<void>();
+  readonly project = input.required<ProjectModel>();
+  readonly nextStep = output<void>();
 
   protected autoResize(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;

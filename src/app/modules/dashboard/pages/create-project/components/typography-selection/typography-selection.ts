@@ -17,10 +17,10 @@ import { TypographyOption } from '../../data';
   styleUrl: './typography-selection.css',
 })
 export class TypographySelectionComponent {
-  protected readonly typographyOptions = input<TypographyOption[]>([]);
-  protected readonly selectedTypography = input('');
+  readonly typographyOptions = input.required<TypographyOption[]>();
+  readonly selectedTypography = input.required<string>();
 
-  protected readonly typographySelected = output<string>();
+  readonly typographySelected = output<string>();
 
   protected selectTypography(typographyId: string): void {
     this.typographySelected.emit(typographyId);

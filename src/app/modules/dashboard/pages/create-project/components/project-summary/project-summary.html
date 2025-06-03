@@ -22,10 +22,10 @@
             </h3>
             <div class="space-y-2">
               <p class="text-gray-300">
-                <span class="text-gray-400">Name:</span> {{ project.name }}
+                <span class="text-gray-400">Name:</span> {{ project().name }}
               </p>
               <p class="text-gray-300">
-                <span class="text-gray-400">Type:</span> {{ project.type }}
+                <span class="text-gray-400">Type:</span> {{ project().type }}
               </p>
             </div>
           </div>
@@ -36,17 +36,18 @@
             <div class="space-y-2">
               <p class="text-gray-300">
                 <span class="text-gray-400">Team Size:</span> {{
-                project.teamSize }}
+                project().teamSize }}
               </p>
               <p class="text-gray-300">
-                <span class="text-gray-400">Scope:</span> {{ project.scope }}
+                <span class="text-gray-400">Scope:</span> {{ project().scope }}
               </p>
               <p class="text-gray-300">
                 <span class="text-gray-400">Budget:</span> {{
-                project.budgetIntervals }}
+                project().budgetIntervals }}
               </p>
               <p class="text-gray-300">
-                <span class="text-gray-400">Target:</span> {{ project.targets }}
+                <span class="text-gray-400">Target:</span> {{ project().targets
+                }}
               </p>
             </div>
           </div>

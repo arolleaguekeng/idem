@@ -17,10 +17,10 @@ import { ColorPalette } from '../../data';
   styleUrl: './color-selection.css',
 })
 export class ColorSelectionComponent {
-  protected readonly colorPalettes = input<ColorPalette[]>();
-  protected readonly selectedColor = input<string>();
+  readonly colorPalettes = input.required<ColorPalette[]>();
+  readonly selectedColor = input.required<string>();
 
-  protected readonly colorSelected = output<string>();
+  readonly colorSelected = output<string>();
 
   protected selectColor(colorId: string): void {
     this.colorSelected.emit(colorId);

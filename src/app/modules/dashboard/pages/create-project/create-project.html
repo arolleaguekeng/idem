@@ -7,6 +7,7 @@
   <section #projectDescription>
     <app-project-description
       (nextStep)="goToNextStep()"
+      [project]="project"
     ></app-project-description>
   </section>
   } @if (isSecondStep()) {
@@ -15,6 +16,14 @@
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
       (constraintsChange)="onConstraintsChange()"
+      [project]="project"
+      [groupedProjectTypes]="groupedProjectTypes"
+      [groupedTeamSizes]="groupedTeamSizes"
+      [groupedScopes]="groupedScopes"
+      [groupedBudgets]="groupedBudgets"
+      [groupedTargets]="groupedTargets"
+      [groupedConstraints]="groupedConstraints"
+      [selectedConstraints]="selectedConstraints()"
     ></app-project-details>
   </section>
   } @if (isLogoStep()) {
@@ -23,7 +32,7 @@
       (logoSelected)="selectLogo($event)"
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
-      (logos)="logos"
+      [logos]="logos"
     ></app-logo-selection>
   </section>
   } @if (isColorStep()) {
@@ -32,6 +41,8 @@
       (colorSelected)="selectColor($event)"
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
+      [colorPalettes]="colorPalettes"
+      [selectedColor]="selectedColor"
     ></app-color-selection>
   </section>
   } @if (isTypographyStep()) {
@@ -40,6 +51,8 @@
       (typographySelected)="selectTypography($event)"
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
+      [typographyOptions]="typographyOptions"
+      [selectedTypography]="selectedTypography"
     ></app-typography-selection>
   </section>
   } @if (isSummaryStep()) {
@@ -47,6 +60,15 @@
     <app-project-summary
       (createProject)="finalizeProjectCreation()"
       (previousStep)="goToPreviousStep()"
+      [project]="project"
+      [selectedLogo]="selectedLogo"
+      [selectedColor]="selectedColor"
+      [selectedTypography]="selectedTypography"
+      [logos]="logos"
+      [colorPalettes]="colorPalettes"
+      [typographyOptions]="typographyOptions"
+      [privacyPolicyAccepted]="privacyPolicyAccepted()"
+      [marketingConsentAccepted]="marketingConsentAccepted()"
     ></app-project-summary>
   </section>
   } }

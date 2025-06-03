@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  input,
+  Input,
+  output,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProjectModel } from '../../../../models/project.model';
@@ -14,32 +21,34 @@ import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 })
 export class ProjectSummaryComponent {
   // Angular inputs
-  @Input() readonly project!: ProjectModel;
-  @Input() readonly selectedLogo = '';
-  @Input() readonly selectedColor = '';
-  @Input() readonly selectedTypography = '';
-  @Input() readonly logos: LogoOption[] = [];
-  @Input() readonly colorPalettes: ColorPalette[] = [];
-  @Input() readonly typographyOptions: TypographyOption[] = [];
-  @Input() readonly privacyPolicyAccepted = false;
-  @Input() readonly marketingConsentAccepted = false;
+  project = input.required<ProjectModel>();
+  selectedLogo = input.required<string>();
+  selectedColor = input.required<string>();
+  selectedTypography = input.required<string>();
+  logos = input.required<LogoOption[]>();
+  colorPalettes = input.required<ColorPalette[]>();
+  typographyOptions = input.required<TypographyOption[]>();
+  privacyPolicyAccepted = input.required<boolean>();
+  marketingConsentAccepted = input.required<boolean>();
 
   // Angular outputs
-  @Output() readonly privacyPolicyChange = new EventEmitter<boolean>();
-  @Output() readonly marketingConsentChange = new EventEmitter<boolean>();
-  @Output() readonly finalizeProject = new EventEmitter<void>();
+  privacyPolicyChange = output<boolean>();
+  marketingConsentChange = output<boolean>();
+  finalizeProject = output<void>();
 
   protected getSelectedLogo(): LogoOption | undefined {
-    return this.logos.find((logo) => logo.id === this.selectedLogo);
+    return this.logos().find((logo) => logo.id === this.selectedLogo());
   }
 
   protected getSelectedColor(): ColorPalette | undefined {
-    return this.colorPalettes.find((color) => color.id === this.selectedColor);
+    return this.colorPalettes().find(
+      (color) => color.id === this.selectedColor()
+    );
   }
 
   protected getSelectedTypography(): TypographyOption | undefined {
-    return this.typographyOptions.find(
-      (typo) => typo.id === this.selectedTypography
+    return this.typographyOptions().find(
+      (typo) => typo.id === this.selectedTypography()
     );
   }
 

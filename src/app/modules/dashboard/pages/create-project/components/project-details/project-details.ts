@@ -31,18 +31,18 @@ import { SelectElement } from '../../datas';
 })
 export class ProjectDetailsComponent {
   // Angular inputs/outputs
-  protected readonly project = input<ProjectModel>();
-  protected readonly groupedProjectTypes = input<SelectElement[]>();
-  protected readonly groupedTeamSizes = input<SelectElement[]>();
-  protected readonly groupedScopes = input<SelectElement[]>();
-  protected readonly groupedBudgets = input<SelectElement[]>();
-  protected readonly groupedTargets = input<SelectElement[]>();
-  protected readonly groupedConstraints = input<any[]>();
-  protected readonly selectedConstraints = input<SelectElement[]>();
+  readonly project = input<ProjectModel>();
+  readonly groupedProjectTypes = input.required<SelectElement[]>();
+  readonly groupedTeamSizes = input.required<SelectElement[]>();
+  readonly groupedScopes = input.required<SelectElement[]>();
+  readonly groupedBudgets = input.required<SelectElement[]>();
+  readonly groupedTargets = input.required<SelectElement[]>();
+  readonly groupedConstraints = input.required<any[]>();
+  readonly selectedConstraints = input.required<SelectElement[]>();
 
-  protected readonly nextStep = output<void>();
-  protected readonly previousStep = output<void>();
-  protected readonly constraintsChange = output<void>();
+  readonly nextStep = output<void>();
+  readonly previousStep = output<void>();
+  readonly constraintsChange = output<void>();
 
   protected goToNextStep(): void {
     this.nextStep.emit();
