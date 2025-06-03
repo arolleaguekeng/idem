@@ -257,9 +257,7 @@ export class CreateProjectComponent implements OnInit {
   // Typography selection methods
   protected selectTypography(typographyId: string) {
     this.selectedTypography = typographyId;
-    setTimeout(() => {
-      this.finalizeProjectCreation();
-    }, 500);
+    this.showSummaryStep();
   }
 
   // Visual identity step navigation
@@ -292,6 +290,19 @@ export class CreateProjectComponent implements OnInit {
 
     setTimeout(() => {
       this.scrollToSection(this.typographySelection);
+      this.isLoaded.set(false);
+    }, 500);
+  }
+
+  protected showSummaryStep() {
+    this.isLogoStep.set(false);
+    this.isColorStep.set(false);
+    this.isTypographyStep.set(false);
+    this.isSummaryStep.set(true);
+    this.isLoaded.set(true);
+
+    setTimeout(() => {
+      this.scrollToSection(this.summarySelection);
       this.isLoaded.set(false);
     }, 500);
   }

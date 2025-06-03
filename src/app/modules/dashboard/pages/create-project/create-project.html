@@ -443,8 +443,8 @@
                   selectedScope.name) || 'Not specified' }}
                 </p>
                 <p>
-                  <strong>Constraints:</strong> {{ project.constraints?.join(',
-                  ') || 'None' }}
+                  <strong>Constraints:</strong> {{ (project.constraints ||
+                  []).join(', ') || 'None' }}
                 </p>
               </div>
             </div>
