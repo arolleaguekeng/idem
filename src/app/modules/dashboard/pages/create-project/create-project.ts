@@ -24,6 +24,7 @@ import {
   TypographyOption,
   VisualIdentityData,
 } from './data';
+import { SafeHtmlPipe } from '../projects-list/safehtml.pipe';
 
 @Component({
   selector: 'app-create-project',
@@ -35,6 +36,7 @@ import {
     InputTextModule,
     FloatLabel,
     Loader,
+    SafeHtmlPipe
   ],
   templateUrl: './create-project.html',
   styleUrl: './create-project.css',
@@ -297,6 +299,8 @@ export class CreateProjectComponent implements OnInit {
   protected showSummaryStep() {
     this.isLogoStep.set(false);
     this.isColorStep.set(false);
+    this.isFirstStep.set(false);
+    this.isSecondStep.set(false);
     this.isTypographyStep.set(false);
     this.isSummaryStep.set(true);
     this.isLoaded.set(true);
@@ -304,6 +308,7 @@ export class CreateProjectComponent implements OnInit {
     setTimeout(() => {
       this.scrollToSection(this.summarySelection);
       this.isLoaded.set(false);
+      document.body.style.overflow = '';
     }, 500);
   }
 

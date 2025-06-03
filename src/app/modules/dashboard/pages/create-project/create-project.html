@@ -389,7 +389,7 @@
             <div
               class="w-full h-48 mb-3 z-10 transition-transform duration-300 group-hover:scale-105"
               [class.scale-105]="selectedLogo === logo.id"
-              [innerHTML]="logo.svg"
+              [innerHTML]="logo.svg | safeHtml"
             ></div>
             <h3 class="text-white text-lg font-medium z-10">{{ logo.name }}</h3>
             <div
@@ -503,7 +503,7 @@
               <h3 class="text-lg font-semibold text-gray-300 mb-4">Logo</h3>
               @if (selectedLogo) {
               <div
-                [innerHTML]="getSelectedLogo()?.svg"
+                [innerHTML]="getSelectedLogo()?.svg! | safeHtml"
                 class="h-32 w-full flex justify-center items-center"
               ></div>
               <p class="text-gray-300 mt-2">
