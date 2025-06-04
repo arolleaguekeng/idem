@@ -1,5 +1,5 @@
 <section
-  class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full"
+  class="flex flex-col items-center mt-[90px] justify-center text-gray-100 w-full"
 >
   <h1
     class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-8 pb-2 w-[60%]"
@@ -167,18 +167,6 @@
             </label>
           </div>
         </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex justify-end space-x-4">
-        <button
-          class="cta-button"
-          [disabled]="!privacyPolicyAccepted"
-          [class.opacity-50]="!privacyPolicyAccepted"
-          (click)="submitProject()"
-        >
-          Create Project
-        </button>
       </div>
     </div>
   </div>

@@ -102,6 +102,7 @@ export const routes: Routes = [
       import('./modules/dashboard/pages/create-project/create-project').then(
         (m) => m.CreateProjectComponent
       ),
+    data: { layout: 'empty' },
   },
 
   { path: '**', redirectTo: 'home' },

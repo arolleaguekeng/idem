@@ -49,14 +49,20 @@ export class CreateProjectComponent implements OnInit {
   protected readonly projectService = inject(ProjectService);
   protected readonly router = inject(Router);
 
-  // Angular template signal states
+  // Step management
   protected readonly isLoaded = signal(false);
-  protected readonly isFirstStep = signal(true);
-  protected readonly isSecondStep = signal(false);
-  protected readonly isLogoStep = signal(false);
-  protected readonly isColorStep = signal(false);
-  protected readonly isTypographyStep = signal(false);
-  protected readonly isSummaryStep = signal(false);
+  protected readonly currentStepIndex = signal<number>(0);
+  protected readonly selectedTabIndex = signal<number>(0);
+
+  // Simplified step structure with all necessary information
+  protected readonly steps = [
+    { id: 'description', title: 'Project Description', active: signal(true) },
+    { id: 'details', title: 'Project Details', active: signal(false) },
+    { id: 'colors', title: 'Color Selection', active: signal(false) },
+    { id: 'logo', title: 'Logo Selection', active: signal(false) },
+    { id: 'typography', title: 'Typography', active: signal(false) },
+    { id: 'summary', title: 'Summary', active: signal(false) },
+  ];
 
   // ViewChild references
   @ViewChild('projectDescription') readonly projectDescription!: ElementRef;
@@ -109,22 +115,41 @@ export class CreateProjectComponent implements OnInit {
    * Scrolls to the specified section element with a smooth animation
    * @param section ElementRef to scroll to
    */
-  protected scrollToSection(section: ElementRef): void {
-    if (section && section.nativeElement) {
-      section.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => {
-        this.isLoaded.set(false);
-      }, 800);
-    }
+  private scrollToSection(section: ElementRef): void {
+    // No longer blocking scroll
+    setTimeout(() => {
+      if (section) {
+        section.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    }, 100);
   }
 
-  protected allowScroll(): void {
-    document.body.style.overflow = '';
+  /**
+   * Adds a transition direction class based on navigation direction
+   * @param fromIndex Previous step index
+   * @param toIndex New step index
+   * @returns CSS class for the appropriate animation direction
+   */
+  protected getTransitionClass(fromIndex: number, toIndex: number): string {
+    if (fromIndex < toIndex) {
+      return 'animate-slideInRight';
+    } else if (fromIndex > toIndex) {
+      return 'animate-slideInLeft';
+    }
+    return 'animate-fadeIn';
   }
+
   ngOnInit(): void {
     console.log('project', this.project);
-    document.body.style.overflow = 'hidden';
   }
+  
+  /**
+   * Auto-resize textarea based on content
+   * @param event Input event from textarea
+   */
   protected autoResize(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
@@ -134,58 +159,68 @@ export class CreateProjectComponent implements OnInit {
   }
 
   /**
+   * Gets the element reference for a step by index
+   */
+  protected getElementForStep(stepIndex: number): ElementRef {
+    const step = this.steps[stepIndex];
+    if (!step) return this.projectDescription;
+    
+    switch (step.id) {
+      case 'description': return this.projectDescription;
+      case 'details': return this.projectDetails;
+      case 'colors': return this.colorSelection;
+      case 'logo': return this.logoSelection;
+      case 'typography': return this.typographySelection;
+      case 'summary': return this.summarySelection;
+      default: return this.projectDescription;
+    }
+  }
+
+  /**
+   * Navigates to a specific step with animation
+   * @param index The index of the step to navigate to
+   */
+  protected navigateToStep(index: number): void {
+    if (index >= 0 && index < this.steps.length) {
+      const previousIndex = this.currentStepIndex();
+      
+      // Skip if already at this step
+      if (previousIndex === index) return;
+      
+      // Deactivate all steps
+      this.steps.forEach(step => step.active.set(false));
+      
+      // Activate the target step
+      this.steps[index].active.set(true);
+      this.currentStepIndex.set(index);
+      
+      // Scroll to the section with a slight delay for better animation
+      setTimeout(() => {
+        this.scrollToSection(this.getElementForStep(index).nativeElement);
+      }, 50);
+      
+      // Track this navigation for analytics (optional)
+      console.log(`Navigation from ${this.steps[previousIndex]?.id} to ${this.steps[index]?.id}`);
+    }
+  }
+  
+  /**
    * Handles navigation to the next step in the project creation flow
-   * Updates relevant signals and scrolls to the appropriate section
    */
   protected goToNextStep(): void {
-    if (this.isFirstStep()) {
-      this.isFirstStep.set(false);
-      this.isSecondStep.set(true);
-      this.scrollToSection(this.projectDetails.nativeElement);
-    } else if (this.isSecondStep()) {
-      this.isSecondStep.set(false);
-      this.isLogoStep.set(true);
-      this.scrollToSection(this.logoSelection.nativeElement);
-    } else if (this.isLogoStep()) {
-      this.isLogoStep.set(false);
-      this.isColorStep.set(true);
-      this.scrollToSection(this.colorSelection.nativeElement);
-    } else if (this.isColorStep()) {
-      this.isColorStep.set(false);
-      this.isTypographyStep.set(true);
-      this.scrollToSection(this.typographySelection.nativeElement);
-    } else if (this.isTypographyStep()) {
-      this.isTypographyStep.set(false);
-      this.isSummaryStep.set(true);
-      this.scrollToSection(this.summarySelection.nativeElement);
+    const nextIndex = this.currentStepIndex() + 1;
+    if (nextIndex < this.steps.length) {
+      this.navigateToStep(nextIndex);
     }
   }
 
   /**
    * Handles navigation to the previous step in the project creation flow
-   * Updates relevant signals and scrolls to the appropriate section
    */
   protected goToPreviousStep(): void {
-    if (this.isSecondStep()) {
-      this.isSecondStep.set(false);
-      this.isFirstStep.set(true);
-      this.scrollToSection(this.projectDescription.nativeElement);
-    } else if (this.isLogoStep()) {
-      this.isLogoStep.set(false);
-      this.isSecondStep.set(true);
-      this.scrollToSection(this.projectDetails.nativeElement);
-    } else if (this.isColorStep()) {
-      this.isColorStep.set(false);
-      this.isLogoStep.set(true);
-      this.scrollToSection(this.logoSelection.nativeElement);
-    } else if (this.isTypographyStep()) {
-      this.isTypographyStep.set(false);
-      this.isColorStep.set(true);
-      this.scrollToSection(this.colorSelection.nativeElement);
-    } else if (this.isSummaryStep()) {
-      this.isSummaryStep.set(false);
-      this.isTypographyStep.set(true);
-      this.scrollToSection(this.typographySelection.nativeElement);
+    const prevIndex = this.currentStepIndex() - 1;
+    if (prevIndex >= 0) {
+      this.navigateToStep(prevIndex);
     }
   }
 
@@ -326,102 +361,44 @@ export class CreateProjectComponent implements OnInit {
   // Logo selection methods
   protected selectLogo(logoId: string) {
     this.selectedLogo = logoId;
-    setTimeout(() => {
-      this.showColorSelectionStep();
-    }, 500);
+    setTimeout(() => this.goToNextStep(), 300);
   }
 
-  // Color selection methods
   protected selectColor(colorId: string) {
     this.selectedColor = colorId;
-    setTimeout(() => {
-      this.showTypographySelectionStep();
-    }, 500);
+    setTimeout(() => this.goToNextStep(), 300);
   }
 
-  // Typography selection methods
   protected selectTypography(typographyId: string) {
     this.selectedTypography = typographyId;
-    this.showSummaryStep();
+    this.goToNextStep();
   }
 
-  // Visual identity step navigation
-  protected showLogoSelectionStep() {
-    this.isLogoStep.set(true);
-    this.isColorStep.set(false);
-    this.isTypographyStep.set(false);
-
-    setTimeout(() => {
-      this.scrollToSection(this.logoSelection);
-      this.isLoaded.set(false);
-    }, 500);
+  /**
+   * Simplified helper for checking if a step is active by index
+   */
+  protected isStepActive(index: number): boolean {
+    return this.steps[index]?.active() || false;
   }
-
-  protected showColorSelectionStep() {
-    this.isLogoStep.set(false);
-    this.isColorStep.set(true);
-    this.isTypographyStep.set(false);
-
-    setTimeout(() => {
-      this.scrollToSection(this.colorSelection);
-      this.isLoaded.set(false);
-    }, 500);
-  }
-
-  protected showTypographySelectionStep() {
-    this.isLogoStep.set(false);
-    this.isColorStep.set(false);
-    this.isTypographyStep.set(true);
-
-    setTimeout(() => {
-      this.scrollToSection(this.typographySelection);
-      this.isLoaded.set(false);
-    }, 500);
-  }
-
-  protected showSummaryStep() {
-    this.isLogoStep.set(false);
-    this.isColorStep.set(false);
-    this.isFirstStep.set(false);
-    this.isSecondStep.set(false);
-    this.isTypographyStep.set(false);
-    this.isSummaryStep.set(true);
+  
+  /**
+   * Navigate to a specific step with loading animation
+   * @param stepIndex The index of the step to navigate to
+   * @param duration Optional transition duration (default: 400ms)
+   */
+  protected navigateWithLoading(stepIndex: number, duration = 400): void {
+    // Show loading state
     this.isLoaded.set(true);
-
+    
+    // Apply a subtle transition effect
+    const animationTiming = duration * 0.8;
+    
     setTimeout(() => {
-      this.scrollToSection(this.summarySelection);
-      this.isLoaded.set(false);
-      document.body.style.overflow = '';
-    }, 500);
-  }
-
-  protected goToSecondStep() {
-    this.isFirstStep.set(false);
-    this.isSecondStep.set(true);
-    this.isLoaded.set(true);
-
-    setTimeout(() => {
-      this.isLoaded.set(false);
-    }, 500);
-
-    setTimeout(() => {
-      this.scrollToSection(this.projectDetails);
-    }, 500);
-
-    this.isFirstStep.set(true);
-  }
-
-  protected goToFirstStep() {
-    this.isFirstStep.set(true);
-    this.isSecondStep.set(false);
-    this.isLoaded.set(true);
-
-    setTimeout(() => {
-      this.isLoaded.set(false);
-    }, 500);
-
-    setTimeout(() => {
-      this.scrollToSection(this.projectDescription);
-    }, 500);
+      this.navigateToStep(stepIndex);
+      // Hide loading after animation completes
+      setTimeout(() => {
+        this.isLoaded.set(false);
+      }, animationTiming);
+    }, duration * 0.2);
   }
 }
