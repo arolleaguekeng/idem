@@ -1,29 +1,76 @@
-<section class="md:h-screen flex flex-col items-center justify-center text-gray-100 w-full">
-  <h1 class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]">
-    Select colors that match your brand
+<section
+  class="md:h-screen flex flex-col items-center justify-center w-full"
+  #colorSelection
+>
+  <h1
+    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+  >
+    Select a color palette for your brand
   </h1>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-    @for (palette of colorPalettes(); track palette.id) {
-      <div 
-        class="color-option p-6 rounded-lg cursor-pointer flex flex-col transition-all duration-200" 
-        [class.selected]="selectedColor() === palette.id" 
-        (click)="selectColor(palette.id)">
-        <div class="flex flex-wrap gap-2 mb-4">
-          <div 
-            class="w-12 h-12 rounded-lg shadow-sm" 
-            [style.background-color]="palette.colors.primary">
+  <div class="card flex justify-center">
+    <div class="max-w-4xl mx-auto p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @for (color of colorPalettes(); track color.id) {
+        <div
+          class="p-6 border border-gray-700 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all cursor-pointer group relative overflow-hidden"
+          [style.boxShadow]="selectedColor() === color.id ? '0 0 15px ' + color.colors.primary : 'none'"
+          [class.border-2]="selectedColor() === color.id"
+          [style.borderColor]="selectedColor() === color.id ? color.colors.primary : ''"
+          (click)="selectColor(color.id)"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+            [style.backgroundImage]="'linear-gradient(to bottom right, ' + color.colors.primary + ', ' + color.colors.accent + ')'"
+            [class.opacity-20]="selectedColor() === color.id"
+          ></div>
+          <h3 class="text-white text-lg font-medium mb-3 z-10">
+            {{ color.name }}
+          </h3>
+          <div class="flex space-x-2 mb-4">
+            <div
+              class="w-8 h-8 rounded-full"
+              [style.backgroundColor]="color.colors.primary"
+            ></div>
+            <div
+              class="w-8 h-8 rounded-full"
+              [style.backgroundColor]="color.colors.secondary"
+            ></div>
+            <div
+              class="w-8 h-8 rounded-full"
+              [style.backgroundColor]="color.colors.accent"
+            ></div>
+            <div
+              class="w-8 h-8 rounded-full border border-gray-500"
+              [style.backgroundColor]="color.colors.background"
+            ></div>
           </div>
-          <div 
-            class="w-12 h-12 rounded-lg shadow-sm" 
-            [style.background-color]="palette.colors.secondary">
-          </div>
-          <div 
-            class="w-12 h-12 rounded-lg shadow-sm" 
-            [style.background-color]="palette.colors.accent">
+          <div
+            class="mt-2 p-3 rounded"
+            [style.backgroundColor]="color.colors.background"
+          >
+            <p [style.color]="color.colors.text" class="font-medium">
+              Sample Text
+            </p>
+            <div class="flex mt-2">
+              <button
+                class="px-3 py-1 rounded mr-2 text-sm"
+                [style.backgroundColor]="color.colors.primary"
+                [style.color]="'white'"
+              >
+                Primary
+              </button>
+              <button
+                class="px-3 py-1 rounded text-sm"
+                [style.backgroundColor]="color.colors.accent"
+                [style.color]="'white'"
+              >
+                Accent
+              </button>
+            </div>
           </div>
         </div>
-        <h3 class="text-lg font-medium text-gray-200">{{ palette.name }}</h3>
+        }
       </div>
-    }
+    </div>
   </div>
 </section>
