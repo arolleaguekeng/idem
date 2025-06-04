@@ -3,34 +3,54 @@
   #logoSelection
 >
   <h1
-    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[80%] md:w-[60%]"
   >
     Choose a stunning logo for your project
   </h1>
 
-  <div class="card flex justify-center">
-    <div class="max-w-4xl mx-auto p-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="flex justify-center w-full">
+    <div class="max-w-4xl mx-auto p-4 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         @for (logo of logos(); track logo.id) {
         <div
-          class="p-6 border border-gray-700 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all cursor-pointer flex flex-col items-center group relative overflow-hidden"
+          class="p-6 md:p-8 border border-gray-700/50 rounded-2xl backdrop-blur-sm hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden bg-black/20 hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
           [class.border-primary]="selectedLogo() === logo.id"
           [class.bg-gray-900]="selectedLogo() === logo.id"
+          [class.shadow-md]="selectedLogo() === logo.id"
           (click)="selectLogo(logo.id)"
+          tabindex="0"
+          role="button"
+          [attr.aria-pressed]="selectedLogo() === logo.id"
+          [attr.aria-label]="'Select ' + logo.name + ' logo'"
         >
+          <!-- Background gradient effect - preserved from original -->
           <div
             class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             [class.opacity-50]="selectedLogo() === logo.id"
           ></div>
+
+          <!-- Logo container with preserved hover animation -->
           <div
-            class="w-full h-48 mb-3 z-10 transition-transform duration-300 group-hover:scale-105"
+            class="w-full h-48 mb-3 z-10 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
             [class.scale-105]="selectedLogo() === logo.id"
             [innerHTML]="logo.svg | safeHtml"
           ></div>
-          <h3 class="text-white text-lg font-medium z-10">{{ logo.name }}</h3>
+
+          <!-- Logo name with improved typography -->
+          <h3 class="text-white text-lg font-medium z-10 tracking-wide">
+            {{ logo.name }}
+          </h3>
+
+          <!-- Animated indicator line - preserved from original -->
           <div
-            class="w-0 group-hover:w-full h-1 bg-primary mt-2 transition-all duration-300"
+            class="w-0 group-hover:w-full h-1 bg-primary mt-2 transition-all duration-300 rounded-full"
             [class.w-full]="selectedLogo() === logo.id"
+          ></div>
+
+          <!-- Selected indicator dot -->
+          <div
+            *ngIf="selectedLogo() === logo.id"
+            class="absolute top-4 right-4 w-3 h-3 rounded-full bg-primary z-20 animate-pulse"
           ></div>
         </div>
         }

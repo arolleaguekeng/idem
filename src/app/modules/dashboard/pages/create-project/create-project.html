@@ -95,39 +95,6 @@
     </button>
   </div>
 
-  <!-- Step Indicator Dots -->
-  <div
-    class="fixed top-[80px] right-5 z-40 bg-gray-800/80 backdrop-blur-sm rounded-full py-2 px-3 shadow-lg"
-  >
-    <div class="flex gap-3 items-center">
-      @for (step of steps; track step.id; let i = $index) {
-      <div class="relative group">
-        <button
-          (click)="navigateToStep(i)"
-          class="w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-150"
-          [class.bg-gray-600]="isStepActive(i)"
-          [class.bg-gray-500]="!isStepActive(i)"
-          [class.scale-125]="isStepActive(i)"
-          [class.shadow-md]="isStepActive(i)"
-          [attr.aria-label]="'Navigate to ' + step.title"
-        >
-          @if (isStepActive(i)) {
-          <span
-            class="animate-ping absolute h-full w-full rounded-full opacity-30 bg-white"
-          ></span>
-          }
-        </button>
-        <!-- Tooltip -->
-        <span
-          class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          {{step.title}}
-        </span>
-      </div>
-      }
-    </div>
-  </div>
-
   @if (isStepActive(0)) {
   <section #projectDescription class="animate-fadeIn">
     <app-project-description
