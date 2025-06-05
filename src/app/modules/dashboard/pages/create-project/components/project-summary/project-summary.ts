@@ -9,8 +9,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProjectModel } from '../../../../models/project.model';
-import { ColorPalette, LogoOption, TypographyOption } from '../../data';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
+import { ColorModel, TypographyModel } from '../../../../models/brand-identity.model';
+import { LogoModel } from '../../../../models/logo.model';
 
 @Component({
   selector: 'app-project-summary',
@@ -25,9 +26,9 @@ export class ProjectSummaryComponent {
   selectedLogo = input.required<string>();
   selectedColor = input.required<string>();
   selectedTypography = input.required<string>();
-  logos = input.required<LogoOption[]>();
-  colorPalettes = input.required<ColorPalette[]>();
-  typographyOptions = input.required<TypographyOption[]>();
+  logos = input.required<LogoModel[]>();
+  colorPalettes = input.required<ColorModel[]>();
+  typographyOptions = input.required<TypographyModel[]>();
   privacyPolicyAccepted = input.required<boolean>();
   marketingConsentAccepted = input.required<boolean>();
 
@@ -36,17 +37,17 @@ export class ProjectSummaryComponent {
   marketingConsentChange = output<boolean>();
   finalizeProject = output<void>();
 
-  protected getSelectedLogo(): LogoOption | undefined {
+  protected getSelectedLogo(): LogoModel | undefined {
     return this.logos().find((logo) => logo.id === this.selectedLogo());
   }
 
-  protected getSelectedColor(): ColorPalette | undefined {
+  protected getSelectedColor(): ColorModel | undefined {
     return this.colorPalettes().find(
       (color) => color.id === this.selectedColor()
     );
   }
 
-  protected getSelectedTypography(): TypographyOption | undefined {
+  protected getSelectedTypography(): TypographyModel | undefined {
     return this.typographyOptions().find(
       (typo) => typo.id === this.selectedTypography()
     );

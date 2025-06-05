@@ -1,13 +1,6 @@
-import {
-  Component,
-  EventEmitter,
-  input,
-  Input,
-  output,
-  Output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TypographyOption } from '../../data';
+import { TypographyModel } from '../../../../models/brand-identity.model';
 
 @Component({
   selector: 'app-typography-selection',
@@ -17,7 +10,7 @@ import { TypographyOption } from '../../data';
   styleUrl: './typography-selection.css',
 })
 export class TypographySelectionComponent {
-  readonly typographyOptions = input.required<TypographyOption[]>();
+  readonly typographyOptions = input.required<TypographyModel[]>();
   readonly selectedTypography = input.required<string>();
 
   readonly typographySelected = output<string>();

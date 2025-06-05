@@ -118,7 +118,7 @@
       [selectedConstraints]="selectedConstraints()"
     ></app-project-details>
   </section>
-  } @if (isStepActive(2)) {
+  } @if (isStepActive(3)) {
   <section #logoSelection class="animate-slideInRight">
     <app-logo-selection
       (logoSelected)="selectLogo($event)"
@@ -127,13 +127,13 @@
       [logos]="logos"
     ></app-logo-selection>
   </section>
-  } @if (isStepActive(3)) {
+  } @if (isStepActive(2)) {
   <section #colorSelection class="animate-slideInRight">
     <app-color-selection
       (colorSelected)="selectColor($event)"
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
-      [colorPalettes]="colorPalettes"
+      [colorPalettes]="colorModels"
       [selectedColor]="selectedColor"
     ></app-color-selection>
   </section>
@@ -143,7 +143,7 @@
       (typographySelected)="selectTypography($event)"
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
-      [typographyOptions]="typographyOptions"
+      [typographyOptions]="typographyModels"
       [selectedTypography]="selectedTypography"
     ></app-typography-selection>
   </section>
@@ -157,8 +157,8 @@
       [selectedColor]="selectedColor"
       [selectedTypography]="selectedTypography"
       [logos]="logos"
-      [colorPalettes]="colorPalettes"
-      [typographyOptions]="typographyOptions"
+      [colorPalettes]="colorModels"
+      [typographyOptions]="typographyModels"
       [privacyPolicyAccepted]="privacyPolicyAccepted()"
       [marketingConsentAccepted]="marketingConsentAccepted()"
     ></app-project-summary>

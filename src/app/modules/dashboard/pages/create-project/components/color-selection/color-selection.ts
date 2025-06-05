@@ -1,13 +1,10 @@
 import {
   Component,
-  EventEmitter,
   input,
-  Input,
   output,
-  Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ColorPalette } from '../../data';
+import { ColorModel } from '../../../../models/brand-identity.model';
 
 @Component({
   selector: 'app-color-selection',
@@ -17,7 +14,7 @@ import { ColorPalette } from '../../data';
   styleUrl: './color-selection.css',
 })
 export class ColorSelectionComponent {
-  readonly colorPalettes = input.required<ColorPalette[]>();
+  readonly colorPalettes = input.required<ColorModel[]>();
   readonly selectedColor = input.required<string>();
 
   readonly colorSelected = output<string>();

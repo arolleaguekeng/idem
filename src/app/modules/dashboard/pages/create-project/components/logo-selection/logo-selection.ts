@@ -1,15 +1,12 @@
 import {
   Component,
-  EventEmitter,
   input,
-  Input,
   output,
-  Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LogoOption } from '../../data';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
+import { LogoModel } from '../../../../models/logo.model';
 
 @Component({
   selector: 'app-logo-selection',
@@ -19,7 +16,7 @@ import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
   styleUrl: './logo-selection.css',
 })
 export class LogoSelectionComponent {
-  readonly logos = input<LogoOption[]>();
+  readonly logos = input<LogoModel[]>();
   readonly selectedLogo = input<string>();
 
   readonly logoSelected = output<string>();

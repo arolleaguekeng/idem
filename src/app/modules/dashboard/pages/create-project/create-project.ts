@@ -13,12 +13,7 @@ import { ProjectService } from '../../services/project.service';
 import { Loader } from '../../../../components/loader/loader';
 import { initEmptyObject } from '../../../../utils/init-empty-object';
 import CreateProjectDatas, { DevelopmentPhase, SelectElement } from './datas';
-import {
-  LogoOption,
-  ColorPalette,
-  TypographyOption,
-  VisualIdentityData,
-} from './data';
+import { VisualIdentityData } from './data';
 
 // Import new components
 import { ProjectDescriptionComponent } from './components/project-description/project-description';
@@ -27,6 +22,8 @@ import { LogoSelectionComponent } from './components/logo-selection/logo-selecti
 import { ColorSelectionComponent } from './components/color-selection/color-selection';
 import { TypographySelectionComponent } from './components/typography-selection/typography-selection';
 import { ProjectSummaryComponent } from './components/project-summary/project-summary';
+import { LogoModel } from '../../models/logo.model';
+import { ColorModel, TypographyModel } from '../../models/brand-identity.model';
 
 @Component({
   selector: 'app-create-project',
@@ -89,9 +86,9 @@ export class CreateProjectComponent implements OnInit {
   protected marketingConsentAccepted = signal<boolean>(false);
 
   // Visual identity selections
-  logos: LogoOption[] = VisualIdentityData.logos;
-  protected colorPalettes: ColorPalette[] = VisualIdentityData.colorPalettes;
-  protected typographyOptions: TypographyOption[] =
+  logos: LogoModel[] = VisualIdentityData.logos;
+  protected colorModels: ColorModel[] = VisualIdentityData.colorPalettes;
+  protected typographyModels: TypographyModel[] =
     VisualIdentityData.typographyOptions;
   protected selectedLogo = '';
   protected selectedColor = '';
@@ -145,7 +142,7 @@ export class CreateProjectComponent implements OnInit {
   ngOnInit(): void {
     console.log('project', this.project);
   }
-  
+
   /**
    * Auto-resize textarea based on content
    * @param event Input event from textarea
@@ -164,15 +161,22 @@ export class CreateProjectComponent implements OnInit {
   protected getElementForStep(stepIndex: number): ElementRef {
     const step = this.steps[stepIndex];
     if (!step) return this.projectDescription;
-    
+
     switch (step.id) {
-      case 'description': return this.projectDescription;
-      case 'details': return this.projectDetails;
-      case 'colors': return this.colorSelection;
-      case 'logo': return this.logoSelection;
-      case 'typography': return this.typographySelection;
-      case 'summary': return this.summarySelection;
-      default: return this.projectDescription;
+      case 'description':
+        return this.projectDescription;
+      case 'details':
+        return this.projectDetails;
+      case 'colors':
+        return this.colorSelection;
+      case 'logo':
+        return this.logoSelection;
+      case 'typography':
+        return this.typographySelection;
+      case 'summary':
+        return this.summarySelection;
+      default:
+        return this.projectDescription;
     }
   }
 
@@ -183,27 +187,29 @@ export class CreateProjectComponent implements OnInit {
   protected navigateToStep(index: number): void {
     if (index >= 0 && index < this.steps.length) {
       const previousIndex = this.currentStepIndex();
-      
+
       // Skip if already at this step
       if (previousIndex === index) return;
-      
+
       // Deactivate all steps
-      this.steps.forEach(step => step.active.set(false));
-      
+      this.steps.forEach((step) => step.active.set(false));
+
       // Activate the target step
       this.steps[index].active.set(true);
       this.currentStepIndex.set(index);
-      
+
       // Scroll to the section with a slight delay for better animation
       setTimeout(() => {
         this.scrollToSection(this.getElementForStep(index).nativeElement);
       }, 50);
-      
+
       // Track this navigation for analytics (optional)
-      console.log(`Navigation from ${this.steps[previousIndex]?.id} to ${this.steps[index]?.id}`);
+      console.log(
+        `Navigation from ${this.steps[previousIndex]?.id} to ${this.steps[index]?.id}`
+      );
     }
   }
-  
+
   /**
    * Handles navigation to the next step in the project creation flow
    */
@@ -245,13 +251,15 @@ export class CreateProjectComponent implements OnInit {
 
       // Find the selected logo
       const selectedLogoObj = this.logos.find(
-        (logo: LogoOption) => logo.id === this.selectedLogo
+        (logo: LogoModel) => logo.id === this.selectedLogo
       );
 
       if (selectedLogoObj) {
         // Set logo data in the project model
         this.project.analysisResultModel.branding.logo = {
           content: {
+            id: selectedLogoObj.id,
+            name: selectedLogoObj.name,
             svg: selectedLogoObj.svg,
             concept: 'Auto-generated logo for ' + this.project.name,
             colors: [],
@@ -262,15 +270,16 @@ export class CreateProjectComponent implements OnInit {
 
         // Set colors in the project model if selected
         if (this.selectedColor) {
-          const selectedColorObj = this.colorPalettes.find(
-            (color: ColorPalette) => color.id === this.selectedColor
+          const selectedColorObj = this.colorModels.find(
+            (color: ColorModel) => color.id === this.selectedColor
           );
           if (selectedColorObj) {
             this.project.analysisResultModel.branding.colors = [
               {
                 id: selectedColorObj.id,
                 name: selectedColorObj.name,
-                exaDecimal: selectedColorObj.colors.primary,
+                url: selectedColorObj.url,
+                colors: selectedColorObj.colors,
               },
             ];
           }
@@ -278,15 +287,17 @@ export class CreateProjectComponent implements OnInit {
 
         // Set typography in the project model if selected
         if (this.selectedTypography) {
-          const selectedTypoObj = this.typographyOptions.find(
-            (typo: TypographyOption) => typo.id === this.selectedTypography
+          const selectedTypoObj = this.typographyModels.find(
+            (typo: TypographyModel) => typo.id === this.selectedTypography
           );
           if (selectedTypoObj) {
             this.project.analysisResultModel.branding.typography = [
               {
-                fonts: [
-                  { id: selectedTypoObj.id, name: selectedTypoObj.primaryFont },
-                ],
+                id: selectedTypoObj.id,
+                name: selectedTypoObj.name,
+                url: selectedTypoObj.url,
+                primaryFont: selectedTypoObj.primaryFont,
+                secondaryFont: selectedTypoObj.secondaryFont,
               },
             ];
           }
@@ -342,19 +353,19 @@ export class CreateProjectComponent implements OnInit {
   }
 
   // Helper methods for template
-  protected getSelectedLogo(): LogoOption | undefined {
-    return this.logos.find((logo: LogoOption) => logo.id === this.selectedLogo);
+  protected getSelectedLogo(): LogoModel | undefined {
+    return this.logos.find((logo: LogoModel) => logo.id === this.selectedLogo);
   }
 
-  protected getSelectedColor(): ColorPalette | undefined {
-    return this.colorPalettes.find(
-      (color: ColorPalette) => color.id === this.selectedColor
+  protected getSelectedColor(): ColorModel | undefined {
+    return this.colorModels.find(
+      (color: ColorModel) => color.id === this.selectedColor
     );
   }
 
-  protected getSelectedTypography(): TypographyOption | undefined {
-    return this.typographyOptions.find(
-      (typo: TypographyOption) => typo.id === this.selectedTypography
+  protected getSelectedTypography(): TypographyModel | undefined {
+    return this.typographyModels.find(
+      (typo: TypographyModel) => typo.id === this.selectedTypography
     );
   }
 
@@ -380,7 +391,7 @@ export class CreateProjectComponent implements OnInit {
   protected isStepActive(index: number): boolean {
     return this.steps[index]?.active() || false;
   }
-  
+
   /**
    * Navigate to a specific step with loading animation
    * @param stepIndex The index of the step to navigate to
@@ -389,10 +400,10 @@ export class CreateProjectComponent implements OnInit {
   protected navigateWithLoading(stepIndex: number, duration = 400): void {
     // Show loading state
     this.isLoaded.set(true);
-    
+
     // Apply a subtle transition effect
     const animationTiming = duration * 0.8;
-    
+
     setTimeout(() => {
       this.navigateToStep(stepIndex);
       // Hide loading after animation completes
