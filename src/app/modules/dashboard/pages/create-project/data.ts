@@ -40,23 +40,6 @@ export class VisualIdentityData {
       fonts: [],
     },
     {
-      id: 'logo5',
-      name: 'Logo 5',
-      svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#8e44ad;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#f1c40f;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <circle cx="50" cy="50" r="45" fill="url(#grad)"/>
-        <text x="50" y="55" font-family="Arial" font-size="24" text-anchor="middle" fill="#ffffff">L</text>
-      </svg>`,
-      concept: 'Modern Minimalist',
-      colors: ['#8e44ad', '#f1c40f'],
-      fonts: [],
-    },
-    {
       id: 'logo4',
       name: 'Logo 4',
       svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
