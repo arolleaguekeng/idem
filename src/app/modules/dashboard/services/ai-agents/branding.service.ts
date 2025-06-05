@@ -58,6 +58,27 @@ export class BrandingService {
     );
   }
 
+  // Generate Logo Colors and Typography for a project
+  generateLogoColorsAndTypography(
+    projectId: string
+  ): Observable<BrandIdentityModel> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) => {
+        return this.http.post<BrandIdentityModel>(
+          `${this.apiUrl}/genColorsAndTypography/${projectId}`,
+          { headers }
+        );
+      }),
+      tap((response) =>
+        console.log('generateLogoColorsAndTypography response:', response)
+      ),
+      catchError((error) => {
+        console.error('Error in generateLogoColorsAndTypography:', error);
+        throw error;
+      })
+    );
+  }
+
   // Get all branding items for a project (assuming API needs projectId for filtering)
   // If API doesn't filter by projectId here, this might need adjustment or projectId removed.
   getBrandIdentityModels(projectId: string): Observable<BrandIdentityModel[]> {

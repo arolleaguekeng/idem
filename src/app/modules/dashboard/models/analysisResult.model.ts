@@ -8,7 +8,7 @@ export interface AnalysisResultModel {
   id?: string;
   architectures: ArchitectureModel[];
   businessPlan?: BusinessPlanModel;
-  design: DiagramModel[];
+  design: DiagramModel;
   development: string;
   branding: BrandIdentityModel;
   landing: LandingModel;
