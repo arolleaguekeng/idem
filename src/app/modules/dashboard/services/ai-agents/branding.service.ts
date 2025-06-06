@@ -4,8 +4,13 @@ import { Auth, authState } from '@angular/fire/auth';
 import { Observable, throwError, from } from 'rxjs';
 import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
-import { BrandIdentityModel } from '../../models/brand-identity.model';
+import {
+  BrandIdentityModel,
+  ColorModel,
+  TypographyModel,
+} from '../../models/brand-identity.model';
 import { ProjectModel } from '../../models/project.model';
+import { LogoModel } from '../../models/logo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -60,18 +65,20 @@ export class BrandingService {
   }
 
   // Generate Logo Colors and Typography for a project
-  generateLogoColorsAndTypography(
-    project: ProjectModel
-  ): Observable<BrandIdentityModel> {
+  generateLogoColorsAndTypography(project: ProjectModel): Observable<{
+    logos: LogoModel[];
+    colors: ColorModel[];
+    typography: TypographyModel[];
+  }> {
     console.log('Generating logo colors and typography...');
     console.log('Project:', project);
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.post<BrandIdentityModel>(
-          `${this.apiUrl}/genColorsAndTypography`,
-          { project },
-          { headers }
-        );
+        return this.http.post<{
+          logos: LogoModel[];
+          colors: ColorModel[];
+          typography: TypographyModel[];
+        }>(`${this.apiUrl}/genColorsAndTypography`, { project }, { headers });
       }),
       tap((response) =>
         console.log('generateLogoColorsAndTypography response:', response)

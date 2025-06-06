@@ -263,6 +263,9 @@ export class CreateProjectComponent implements OnInit {
                 'Branding elements generated successfully:',
                 brandIdentity
               );
+              this.colorModels = brandIdentity.colors;
+              this.typographyModels = brandIdentity.typography;
+              this.logos = brandIdentity.logos;
               this.project.update((project) => ({
                 ...project,
                 brandIdentity,
