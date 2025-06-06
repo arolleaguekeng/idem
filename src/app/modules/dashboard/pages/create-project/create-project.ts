@@ -24,6 +24,8 @@ import { TypographySelectionComponent } from './components/typography-selection/
 import { ProjectSummaryComponent } from './components/project-summary/project-summary';
 import { LogoModel } from '../../models/logo.model';
 import { ColorModel, TypographyModel } from '../../models/brand-identity.model';
+import { BrandingService } from '../../services/ai-agents/branding.service';
+import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-create-project',
@@ -45,11 +47,14 @@ export class CreateProjectComponent implements OnInit {
   // Angular injected services
   protected readonly projectService = inject(ProjectService);
   protected readonly router = inject(Router);
+  protected readonly brandingService = inject(BrandingService);
+  protected readonly cookieService = inject(CookieService);
 
   // Step management
   protected readonly isLoaded = signal(false);
   protected readonly currentStepIndex = signal<number>(0);
   protected readonly selectedTabIndex = signal<number>(0);
+  protected readonly brandingError = signal<string | null>(null);
 
   // Simplified step structure with all necessary information
   protected readonly steps = [
@@ -70,7 +75,7 @@ export class CreateProjectComponent implements OnInit {
   @ViewChild('summarySelection') readonly summarySelection!: ElementRef;
 
   // Project model
-  protected project: ProjectModel = initEmptyObject<ProjectModel>();
+  protected project = signal<ProjectModel>(initEmptyObject<ProjectModel>());
 
   // Store selected visual identity items separately
   protected selectedLogoId = '';
@@ -198,6 +203,14 @@ export class CreateProjectComponent implements OnInit {
       this.steps[index].active.set(true);
       this.currentStepIndex.set(index);
 
+      // Save project to cookies after step change
+      try {
+        this.cookieService.set('draftProject', JSON.stringify(this.project));
+        console.log('Project data updated in cookies after step navigation.');
+      } catch (e) {
+        console.error('Error updating project data in cookies:', e);
+      }
+
       // Scroll to the section with a slight delay for better animation
       setTimeout(() => {
         this.scrollToSection(this.getElementForStep(index).nativeElement);
@@ -210,13 +223,68 @@ export class CreateProjectComponent implements OnInit {
     }
   }
 
+  private generateProjectId(): string {
+    console.log('Generating project ID...');
+    console.log('Project name:', this.project()?.name);
+    if (!this.project() || !this.project()?.name) {
+      return '';
+    }
+    const projectName = this.project()
+      .name.trim()
+      .toLowerCase()
+      .replace(/\s/g, '-');
+    const date = new Date().toISOString().replace(/[:.]/g, '-');
+    return `${projectName}-${date}`;
+  }
+
   /**
    * Handles navigation to the next step in the project creation flow
    */
   protected goToNextStep(): void {
-    const nextIndex = this.currentStepIndex() + 1;
-    if (nextIndex < this.steps.length) {
-      this.navigateToStep(nextIndex);
+    const currentStep = this.currentStepIndex();
+    const nextIndex = currentStep + 1;
+
+    if (currentStep === 1) {
+      // Corresponds to 'Color Selection' step (index 2)
+      this.project.update((project) => ({
+        ...project,
+        id: this.generateProjectId(),
+      }));
+      console.log('Project ID generated:', this.project().id);
+      if (nextIndex < this.steps.length) {
+        this.isLoaded.set(true);
+        this.brandingError.set(null); // Clear previous error
+
+        this.brandingService
+          .generateLogoColorsAndTypography(this.project())
+          .subscribe({
+            next: (brandIdentity) => {
+              console.log(
+                'Branding elements generated successfully:',
+                brandIdentity
+              );
+              this.project.update((project) => ({
+                ...project,
+                brandIdentity,
+              }));
+              this.isLoaded.set(false);
+              this.navigateToStep(nextIndex);
+            },
+            error: (err) => {
+              console.error('Error generating branding elements:', err);
+              this.brandingError.set(
+                'Failed to generate branding elements. Please check the console for details or try again.'
+              );
+              this.isLoaded.set(false);
+              // Do not navigate to the next step on error
+            },
+          });
+      }
+    } else {
+      // For any other step, proceed as usual
+      if (nextIndex < this.steps.length) {
+        this.navigateToStep(nextIndex);
+      }
     }
   }
 
@@ -256,7 +324,7 @@ export class CreateProjectComponent implements OnInit {
 
       if (selectedLogoObj) {
         // Set logo data in the project model
-        this.project.analysisResultModel.branding.logo = {
+        this.project().analysisResultModel.branding.logo = {
           content: {
             id: selectedLogoObj.id,
             name: selectedLogoObj.name,
@@ -274,7 +342,7 @@ export class CreateProjectComponent implements OnInit {
             (color: ColorModel) => color.id === this.selectedColor
           );
           if (selectedColorObj) {
-            this.project.analysisResultModel.branding.colors = [
+            this.project().analysisResultModel.branding.colors = [
               {
                 id: selectedColorObj.id,
                 name: selectedColorObj.name,
@@ -291,7 +359,7 @@ export class CreateProjectComponent implements OnInit {
             (typo: TypographyModel) => typo.id === this.selectedTypography
           );
           if (selectedTypoObj) {
-            this.project.analysisResultModel.branding.typography = [
+            this.project().analysisResultModel.branding.typography = [
               {
                 id: selectedTypoObj.id,
                 name: selectedTypoObj.name,
@@ -305,7 +373,7 @@ export class CreateProjectComponent implements OnInit {
       }
 
       // Create the project with all selected data
-      this.projectService.createProject(this.project).subscribe({
+      this.projectService.createProject(this.project()).subscribe({
         next: (createdProject: ProjectModel) => {
           if (createdProject && createdProject.id) {
             // Navigate to the planning page with the new project id
@@ -341,12 +409,12 @@ export class CreateProjectComponent implements OnInit {
     const constraints = this.selectedConstraints();
     if (constraints && constraints.length > 0) {
       // Make sure to convert SelectElement[] to string[] if needed
-      this.project.constraints = constraints.map(
+      this.project().constraints = constraints.map(
         (item: SelectElement | string) =>
           typeof item === 'string' ? item : String(item)
       );
     } else {
-      this.project.constraints = [];
+      this.project().constraints = [];
     }
     // Log for debugging purposes
     console.log('Constraints updated:', this.selectedConstraints());

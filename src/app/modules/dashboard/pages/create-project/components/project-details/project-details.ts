@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  input,
-  Input,
-  output,
-  Output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -30,8 +23,7 @@ import { SelectElement } from '../../datas';
   styleUrl: './project-details.css',
 })
 export class ProjectDetailsComponent {
-  // Angular inputs/outputs
-  readonly project = input<ProjectModel>();
+  project = input<ProjectModel>();
   readonly groupedProjectTypes = input.required<SelectElement[]>();
   readonly groupedTeamSizes = input.required<SelectElement[]>();
   readonly groupedScopes = input.required<SelectElement[]>();
@@ -40,6 +32,7 @@ export class ProjectDetailsComponent {
   readonly groupedConstraints = input.required<any[]>();
   readonly selectedConstraints = input.required<SelectElement[]>();
 
+  projectChange = output<ProjectModel>();
   readonly nextStep = output<void>();
   readonly previousStep = output<void>();
   readonly constraintsChange = output<void>();

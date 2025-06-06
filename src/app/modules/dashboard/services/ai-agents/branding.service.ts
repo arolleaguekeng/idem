@@ -5,6 +5,7 @@ import { Observable, throwError, from } from 'rxjs';
 import { switchMap, map, take, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
+import { ProjectModel } from '../../models/project.model';
 
 @Injectable({
   providedIn: 'root',
@@ -60,12 +61,15 @@ export class BrandingService {
 
   // Generate Logo Colors and Typography for a project
   generateLogoColorsAndTypography(
-    projectId: string
+    project: ProjectModel
   ): Observable<BrandIdentityModel> {
+    console.log('Generating logo colors and typography...');
+    console.log('Project:', project);
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
         return this.http.post<BrandIdentityModel>(
-          `${this.apiUrl}/genColorsAndTypography/${projectId}`,
+          `${this.apiUrl}/genColorsAndTypography`,
+          { project },
           { headers }
         );
       }),

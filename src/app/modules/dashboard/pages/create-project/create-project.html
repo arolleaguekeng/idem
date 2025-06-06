@@ -99,16 +99,46 @@
   <section #projectDescription class="animate-fadeIn">
     <app-project-description
       (nextStep)="goToNextStep()"
-      [project]="project"
+      [project]="project()"
     ></app-project-description>
   </section>
-  } @if (isStepActive(1)) {
+  } @if (isStepActive(1)) { @if (brandingError()) {
+  <div
+    class="flex items-start p-4 mb-6 space-x-3 bg-red-50 border border-red-200 rounded-lg shadow-sm dark:bg-red-900/20 dark:border-red-700/60 w-full max-w-2xl mx-auto"
+    role="alert"
+  >
+    <div class="flex-shrink-0">
+      <svg
+        class="w-5 h-5 text-red-500 dark:text-red-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm-1-9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0 3a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="flex-1">
+      <p class="text-sm font-semibold text-red-700 dark:text-red-300">
+        Oops! Something went wrong.
+      </p>
+      <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+        {{ brandingError() }}
+      </p>
+    </div>
+  </div>
+  }
   <section #projectDetails class="animate-slideInRight">
     <app-project-details
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
       (constraintsChange)="onConstraintsChange()"
-      [project]="project"
+      [project]="project()"
+      (projectChange)="project.set($event)"
       [groupedProjectTypes]="groupedProjectTypes"
       [groupedTeamSizes]="groupedTeamSizes"
       [groupedScopes]="groupedScopes"
@@ -152,7 +182,7 @@
     <app-project-summary
       (createProject)="finalizeProjectCreation()"
       (previousStep)="goToPreviousStep()"
-      [project]="project"
+      [project]="project()"
       [selectedLogo]="selectedLogo"
       [selectedColor]="selectedColor"
       [selectedTypography]="selectedTypography"
