@@ -320,114 +320,58 @@ export class CreateProjectComponent implements OnInit {
     try {
       this.isLoaded.set(true);
 
-      // Find the selected logo
-      const selectedLogoObj = this.logos.find(
-        (logo: LogoModel) => logo.id === this.selectedLogo
-      );
+      // Get the selected logo, color and typography objects without verification
+      const selectedLogoObj =
+        this.logos.find((logo) => logo.id === this.selectedLogo) ||
+        this.logos[0];
+      const selectedColorObj =
+        this.colorModels.find((color) => color.id === this.selectedColor) ||
+        this.colorModels[0];
+      const selectedTypoObj =
+        this.typographyModels.find(
+          (typo) => typo.id === this.selectedTypography
+        ) || this.typographyModels[0];
 
-      if (selectedLogoObj) {
-        // Set logo data in the project model
-        this.project.update((project) => ({
-          ...project,
-          analysisResultModel: {
-            ...project.analysisResultModel,
-            branding: {
-              logo: {
-                content: {
-                  id: selectedLogoObj.id,
-                  name: selectedLogoObj.name,
-                  svg: selectedLogoObj.svg,
-                  concept: 'Auto-generated logo for ' + this.project.name,
-                  colors: [],
-                  fonts: [],
-                },
-                summary: 'Modern logo design for ' + this.project.name,
-              },
+      // Single update operation to set all branding data at once
+      this.project.update((project) => ({
+        ...project,
+        analysisResultModel: {
+          ...(project.analysisResultModel || {}),
+          branding: {
+            logo: {
+              id: selectedLogoObj.id,
+              name: selectedLogoObj.name,
+              svg: selectedLogoObj.svg,
+              concept: 'Auto-generated logo for ' + project.name,
               colors: [],
-              typography: [],
-              brandIdentity: [],
+              fonts: [],
             },
+            colors: {
+              id: selectedColorObj.id,
+              name: selectedColorObj.name,
+              url: selectedColorObj.url,
+              colors: selectedColorObj.colors,
+            },
+            typography: {
+              id: selectedTypoObj.id,
+              name: selectedTypoObj.name,
+              url: selectedTypoObj.url,
+              primaryFont: selectedTypoObj.primaryFont,
+              secondaryFont: selectedTypoObj.secondaryFont,
+            },
+            generatedLogos: [],
+            generatedColors: [],
+            generatedTypography: [],
+            sections: [],
           },
-        }));
-
-        // Set colors in the project model if selected
-        if (this.selectedColor) {
-          const selectedColorObj = this.colorModels.find(
-            (color: ColorModel) => color.id === this.selectedColor
-          );
-          if (selectedColorObj) {
-            this.project.update((project) => ({
-              ...project,
-              analysisResultModel: {
-                ...project.analysisResultModel,
-                branding: {
-                  colors: [
-                    {
-                      id: selectedColorObj.id,
-                      name: selectedColorObj.name,
-                      url: selectedColorObj.url,
-                      colors: selectedColorObj.colors,
-                    },
-                  ],
-                  logo: {
-                    content: {
-                      id: '',
-                      name: '',
-                      svg: '',
-                      concept: '',
-                      colors: [],
-                      fonts: [],
-                    },
-                    summary: '',
-                  },
-                  typography: [],
-                  brandIdentity: [],
-                },
-              },
-            }));
-          }
-        }
-
-        // Set typography in the project model if selected
-        if (this.selectedTypography) {
-          const selectedTypoObj = this.typographyModels.find(
-            (typo: TypographyModel) => typo.id === this.selectedTypography
-          );
-          if (selectedTypoObj) {
-            this.project.update((project) => ({
-              ...project,
-              analysisResultModel: {
-                ...project.analysisResultModel,
-                branding: {
-                  ...project.analysisResultModel.branding,
-                  typography: [
-                    {
-                      id: selectedTypoObj.id,
-                      name: selectedTypoObj.name,
-                      url: selectedTypoObj.url,
-                      primaryFont: selectedTypoObj.primaryFont,
-                      secondaryFont: selectedTypoObj.secondaryFont,
-                    },
-                  ],
-                },
-              },
-            }));
-          }
-        }
-      }
+        },
+      }));
 
       // Create the project with all selected data
       this.projectService.createProject(this.project()).subscribe({
         next: (projectId: string) => {
-          if (projectId) {
-            // store in cookies
-            this.cookieService.set('projectId', projectId);
-            this.router.navigate([`/console/planing/${projectId}`]);
-          } else {
-            console.error(
-              'Project creation successful but ID is missing in the response.'
-            );
-          }
+          this.cookieService.set('projectId', projectId);
+          this.router.navigate([`/console/planing/${projectId}`]);
         },
         error: (err) => {
           console.error('Error creating project:', err);

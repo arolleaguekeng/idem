@@ -1,1 +1,294 @@
-<app-show-planing/>
+<div class="p-4 md:p-8 text-gray-300 min-h-screen">
+  @if (project(); as currentProject) {
+  <div class="space-y-8">
+    <!-- Project Header -->
+    <header class="bg-gray-900 shadow-md rounded-lg p-6">
+      <div class="flex flex-col md:flex-row justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-100">
+            {{ currentProject.name }}
+            <span class="text-2xl ml-2"
+              >{{ getProjectTypeIcon(currentProject.type) }}</span
+            >
+          </h1>
+          <p class="text-sm text-gray-400 mt-1">
+            Created: {{ currentProject.createdAt | date : "mediumDate" }} | Last
+            Updated: {{ currentProject.updatedAt | date : "mediumDate" }}
+          </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <button
+            class="bg-primary hover:bg-primary/80 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out"
+          >
+            Project Settings (Soon)
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Project Vitals -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-gray-900 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-300 mb-3">Description</h2>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          {{ currentProject.description || "No description provided." }}
+        </p>
+      </div>
+      <div class="bg-gray-900 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-300 mb-3">Scope</h2>
+        <p class="text-gray-400 text-sm">
+          {{ currentProject.scope || "Not specified." }}
+        </p>
+      </div>
+      <div class="bg-gray-900 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-300 mb-3">
+          Target Audience
+        </h2>
+        <p class="text-gray-400 text-sm">
+          {{ currentProject.targets || "Not specified." }}
+        </p>
+      </div>
+      <div class="bg-gray-900 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-300 mb-3">Budget</h2>
+        <p class="text-gray-400 text-sm">
+          {{ currentProject.budgetIntervals || "Not specified." }}
+        </p>
+      </div>
+      <div class="bg-gray-900 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-300 mb-3">Team Size</h2>
+        <p class="text-gray-400 text-sm">
+          {{ currentProject.teamSize || "Not specified." }}
+        </p>
+      </div>
+    </section>
+
+    <!-- Development Lifecycle Stages -->
+    <section class="bg-gray-900 shadow-md rounded-lg p-6">
+      <h2 class="text-2xl font-semibold text-gray-100 mb-6">
+        Software Development Lifecycle
+      </h2>
+      <div class="space-y-6">
+        <!-- Planning & Analysis -->
+        <div>
+          <h3 class="text-xl font-medium text-indigo-400 mb-2">
+            Planning & Analysis
+          </h3>
+          <div class="pl-4 border-l-2 border-indigo-600 space-y-3">
+            <p class="text-sm text-gray-400">
+              <span class="font-semibold">Constraints:</span>
+              @if (currentProject.constraints &&
+              currentProject.constraints.length > 0) {
+              <span class="ml-1"
+                >{{ currentProject.constraints.join(", ") }}</span
+              >
+              } @else {
+              <span class="ml-1 text-gray-500">None specified.</span>
+              }
+            </p>
+            <p class="text-sm text-gray-400">
+              <span class="font-semibold">Selected Phases:</span>
+              @if (currentProject.selectedPhases &&
+              currentProject.selectedPhases.length > 0) {
+              <span class="ml-1"
+                >{{ currentProject.selectedPhases.join(", ") }}</span
+              >
+              } @else {
+              <span class="ml-1 text-gray-500">None specified.</span>
+              }
+            </p>
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.businessPlan) {
+            <a
+              [routerLink]="['/console/business-plan', currentProject.id]"
+              class="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium"
+            >
+              View Business Plan &rarr;
+            </a>
+            }
+          </div>
+        </div>
+
+        <!-- Design -->
+        <div>
+          <h3 class="text-xl font-medium text-teal-400 mb-2">Design</h3>
+          <div class="pl-4 border-l-2 border-teal-600 space-y-3">
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.branding &&
+            currentProject.analysisResultModel.branding.logo &&
+            currentProject.analysisResultModel.branding.logo.svg) {
+            <div class="mb-2">
+              <span class="font-semibold text-sm text-gray-400"
+                >Selected Logo:</span
+              >
+              <div
+                class="mt-1 p-2 border border-slate-600 rounded-md inline-block bg-slate-700 max-w-[100px] max-h-[100px] overflow-hidden"
+                [innerHTML]="currentProject.analysisResultModel.branding.logo.svg | safeHtml"
+              ></div>
+              <!-- Note: Removed safeHtml pipe. Add sanitization if SVG source is not trusted. -->
+            </div>
+            }
+            <a
+              [routerLink]="['/console/branding', currentProject.id]"
+              class="text-teal-600 hover:text-teal-800 hover:underline text-sm font-medium"
+            >
+              View Full Branding Guidelines &rarr;
+            </a>
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.design) {
+            <!-- Assuming design might be a link or object -->
+            <a
+              [routerLink]="['/console/diagrams', currentProject.id]"
+              class="text-teal-600 hover:text-teal-800 hover:underline text-sm font-medium ml-4"
+            >
+              View Design Diagrams &rarr;
+            </a>
+            }
+          </div>
+        </div>
+
+        <!-- Architecture -->
+        <div>
+          <h3 class="text-xl font-medium text-purple-400 mb-2">Architecture</h3>
+          <div class="pl-4 border-l-2 border-purple-600 space-y-3">
+            <p class="text-sm text-gray-400">
+              <span class="font-semibold">Defined Architectures:</span>
+              @if (architectureNamesList(); as archList) {
+              <span class="ml-1">{{ archList }}</span>
+              } @else {
+              <span class="ml-1 text-gray-500">Details not available.</span>
+              }
+            </p>
+            <!-- Link to detailed architecture view if applicable -->
+          </div>
+        </div>
+
+        <!-- Development -->
+        <div>
+          <h3 class="text-xl font-medium text-sky-400 mb-2">Development</h3>
+          <div class="pl-4 border-l-2 border-sky-600 space-y-3">
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.development) {
+            <p class="text-sm text-gray-400">
+              <span class="font-semibold">Summary:</span>
+              <span class="ml-1"
+                >{{ currentProject.analysisResultModel.development }}</span
+              >
+            </p>
+            } @else {
+            <p class="text-sm text-gray-500">
+              No development summary available.
+            </p>
+            }
+            <a
+              [routerLink]="['/console/development', currentProject.id]"
+              class="text-sky-600 hover:text-sky-800 hover:underline text-sm font-medium"
+            >
+              View Development Details &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Testing -->
+        <div>
+          <h3 class="text-xl font-medium text-amber-400 mb-2">Testing</h3>
+          <div class="pl-4 border-l-2 border-amber-600 space-y-3">
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.testing) {
+            <p class="text-sm text-gray-400">
+              <span class="font-semibold">Summary:</span>
+              <span class="ml-1"
+                >{{ currentProject.analysisResultModel.testing }}</span
+              >
+            </p>
+            } @else {
+            <p class="text-sm text-gray-500">No testing summary available.</p>
+            }
+            <a
+              [routerLink]="['/console/tests', currentProject.id]"
+              class="text-amber-600 hover:text-amber-800 hover:underline text-sm font-medium"
+            >
+              View Testing Details &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Deployment & Landing -->
+        <div>
+          <h3 class="text-xl font-medium text-lime-500 mb-2">
+            Deployment & Landing Page
+          </h3>
+          <div class="pl-4 border-l-2 border-lime-600 space-y-3">
+            @if (currentProject.analysisResultModel &&
+            currentProject.analysisResultModel.landing) {
+            <a
+              [routerLink]="['/console/landing', currentProject.id]"
+              class="text-lime-600 hover:text-lime-800 hover:underline text-sm font-medium"
+            >
+              View Landing Page Details &rarr;
+            </a>
+            } @else {
+            <p class="text-sm text-gray-500">
+              Landing page details not yet available.
+            </p>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommendations / Next Steps -->
+    <section class="bg-gray-900 shadow-md rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-300 mb-3">Recommendations</h2>
+      <ul class="list-disc list-inside text-gray-400 text-sm space-y-1">
+        <li>Review and finalize branding guidelines.</li>
+        <li>Define detailed technical architecture if not already done.</li>
+        <li>Plan initial development sprints and tasks.</li>
+        <li>Set up testing environments and strategy.</li>
+      </ul>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="bg-gray-900 shadow-md rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-300 mb-4">Quick Links</h2>
+      <div class="flex flex-wrap gap-3">
+        <a
+          [routerLink]="['/console/branding', currentProject.id]"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
+        >
+          Full Branding
+        </a>
+        <a
+          [routerLink]="['/console/planing', currentProject.id]"
+          class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
+        >
+          Project Plan
+        </a>
+        <a
+          [routerLink]="['/projects']"
+          class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
+        >
+          All Projects
+        </a>
+      </div>
+    </section>
+  </div>
+  } @else if (isLoading()) {
+  <div class="flex justify-center items-center h-64">
+    <p class="text-gray-400 text-xl">Loading project dashboard...</p>
+    <!-- Placeholder for a proper loader component -->
+  </div>
+  } @else if (error()) {
+  <div
+    class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
+    role="alert"
+  >
+    <p class="font-bold">Error</p>
+    <p>{{ error() }}</p>
+  </div>
+  } @else {
+  <div class="flex justify-center items-center h-64">
+    <p class="text-gray-400 text-xl">No project data to display.</p>
+    <!-- This case should ideally be covered by the error() check if projectId was missing or project not found -->
+  </div>
+  }
+</div>

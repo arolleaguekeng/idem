@@ -58,30 +58,39 @@ export class ShowBrandingComponent {
           .getBrandIdentityModelById(this.projectIdFromCookie()!)
           .subscribe({
             next: (brandModelData) => {
-              this.branding = brandModelData;
-              this.globalCss.set(
-                `<style>
+              if (
+                brandModelData.sections &&
+                brandModelData.sections.length > 0
+              ) {
+                this.branding = brandModelData;
+                this.globalCss.set(
+                  `<style>
                 ${
-                  this.branding?.brandIdentity.filter(
+                  this.branding?.sections.filter(
                     (item) => item.name === 'Global CSS'
                   )[0].data
                 }
                 </style>`
-              );
+                );
 
-              this.branding.brandIdentity = this.branding?.brandIdentity.filter(
-                (item) => item.name !== 'Global CSS'
-              );
-              this.branding.brandIdentity.unshift({
-                id: 'global-css',
-                name: 'Global CSS',
-                data: this.globalCss(),
-                summary: 'Global CSS',
-              });
-              if (this.branding) {
-                this.isBrandExists.set(true);
+                this.branding.sections = this.branding?.sections.filter(
+                  (item) => item.name !== 'Global CSS'
+                );
+                this.branding.sections.unshift({
+                  id: 'global-css',
+                  name: 'Global CSS',
+                  data: this.globalCss(),
+                  summary: 'Global CSS',
+                  type: 'css',
+                });
+                if (this.branding) {
+                  this.isBrandExists.set(true);
+                }
+                this.isBrandingLoaded.set(false);
+              } else {
+                this.isBrandExists.set(false);
+                this.isBrandingLoaded.set(false);
               }
-              this.isBrandingLoaded.set(false);
             },
             error: (err) => {
               console.error(
@@ -104,9 +113,7 @@ export class ShowBrandingComponent {
 
   makePdf() {
     if (this.branding) {
-      generatePdf(
-        this.branding.brandIdentity.map((item) => item.data).join('\n')
-      );
+      generatePdf(this.branding.sections.map((item) => item.data).join('\n'));
     }
   }
 

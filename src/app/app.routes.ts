@@ -22,10 +22,10 @@ export const routes: Routes = [
 
   // Dashboard layout routes
   {
-    path: 'console/dashboard',
+    path: 'console/dashboard/:id',
     loadComponent: () =>
       import('./modules/dashboard/pages/dashboard/dashboard').then(
-        (m) => m.Dashboard
+        (m) => m.DashboardComponent
       ),
     data: { layout: 'dashboard' },
   },
