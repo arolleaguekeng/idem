@@ -56,10 +56,10 @@ export class ProjectService {
     );
   }
 
-  createProject(projectData: ProjectModel): Observable<ProjectModel> {
+  createProject(projectData: ProjectModel): Observable<string> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.post<ProjectModel>(
+        return this.http.post<{ message: string; projectId: string }>(
           `${this.apiUrl}/create`,
           projectData,
           {
@@ -67,7 +67,8 @@ export class ProjectService {
           }
         );
       }),
-      tap((response) => console.log('createProject response:', response)),
+      map((response) => response.projectId),
+      tap((projectId) => console.log('createProject response:', projectId)),
       catchError((error) => {
         console.error('Error in createProject:', error);
         return throwError(() => error);
@@ -78,7 +79,9 @@ export class ProjectService {
   getProjects(): Observable<ProjectModel[]> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.get<ProjectModel[]>(`${this.apiUrl}/getAll`, { headers });
+        return this.http.get<ProjectModel[]>(`${this.apiUrl}/getAll`, {
+          headers,
+        });
       }),
       tap((response) => console.log('getProjects response:', response)),
       catchError((error) => {

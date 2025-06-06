@@ -19,8 +19,8 @@
     class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-wrap justify-center gap-3 md:gap-4 items-center max-w-[95vw] px-2"
   >
     <!-- Previous Button -->
+    @if (currentStepIndex() > 0) {
     <button
-      *ngIf="currentStepIndex() > 0"
       (click)="goToPreviousStep()"
       class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md"
     >
@@ -40,7 +40,7 @@
       </svg>
       <span class="text-sm md:text-base">Previous</span>
     </button>
-
+    }
     <!-- Step Counter Badge -->
     <div
       class="hidden md:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-8 px-3 mx-1 backdrop-blur-md"
@@ -49,8 +49,8 @@
     </div>
 
     <!-- Next Button -->
+    @if (currentStepIndex() < steps.length - 1) {
     <button
-      *ngIf="currentStepIndex() < steps.length - 1"
       (click)="goToNextStep()"
       class="group flex items-center bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white py-2 md:py-3 px-5 md:px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
     >
@@ -70,10 +70,10 @@
         />
       </svg>
     </button>
-
+    }
     <!-- Finish Button -->
+    @if (currentStepIndex() === steps.length - 1) {
     <button
-      *ngIf="currentStepIndex() === steps.length - 1"
       (click)="finalizeProjectCreation()"
       class="group flex items-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-2 md:py-3 px-5 md:px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
     >
@@ -93,6 +93,7 @@
         />
       </svg>
     </button>
+    }
   </div>
 
   @if (isStepActive(0)) {

@@ -327,17 +327,28 @@ export class CreateProjectComponent implements OnInit {
 
       if (selectedLogoObj) {
         // Set logo data in the project model
-        this.project().analysisResultModel.branding.logo = {
-          content: {
-            id: selectedLogoObj.id,
-            name: selectedLogoObj.name,
-            svg: selectedLogoObj.svg,
-            concept: 'Auto-generated logo for ' + this.project.name,
-            colors: [],
-            fonts: [],
+        this.project.update((project) => ({
+          ...project,
+          analysisResultModel: {
+            ...project.analysisResultModel,
+            branding: {
+              logo: {
+                content: {
+                  id: selectedLogoObj.id,
+                  name: selectedLogoObj.name,
+                  svg: selectedLogoObj.svg,
+                  concept: 'Auto-generated logo for ' + this.project.name,
+                  colors: [],
+                  fonts: [],
+                },
+                summary: 'Modern logo design for ' + this.project.name,
+              },
+              colors: [],
+              typography: [],
+              brandIdentity: [],
+            },
           },
-          summary: 'Modern logo design for ' + this.project.name,
-        };
+        }));
 
         // Set colors in the project model if selected
         if (this.selectedColor) {
@@ -345,14 +356,35 @@ export class CreateProjectComponent implements OnInit {
             (color: ColorModel) => color.id === this.selectedColor
           );
           if (selectedColorObj) {
-            this.project().analysisResultModel.branding.colors = [
-              {
-                id: selectedColorObj.id,
-                name: selectedColorObj.name,
-                url: selectedColorObj.url,
-                colors: selectedColorObj.colors,
+            this.project.update((project) => ({
+              ...project,
+              analysisResultModel: {
+                ...project.analysisResultModel,
+                branding: {
+                  colors: [
+                    {
+                      id: selectedColorObj.id,
+                      name: selectedColorObj.name,
+                      url: selectedColorObj.url,
+                      colors: selectedColorObj.colors,
+                    },
+                  ],
+                  logo: {
+                    content: {
+                      id: '',
+                      name: '',
+                      svg: '',
+                      concept: '',
+                      colors: [],
+                      fonts: [],
+                    },
+                    summary: '',
+                  },
+                  typography: [],
+                  brandIdentity: [],
+                },
               },
-            ];
+            }));
           }
         }
 
@@ -362,25 +394,35 @@ export class CreateProjectComponent implements OnInit {
             (typo: TypographyModel) => typo.id === this.selectedTypography
           );
           if (selectedTypoObj) {
-            this.project().analysisResultModel.branding.typography = [
-              {
-                id: selectedTypoObj.id,
-                name: selectedTypoObj.name,
-                url: selectedTypoObj.url,
-                primaryFont: selectedTypoObj.primaryFont,
-                secondaryFont: selectedTypoObj.secondaryFont,
+            this.project.update((project) => ({
+              ...project,
+              analysisResultModel: {
+                ...project.analysisResultModel,
+                branding: {
+                  ...project.analysisResultModel.branding,
+                  typography: [
+                    {
+                      id: selectedTypoObj.id,
+                      name: selectedTypoObj.name,
+                      url: selectedTypoObj.url,
+                      primaryFont: selectedTypoObj.primaryFont,
+                      secondaryFont: selectedTypoObj.secondaryFont,
+                    },
+                  ],
+                },
               },
-            ];
+            }));
           }
         }
       }
 
       // Create the project with all selected data
       this.projectService.createProject(this.project()).subscribe({
-        next: (createdProject: ProjectModel) => {
-          if (createdProject && createdProject.id) {
-            // Navigate to the planning page with the new project id
-            this.router.navigate([`/console/planing/${createdProject.id}`]);
+        next: (projectId: string) => {
+          if (projectId) {
+            // store in cookies
+            this.cookieService.set('projectId', projectId);
+            this.router.navigate([`/console/planing/${projectId}`]);
           } else {
             console.error(
               'Project creation successful but ID is missing in the response.'
