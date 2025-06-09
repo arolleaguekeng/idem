@@ -1,0 +1,453 @@
+/* Main Container */
+.deployment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: var(--color-light-text);
+}
+
+/* Header Styles */
+.deployment-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: var(--font-size-light-text);
+  opacity: 0.8;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+  border-radius: 4px;
+}
+
+/* Mode Selection Cards */
+.deployment-mode {
+  margin-bottom: 3rem;
+}
+
+.mode-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mode-card {
+  flex: 1;
+  min-width: 280px;
+  max-width: 400px;
+  border-radius: 15px;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(20, 71, 230, 0.2), rgba(209, 30, 192, 0.2));
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mode-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 15px;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.mode-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(20, 71, 230, 0.3);
+}
+
+.mode-card-inner {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.mode-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mode-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mode-card p {
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+  opacity: 0.7;
+}
+
+.card-footer {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Form Styles */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.form-container {
+  background: rgba(15, 20, 27, 0.7);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background-color: rgba(6, 8, 13, 0.7);
+  color: var(--color-light-text);
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(20, 71, 230, 0.25);
+}
+
+.form-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-light-text);
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+/* Multi-step form */
+.multi-step-form {
+  position: relative;
+}
+
+.form-step {
+  margin-bottom: 2rem;
+}
+
+.step-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.step-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+
+/* Cloud Providers Grid */
+.cloud-providers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cloud-provider-card {
+  background-color: rgba(6, 8, 13, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cloud-provider-card:hover {
+  background-color: rgba(20, 71, 230, 0.1);
+  transform: translateY(-2px);
+}
+
+.cloud-provider-card.selected {
+  background-color: rgba(20, 71, 230, 0.2);
+  border-color: var(--color-primary);
+}
+
+.provider-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+.provider-name {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: rgba(6, 8, 13, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: rgba(20, 71, 230, 0.1);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.form-help-text {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Secrets Section */
+.secrets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.add-secret-btn {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.secrets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.secret-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.secret-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secret-action {
+  background: none;
+  border: none;
+  color: var(--color-light-text);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.secret-action:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.secret-action.active {
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+/* Action Buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.form-actions .inner-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 150px;
+  justify-content: center;
+}
+
+.inner-button:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .deployment-container {
+    padding: 1rem;
+  }
+  
+  .mode-cards {
+    flex-direction: column;
+  }
+  
+  .mode-card {
+    min-width: 100%;
+  }
+  
+  .form-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .cloud-providers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .secret-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .secret-actions {
+    justify-content: flex-end;
+  }
+}

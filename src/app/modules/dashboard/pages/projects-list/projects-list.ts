@@ -15,6 +15,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { first, Observable } from 'rxjs';
 import { ProjectCard } from '../../components/project-card/project-card';
+import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-projects-list',
@@ -36,6 +37,7 @@ export class ProjectsList implements OnInit {
   protected readonly isMenuOpen = signal(false);
   protected readonly isDropdownOpen = signal(false);
   protected readonly user$ = this.auth.user$;
+  cookieService = inject(CookieService);
   @ViewChild('menu') menuRef!: ElementRef;
   ngOnInit() {
     try {
@@ -89,8 +91,7 @@ export class ProjectsList implements OnInit {
    */
   protected openProjectDashboard(projectId: string) {
     this.isDropdownOpen.set(false);
-
-    // Navigate to updated route format (simplified path)
+    this.cookieService.set('projectId', projectId);
     this.router.navigate([`console/dashboard/${projectId}`]);
   }
 }

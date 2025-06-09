@@ -168,7 +168,6 @@ export class SidebarDashboard implements OnInit {
           this._userProjects.set(projects);
           const initialCookieId = this.cookieService.get('projectId'); // Get ID from cookie
 
-
           if (projects.length > 0) {
             if (!initialCookieId) {
               // No project ID in cookie on initial load, save to cookie and navigate to the first project
@@ -267,6 +266,12 @@ export class SidebarDashboard implements OnInit {
         icon: 'pi pi-fw pi-code',
         command: () =>
           this.navigateTo(`console/developement/${selectedProjectId}`),
+      },
+      {
+        label: 'Deployment',
+        icon: 'pi pi-fw pi-globe',
+        command: () =>
+          this.navigateTo(`console/deployment/${selectedProjectId}`),
       },
     ]);
   }

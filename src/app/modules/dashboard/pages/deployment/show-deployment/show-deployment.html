@@ -1,0 +1,261 @@
+<div class="deployment-container">
+  <!-- Header Section -->
+  <div class="deployment-header">
+    <h1 class="title">Deployment Configuration</h1>
+    <p class="subtitle">Configure your application deployment settings</p>
+  </div>
+
+  <!-- Mode Selection Section -->
+  <div class="deployment-mode" *ngIf="(deploymentMode | async) === null">
+    <h2 class="section-title">Select Deployment Mode</h2>
+    <div class="mode-cards">
+      <div class="mode-card" (click)="setDeploymentMode('quick')">
+        <div class="mode-card-inner">
+          <div class="icon">
+            <i class="pi pi-bolt"></i>
+          </div>
+          <h3>Quick</h3>
+          <p>Simple deployment with minimal configuration</p>
+          <div class="card-footer">
+            <button class="inner-button">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card" (click)="setDeploymentMode('advanced')">
+        <div class="mode-card-inner">
+          <div class="icon">
+            <i class="pi pi-cog"></i>
+          </div>
+          <h3>Advanced</h3>
+          <p>Full control over deployment configuration</p>
+          <div class="card-footer">
+            <button class="inner-button">Select</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Deployment Form -->
+  <div class="deployment-form" *ngIf="(deploymentMode | async) === 'quick'">
+    <div class="form-header">
+      <h2 class="section-title">Quick Deployment</h2>
+      <button class="outer-button" (click)="resetForms()">
+        <i class="pi pi-arrow-left"></i> Back
+      </button>
+    </div>
+
+    <form [formGroup]="gitRepositoryForm" class="form-container">
+      <div class="form-group">
+        <label for="repoUrl">Git Repository URL</label>
+        <input
+          id="repoUrl"
+          type="text"
+          formControlName="repoUrl"
+          placeholder="https://github.com/username/repository.git"
+          (blur)="fetchGitBranches()"
+        />
+        <div
+          class="form-error"
+          *ngIf="gitRepositoryForm.get('repoUrl')?.invalid && gitRepositoryForm.get('repoUrl')?.touched"
+        >
+          Please enter a valid Git repository URL
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="branch">Branch to Deploy</label>
+        <select id="branch" formControlName="branch">
+          <option value="" disabled>Select a branch</option>
+          <option *ngFor="let branch of gitBranches" [value]="branch">
+            {{ branch }}
+          </option>
+        </select>
+        <div class="loading-indicator" *ngIf="loadingGitInfo | async">
+          <i class="pi pi-spin pi-spinner"></i> Loading branches...
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="inner-button"
+          [disabled]="gitRepositoryForm.invalid || (loadingDeployment | async)"
+          (click)="startDeployment()"
+        >
+          <i class="pi pi-rocket"></i>
+          <span *ngIf="!(loadingDeployment | async)">Deploy</span>
+          <span *ngIf="loadingDeployment | async">Deploying...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Advanced Deployment Form -->
+  <div class="deployment-form" *ngIf="(deploymentMode | async) === 'advanced'">
+    <div class="form-header">
+      <h2 class="section-title">Advanced Deployment</h2>
+      <button class="outer-button" (click)="resetForms()">
+        <i class="pi pi-arrow-left"></i> Back
+      </button>
+    </div>
+
+    <!-- Multi-step form for advanced deployment -->
+    <div class="multi-step-form">
+      <!-- Step 1: Git Repository -->
+      <div class="form-step">
+        <h3 class="step-title">
+          <span class="step-number">1</span> Git Repository Configuration
+        </h3>
+
+        <form [formGroup]="gitRepositoryForm" class="form-container">
+          <div class="form-group">
+            <label for="adv-repoUrl">Git Repository URL</label>
+            <input
+              id="adv-repoUrl"
+              type="text"
+              formControlName="repoUrl"
+              placeholder="https://github.com/username/repository.git"
+              (blur)="fetchGitBranches()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="adv-branch">Branch to Deploy</label>
+            <select id="adv-branch" formControlName="branch">
+              <option value="" disabled>Select a branch</option>
+              <option *ngFor="let branch of gitBranches" [value]="branch">
+                {{ branch }}
+              </option>
+            </select>
+            <div class="loading-indicator" *ngIf="loadingGitInfo | async">
+              <i class="pi pi-spin pi-spinner"></i> Loading branches...
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Cloud Provider -->
+      <div class="form-step">
+        <h3 class="step-title">
+          <span class="step-number">2</span> Cloud Provider
+        </h3>
+
+        <form [formGroup]="cloudProviderForm" class="form-container">
+          <div class="form-group">
+            <label>Select Cloud Provider</label>
+            <div class="cloud-providers-grid">
+              <div
+                *ngFor="let provider of cloudProviders"
+                [class.selected]="cloudProviderForm.get('provider')?.value === provider.id"
+                class="cloud-provider-card"
+                (click)="cloudProviderForm.get('provider')?.setValue(provider.id)"
+              >
+                <div class="provider-icon">
+                  <i class="pi" [ngClass]="'pi-' + provider.id"></i>
+                </div>
+                <div class="provider-name">{{ provider.name }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            *ngIf="cloudProviderForm.get('provider')?.value"
+          >
+            <label for="region">Region</label>
+            <select id="region" formControlName="region">
+              <option value="" disabled>Select a region</option>
+              <option value="us-east-1">US East (N. Virginia)</option>
+              <option value="us-west-2">US West (Oregon)</option>
+              <option value="eu-west-1">EU (Ireland)</option>
+              <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+            </select>
+          </div>
+
+          <div
+            class="form-group checkbox-group"
+            *ngIf="cloudProviderForm.get('provider')?.value"
+          >
+            <label class="checkbox-container">
+              <input type="checkbox" formControlName="highAvailability" />
+              <span class="checkmark"></span>
+              Enable High Availability
+            </label>
+            <p class="form-help-text">
+              Deploys your application across multiple availability zones
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Environment Variables & Secrets -->
+      <div class="form-step">
+        <h3 class="step-title">
+          <span class="step-number">3</span> Environment Variables & Secrets
+        </h3>
+
+        <form [formGroup]="secretsForm" class="form-container">
+          <div class="form-group">
+            <div class="secrets-header">
+              <label>Environment Variables</label>
+              <button type="button" class="outer-button add-secret-btn">
+                <i class="pi pi-plus"></i> Add Variable
+              </button>
+            </div>
+
+            <div class="secrets-container">
+              <div class="secret-row">
+                <input type="text" placeholder="KEY" class="secret-key" />
+                <input type="text" placeholder="VALUE" class="secret-value" />
+                <div class="secret-actions">
+                  <button class="secret-action" title="Mark as secret">
+                    <i class="pi pi-eye-slash"></i>
+                  </button>
+                  <button class="secret-action" title="Remove">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="secret-row">
+                <input
+                  type="text"
+                  placeholder="KEY"
+                  class="secret-key"
+                  value="DATABASE_URL"
+                />
+                <input
+                  type="password"
+                  placeholder="VALUE"
+                  class="secret-value"
+                  value="postgres://user:password@host:port/db"
+                />
+                <div class="secret-actions">
+                  <button class="secret-action active" title="Unmark as secret">
+                    <i class="pi pi-eye"></i>
+                  </button>
+                  <button class="secret-action" title="Remove">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="inner-button"
+          [disabled]="gitRepositoryForm.invalid || cloudProviderForm.invalid || (loadingDeployment | async)"
+          (click)="startDeployment()"
+        >
+          <i class="pi pi-rocket"></i>
+          <span *ngIf="!(loadingDeployment | async)">Start Deployment</span>
+          <span *ngIf="loadingDeployment | async">Deploying...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
