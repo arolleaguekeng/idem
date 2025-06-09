@@ -1,59 +1,115 @@
 # Idem
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+<div align="center">
+  <img src="public/assets/icons/logo_white.png" alt="Idem Logo" width="200">
+  <p><strong>AI-Powered Software Development Lifecycle Generator</strong></p>
+</div>
 
-## Development server
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Angular](https://img.shields.io/badge/Angular-20-dd0031.svg)](https://angular.dev/)
 
-To start a local development server, run:
+## 🚀 Overview
 
-```bash
-ng serve
-```
+IDEM is a revolutionary open-source platform that leverages artificial intelligence to generate all elements of the software development lifecycle. From initial business planning to deployment, IDEM streamlines the creation process for developers, entrepreneurs, and product managers while making the entire software development process accessible to users of all technical backgrounds.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ✨ Features
 
-## Code scaffolding
+All features are powered by AI, generating the following software development lifecycle elements:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Business Plan Generation**: AI creates comprehensive business plans tailored to your software project
+- **Branding**: AI designs logos and complete brand style guides based on your requirements
+- **UML Analysis**: AI develops detailed UML diagrams and system architecture documentation
+- **Landing Page Creation**: AI designs responsive landing pages for your application
+- **Project Generation**: AI builds full software projects based on your specifications
+- **Documentation**: AI generates comprehensive technical documentation for your software
+- **Deployment Management**: AI streamlines the deployment process across different environments
 
-```bash
-ng generate component component-name
-```
+Each step is accompanied by AI guidance to ensure optimal results throughout the entire development lifecycle.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Tech Stack
 
-```bash
-ng generate --help
-```
+- **Frontend**: Angular 20
+- **State Management**: [Add relevant state management]
+- **UI Components**: [Add relevant UI framework]
+- **API Integration**: [Add relevant API communication details]
 
-## Building
+## 🏁 Getting Started
 
-To build the project run:
+### Prerequisites
 
-```bash
-ng build
-```
+- Node.js (v18.x or higher)
+- npm (v9.x or higher)
+- Angular CLI (v20.x)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Installation
 
-## Running unit tests
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/idem.git
+   cd idem
+   ```
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   ng serve
+   ```
+
+4. Open your browser and navigate to `http://localhost:4200`
+
+## 🧪 Testing
+
+### Unit Tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### End-to-End Tests
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🏗️ Building
 
-## Additional Resources
+```bash
+ng build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The build artifacts will be stored in the `dist/` directory.
+
+## 📝 Documentation
+
+For detailed documentation, please visit [our wiki](https://github.com/yourusername/idem/wiki).
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details on how to get involved.
+
+## 📜 Code of Conduct
+
+This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## 📄 License
+
+Idem is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Team
+
+[List core team members here]
+
+## 🙏 Acknowledgements
+
+- [List libraries, tools, and resources that helped build Idem]
+- [List contributors and supporters]
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by the Idem team</p>
+</div>
