@@ -1,21 +1,37 @@
 <div class="deployment-container">
+  <!-- Error message display -->
+  <div class="error-alert" *ngIf="errorMessage()">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ errorMessage() }}</span>
+    <button class="close-button" (click)="errorMessage.set(null)">
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+
   <!-- Header Section -->
   <div class="deployment-header">
-    <h1 class="title">Deployment Configuration</h1>
-    <p class="subtitle">Configure your application deployment settings</p>
+    <div class="header-content">
+      <h1 class="title">Create Deployment</h1>
+      <p class="subtitle">Configure and deploy your application</p>
+    </div>
+    <div class="header-actions">
+      <button class="secondary-button" (click)="navigateToDeploymentsList()">
+        <i class="pi pi-list"></i> View All Deployments
+      </button>
+    </div>
   </div>
 
   <!-- Mode Selection Section -->
-  <div class="deployment-mode" *ngIf="(deploymentMode | async) === null">
-    <h2 class="section-title">Select Deployment Mode</h2>
+  <div class="deployment-mode" *ngIf="deploymentMode() === null">
+    <h2 class="section-title">Select Deployment Type</h2>
     <div class="mode-cards">
       <div class="mode-card" (click)="setDeploymentMode('quick')">
         <div class="mode-card-inner">
           <div class="icon">
             <i class="pi pi-bolt"></i>
           </div>
-          <h3>Quick</h3>
-          <p>Simple deployment with minimal configuration</p>
+          <h3>Quick Deploy</h3>
+          <p>Deploy with optimized defaults for your project type</p>
           <div class="card-footer">
             <button class="inner-button">Select</button>
           </div>
@@ -27,8 +43,8 @@
           <div class="icon">
             <i class="pi pi-cog"></i>
           </div>
-          <h3>Advanced</h3>
-          <p>Full control over deployment configuration</p>
+          <h3>Advanced Setup</h3>
+          <p>Full control over infrastructure and deployment options</p>
           <div class="card-footer">
             <button class="inner-button">Select</button>
           </div>
@@ -38,7 +54,7 @@
   </div>
 
   <!-- Quick Deployment Form -->
-  <div class="deployment-form" *ngIf="(deploymentMode | async) === 'quick'">
+  <div class="deployment-form" *ngIf="deploymentMode() === 'quick'">
     <div class="form-header">
       <h2 class="section-title">Quick Deployment</h2>
       <button class="outer-button" (click)="resetForms()">
@@ -65,14 +81,39 @@
       </div>
 
       <div class="form-group">
+        <label for="name">Deployment Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="My Deployment"
+        />
+        <div
+          class="form-error"
+          *ngIf="gitRepositoryForm.get('name')?.invalid && gitRepositoryForm.get('name')?.touched"
+        >
+          Please enter a valid deployment name
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="environment">Environment</label>
+        <select id="environment" formControlName="environment">
+          <option value="development">Development</option>
+          <option value="staging">Staging</option>
+          <option value="production">Production</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="branch">Branch to Deploy</label>
         <select id="branch" formControlName="branch">
           <option value="" disabled>Select a branch</option>
-          <option *ngFor="let branch of gitBranches" [value]="branch">
+          <option *ngFor="let branch of gitBranches()" [value]="branch">
             {{ branch }}
           </option>
         </select>
-        <div class="loading-indicator" *ngIf="loadingGitInfo | async">
+        <div class="loading-indicator" *ngIf="loadingGitInfo()">
           <i class="pi pi-spin pi-spinner"></i> Loading branches...
         </div>
       </div>
@@ -80,19 +121,19 @@
       <div class="form-actions">
         <button
           class="inner-button"
-          [disabled]="gitRepositoryForm.invalid || (loadingDeployment | async)"
-          (click)="startDeployment()"
+          [disabled]="gitRepositoryForm.invalid || loadingDeployment()"
+          (click)="createDeployment()"
         >
           <i class="pi pi-rocket"></i>
-          <span *ngIf="!(loadingDeployment | async)">Deploy</span>
-          <span *ngIf="loadingDeployment | async">Deploying...</span>
+          <span *ngIf="!loadingDeployment()">Deploy</span>
+          <span *ngIf="loadingDeployment()">Deploying...</span>
         </button>
       </div>
     </form>
   </div>
 
   <!-- Advanced Deployment Form -->
-  <div class="deployment-form" *ngIf="(deploymentMode | async) === 'advanced'">
+  <div class="deployment-form" *ngIf="deploymentMode() === 'advanced'">
     <div class="form-header">
       <h2 class="section-title">Advanced Deployment</h2>
       <button class="outer-button" (click)="resetForms()">
@@ -110,6 +151,31 @@
 
         <form [formGroup]="gitRepositoryForm" class="form-container">
           <div class="form-group">
+            <label for="adv-name">Deployment Name</label>
+            <input
+              id="adv-name"
+              type="text"
+              formControlName="name"
+              placeholder="My Deployment"
+            />
+            <div
+              class="form-error"
+              *ngIf="gitRepositoryForm.get('name')?.invalid && gitRepositoryForm.get('name')?.touched"
+            >
+              Please enter a valid deployment name
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="adv-environment">Environment</label>
+            <select id="adv-environment" formControlName="environment">
+              <option value="development">Development</option>
+              <option value="staging">Staging</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label for="adv-repoUrl">Git Repository URL</label>
             <input
               id="adv-repoUrl"
@@ -118,17 +184,23 @@
               placeholder="https://github.com/username/repository.git"
               (blur)="fetchGitBranches()"
             />
+            <div
+              class="form-error"
+              *ngIf="gitRepositoryForm.get('repoUrl')?.invalid && gitRepositoryForm.get('repoUrl')?.touched"
+            >
+              Please enter a valid Git repository URL
+            </div>
           </div>
 
           <div class="form-group">
             <label for="adv-branch">Branch to Deploy</label>
             <select id="adv-branch" formControlName="branch">
               <option value="" disabled>Select a branch</option>
-              <option *ngFor="let branch of gitBranches" [value]="branch">
+              <option *ngFor="let branch of gitBranches()" [value]="branch">
                 {{ branch }}
               </option>
             </select>
-            <div class="loading-indicator" *ngIf="loadingGitInfo | async">
+            <div class="loading-indicator" *ngIf="loadingGitInfo()">
               <i class="pi pi-spin pi-spinner"></i> Loading branches...
             </div>
           </div>
@@ -138,53 +210,79 @@
       <!-- Step 2: Cloud Provider -->
       <div class="form-step">
         <h3 class="step-title">
-          <span class="step-number">2</span> Cloud Provider
+          <span class="step-number">2</span> Cloud Provider Configuration
         </h3>
 
         <form [formGroup]="cloudProviderForm" class="form-container">
-          <div class="form-group">
-            <label>Select Cloud Provider</label>
-            <div class="cloud-providers-grid">
-              <div
-                *ngFor="let provider of cloudProviders"
-                [class.selected]="cloudProviderForm.get('provider')?.value === provider.id"
-                class="cloud-provider-card"
-                (click)="cloudProviderForm.get('provider')?.setValue(provider.id)"
-              >
-                <div class="provider-icon">
-                  <i class="pi" [ngClass]="'pi-' + provider.id"></i>
+          <div class="cloud-providers-grid">
+            <div class="cloud-provider-option">
+              <input
+                type="radio"
+                id="aws"
+                formControlName="provider"
+                value="aws"
+              />
+              <label for="aws">
+                <div class="provider-logo">
+                  <i class="pi pi-cloud"></i> AWS
                 </div>
-                <div class="provider-name">{{ provider.name }}</div>
-              </div>
+              </label>
+            </div>
+
+            <div class="cloud-provider-option">
+              <input
+                type="radio"
+                id="gcp"
+                formControlName="provider"
+                value="gcp"
+              />
+              <label for="gcp">
+                <div class="provider-logo">
+                  <i class="pi pi-cloud"></i> Google Cloud
+                </div>
+              </label>
+            </div>
+
+            <div class="cloud-provider-option">
+              <input
+                type="radio"
+                id="azure"
+                formControlName="provider"
+                value="azure"
+              />
+              <label for="azure">
+                <div class="provider-logo">
+                  <i class="pi pi-cloud"></i> Azure
+                </div>
+              </label>
+            </div>
+
+            <div class="cloud-provider-option">
+              <input
+                type="radio"
+                id="digitalocean"
+                formControlName="provider"
+                value="digitalocean"
+              />
+              <label for="digitalocean">
+                <div class="provider-logo">
+                  <i class="pi pi-cloud"></i> DigitalOcean
+                </div>
+              </label>
             </div>
           </div>
 
-          <div
-            class="form-group"
-            *ngIf="cloudProviderForm.get('provider')?.value"
-          >
+          <div class="form-group" *ngIf="cloudProviderForm.get('provider')?.value">
             <label for="region">Region</label>
             <select id="region" formControlName="region">
               <option value="" disabled>Select a region</option>
-              <option value="us-east-1">US East (N. Virginia)</option>
-              <option value="us-west-2">US West (Oregon)</option>
-              <option value="eu-west-1">EU (Ireland)</option>
-              <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+              <option *ngFor="let region of availableRegions()" [value]="region.code">
+                {{ region.name }} ({{ region.code }})
+              </option>
             </select>
-          </div>
-
-          <div
-            class="form-group checkbox-group"
-            *ngIf="cloudProviderForm.get('provider')?.value"
-          >
-            <label class="checkbox-container">
-              <input type="checkbox" formControlName="highAvailability" />
-              <span class="checkmark"></span>
-              Enable High Availability
-            </label>
-            <p class="form-help-text">
-              Deploys your application across multiple availability zones
-            </p>
+            <div class="loading-indicator" *ngIf="loadingRegions()">
+              <i class="pi pi-spin pi-spinner"></i> Loading regions...
+            </div>
           </div>
         </form>
       </div>
@@ -195,65 +293,90 @@
           <span class="step-number">3</span> Environment Variables & Secrets
         </h3>
 
-        <form [formGroup]="secretsForm" class="form-container">
-          <div class="form-group">
-            <div class="secrets-header">
-              <label>Environment Variables</label>
-              <button type="button" class="outer-button add-secret-btn">
-                <i class="pi pi-plus"></i> Add Variable
+        <form [formGroup]="environmentVariablesForm" class="form-container">
+          <div class="secrets-header">
+            <h4>Environment Variables</h4>
+            <button
+              type="button"
+              class="add-button"
+              (click)="addEnvironmentVariable()"
+            >
+              <i class="pi pi-plus"></i> Add Variable
+            </button>
+          </div>
+
+          <div
+            class="secrets-list"
+            formArrayName="variables"
+          >
+            <div
+              *ngFor="let envVar of environmentVariablesArray().controls; let i = index"
+              [formGroupName]="i"
+              class="secret-item"
+            >
+              <div class="secret-inputs">
+                <div class="form-group">
+                  <label [attr.for]="'envVarKey' + i">Key</label>
+                  <input
+                    [id]="'envVarKey' + i"
+                    type="text"
+                    formControlName="key"
+                    placeholder="VARIABLE_NAME"
+                  />
+                </div>
+                <div class="form-group">
+                  <label [attr.for]="'envVarValue' + i">Value</label>
+                  <input
+                    [id]="'envVarValue' + i"
+                    type="text"
+                    formControlName="value"
+                    placeholder="variable_value"
+                  />
+                </div>
+                <div class="form-group checkbox-group">
+                  <label [attr.for]="'envVarSecret' + i" class="checkbox-label">
+                    <input
+                      [id]="'envVarSecret' + i"
+                      type="checkbox"
+                      formControlName="isSecret"
+                    />
+                    <span>Secret</span>
+                  </label>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="remove-button"
+                (click)="removeEnvironmentVariable(i)"
+              >
+                <i class="pi pi-times"></i>
               </button>
             </div>
 
-            <div class="secrets-container">
-              <div class="secret-row">
-                <input type="text" placeholder="KEY" class="secret-key" />
-                <input type="text" placeholder="VALUE" class="secret-value" />
-                <div class="secret-actions">
-                  <button class="secret-action" title="Mark as secret">
-                    <i class="pi pi-eye-slash"></i>
-                  </button>
-                  <button class="secret-action" title="Remove">
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="secret-row">
-                <input
-                  type="text"
-                  placeholder="KEY"
-                  class="secret-key"
-                  value="DATABASE_URL"
-                />
-                <input
-                  type="password"
-                  placeholder="VALUE"
-                  class="secret-value"
-                  value="postgres://user:password@host:port/db"
-                />
-                <div class="secret-actions">
-                  <button class="secret-action active" title="Unmark as secret">
-                    <i class="pi pi-eye"></i>
-                  </button>
-                  <button class="secret-action" title="Remove">
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </div>
-              </div>
+            <div class="empty-secrets" *ngIf="environmentVariablesArray().length === 0">
+              <p>No environment variables added yet</p>
+              <button
+                type="button"
+                class="add-button"
+                (click)="addEnvironmentVariable()"
+              >
+                <i class="pi pi-plus"></i> Add First Variable
+              </button>
             </div>
           </div>
         </form>
       </div>
 
+      <!-- Form Actions -->
       <div class="form-actions">
         <button
           class="inner-button"
-          [disabled]="gitRepositoryForm.invalid || cloudProviderForm.invalid || (loadingDeployment | async)"
-          (click)="startDeployment()"
+          [disabled]="gitRepositoryForm.invalid || loadingDeployment()"
+          (click)="createDeployment()"
         >
           <i class="pi pi-rocket"></i>
-          <span *ngIf="!(loadingDeployment | async)">Start Deployment</span>
-          <span *ngIf="loadingDeployment | async">Deploying...</span>
+          <span *ngIf="!loadingDeployment()">Deploy</span>
+          <span *ngIf="loadingDeployment()">Deploying...</span>
         </button>
       </div>
     </div>

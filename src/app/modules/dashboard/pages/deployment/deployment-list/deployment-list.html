@@ -2,9 +2,12 @@
   <div class="deployment-header">
     <h1 class="title">Project Deployments</h1>
     <p class="subtitle">View and manage your project deployments</p>
-    
+
     <div class="header-actions">
-      <button class="primary-button" [routerLink]="['/console/dashboard', projectId(), 'deployment', 'create']">
+      <button
+        class="primary-button"
+        [routerLink]="['/console/dashboard', projectId(), 'deployment', 'create']"
+      >
         <i class="pi pi-plus"></i> New Deployment
       </button>
     </div>
@@ -24,25 +27,41 @@
       <i class="pi pi-exclamation-triangle"></i>
     </div>
     <p>{{ error() }}</p>
-    <button class="secondary-button" *ngIf="projectId()" (click)="fetchDeployments(projectId()!)">
+    <button
+      class="secondary-button"
+      *ngIf="projectId()"
+      (click)="fetchDeployments(projectId()!)"
+    >
       Try Again
     </button>
   </div>
 
   <!-- Empty state -->
-  <div class="empty-state" *ngIf="!loading() && !error() && deployments().length === 0">
+  <div
+    class="empty-state"
+    *ngIf="!loading() && !error() && deployments().length === 0"
+  >
     <div class="empty-icon">
       <i class="pi pi-rocket"></i>
     </div>
     <h2>No Deployments Found</h2>
-    <p>You haven't deployed this project yet. Create your first deployment to get started.</p>
-    <button class="primary-button" [routerLink]="['/console/dashboard', projectId(), 'deployment', 'create']">
+    <p>
+      You haven't deployed this project yet. Create your first deployment to get
+      started.
+    </p>
+    <button
+      class="primary-button"
+      [routerLink]="['/console/dashboard', projectId(), 'deployment', 'create']"
+    >
       Create Deployment
     </button>
   </div>
 
   <!-- Deployments table -->
-  <div class="deployments-table-container" *ngIf="!loading() && !error() && deployments().length > 0">
+  <div
+    class="deployments-table-container"
+    *ngIf="!loading() && !error() && deployments().length > 0"
+  >
     <table class="deployments-table">
       <thead>
         <tr>
@@ -68,14 +87,22 @@
             </span>
           </td>
           <td>
-            <div class="status-badge" [class]="getStatusClass(deployment.status)">
+            <div
+              class="status-badge"
+              [class]="getStatusClass(deployment.status)"
+            >
               <span class="status-indicator"></span>
               <span class="status-text">{{ deployment.status }}</span>
             </div>
           </td>
           <td>{{ deployment.version || 'N/A' }}</td>
           <td>
-            <a *ngIf="deployment.url" [href]="deployment.url" target="_blank" class="deployment-url">
+            <a
+              *ngIf="deployment.url"
+              [href]="deployment.url"
+              target="_blank"
+              class="deployment-url"
+            >
               {{ truncateUrl(deployment.url) }}
               <i class="pi pi-external-link"></i>
             </a>
@@ -85,19 +112,33 @@
           <td>{{ formatDate(deployment.updatedAt) }}</td>
           <td class="actions-cell">
             <div class="action-buttons">
-              <button class="icon-button" title="View Details" 
-                [routerLink]="['/console/dashboard', projectId(), 'deployment', deployment.id]">
+              <button
+                class="icon-button"
+                title="View Details"
+                [routerLink]="['/console/dashboard', projectId(), 'deployment', deployment.id]"
+              >
                 <i class="pi pi-eye"></i>
               </button>
-              <button class="icon-button" title="View Logs"
-                *ngIf="deployment.logs" [routerLink]="['/console/dashboard', projectId(), 'deployment', deployment.id, 'logs']">
+              <button
+                class="icon-button"
+                title="View Logs"
+                *ngIf="deployment.logs"
+                [routerLink]="['/console/dashboard', projectId(), 'deployment', deployment.id, 'logs']"
+              >
                 <i class="pi pi-list"></i>
               </button>
-              <button class="icon-button" title="Redeploy" *ngIf="deployment.status === 'deployed' || deployment.status === 'failed'">
+              <button
+                class="icon-button"
+                title="Redeploy"
+                *ngIf="deployment.status === 'deployed' || deployment.status === 'failed'"
+              >
                 <i class="pi pi-refresh"></i>
               </button>
-              <button class="icon-button danger" title="Cancel" 
-                *ngIf="['building', 'infrastructure-provisioning', 'deploying'].includes(deployment.status)">
+              <button
+                class="icon-button danger"
+                title="Cancel"
+                *ngIf="['building', 'infrastructure-provisioning', 'deploying'].includes(deployment.status)"
+              >
                 <i class="pi pi-times"></i>
               </button>
             </div>

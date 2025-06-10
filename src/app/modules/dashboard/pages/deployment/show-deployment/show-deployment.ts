@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeploymentService } from '../../../services/deployment.service';
 import { CookieService } from '../../../../../shared/services/cookie.service';
@@ -9,13 +9,21 @@ import {
   GitRepository, 
   CloudProvider, 
   InfrastructureConfig, 
-  EnvironmentVariable 
+  EnvironmentVariable
 } from '../../../models/deployment.model';
+
+// Define CloudRegion interface if not in the model
+interface CloudRegion {
+  id: string;
+  code: string;
+  name: string;
+  provider?: string;
+}
 
 @Component({
   selector: 'app-create-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './show-deployment.html',
   styleUrl: './show-deployment.css',
 })
@@ -35,6 +43,9 @@ export class ShowDeployment implements OnInit {
 
   // Data structures
   protected readonly gitBranches = signal<string[]>([]);
+  protected readonly availableRegions = signal<CloudRegion[]>([]);
+  protected readonly loadingRegions = signal<boolean>(false);
+  
   protected readonly cloudProviders = [
     { id: 'aws', name: 'AWS', icon: 'assets/icons/aws.svg' },
     { id: 'gcp', name: 'Google Cloud', icon: 'assets/icons/gcp.svg' },
@@ -60,7 +71,6 @@ export class ShowDeployment implements OnInit {
   private readonly deploymentService = inject(DeploymentService);
   private readonly cookieService = inject(CookieService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
   constructor() {
     // Initialize forms
@@ -111,7 +121,8 @@ export class ShowDeployment implements OnInit {
 
   ngOnInit(): void {
     // Get project ID from cookie
-    const projectId = this.cookieService.getCookie('activeProjectId');
+    // Assuming the cookie service has a method to get cookie value - adjust if needed
+    const projectId = this.cookieService.get('activeProjectId');
     this.projectId.set(projectId);
     
     if (!projectId) {
@@ -147,9 +158,48 @@ export class ShowDeployment implements OnInit {
       }
     });
   }
+  
+  protected fetchCloudRegions(): void {
+    const provider = this.cloudProviderForm.get('type')?.value;
+    
+    if (!provider) {
+      return;
+    }
+    
+    this.loadingRegions.set(true);
+    
+    this.deploymentService.getProviderRegions(provider).subscribe({
+      next: (regions: {id: string, name: string}[]) => {
+        // Map received regions to our CloudRegion interface
+        const mappedRegions: CloudRegion[] = regions.map(region => ({
+          id: region.id,
+          code: region.id, // Assuming id is the same as code
+          name: region.name,
+          provider: provider
+        }));
+        
+        this.availableRegions.set(mappedRegions);
+        this.loadingRegions.set(false);
+        
+        // Set default region if available
+        if (mappedRegions.length > 0 && !this.cloudProviderForm.get('region')?.value) {
+          this.cloudProviderForm.get('region')?.setValue(mappedRegions[0].code);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching cloud provider regions', error);
+        this.loadingRegions.set(false);
+        this.errorMessage.set('Failed to fetch cloud provider regions. Please try again.');
+      }
+    });
+  }
 
   protected get environmentVariables(): FormArray {
     return this.environmentVariablesForm.get('variables') as FormArray;
+  }
+  
+  protected environmentVariablesArray(): FormArray {
+    return this.environmentVariables;
   }
 
   protected addEnvironmentVariable(): void {
@@ -163,7 +213,11 @@ export class ShowDeployment implements OnInit {
   protected removeEnvironmentVariable(index: number): void {
     this.environmentVariables.removeAt(index);
   }
-
+  
+  protected navigateToDeploymentsList(): void {
+    this.router.navigate(['/console/dashboard/deployments']);
+  }
+  
   protected createDeployment(): void {
     if (!this.projectId()) {
       this.errorMessage.set('No active project selected');
@@ -222,9 +276,5 @@ export class ShowDeployment implements OnInit {
     
     this.deploymentMode.set(null);
     this.errorMessage.set(null);
-  }
-
-  protected navigateToDeploymentsList(): void {
-    this.router.navigate(['/console/dashboard', this.projectId(), 'deployments']);
   }
 }
