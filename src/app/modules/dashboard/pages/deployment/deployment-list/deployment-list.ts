@@ -1,11 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { DeploymentModel } from '../../../models/deployment.model';
-import { DeploymentService } from '../../../services/deployment.service';
 import { CookieService } from '../../../../../shared/services/cookie.service';
+import { DeploymentService } from '../../../services/deployment.service';
 
 @Component({
   selector: 'app-deployment-list',
@@ -27,9 +26,9 @@ export class DeploymentList implements OnInit {
 
   ngOnInit(): void {
     // Get project ID from cookie
-    const projectId = this.cookieService.getCookie('activeProjectId');
+    const projectId = this.cookieService.get('projectId');
     this.projectId.set(projectId);
-    
+
     if (projectId) {
       this.fetchDeployments(projectId);
     } else {
@@ -41,19 +40,22 @@ export class DeploymentList implements OnInit {
   protected fetchDeployments(projectId: string): void {
     this.loading.set(true);
     this.error.set(null);
-    
-    this.deploymentService.getProjectDeployments(projectId).pipe(
-      tap(deployments => {
-        this.deployments.set(deployments);
-        this.loading.set(false);
-      }),
-      catchError(error => {
-        console.error('Error fetching deployments', error);
-        this.error.set('Failed to load deployments');
-        this.loading.set(false);
-        return of([]);
-      })
-    ).subscribe();
+
+    this.deploymentService
+      .getProjectDeployments(projectId)
+      .pipe(
+        tap((deployments) => {
+          this.deployments.set(deployments);
+          this.loading.set(false);
+        }),
+        catchError((error) => {
+          console.error('Error fetching deployments', error);
+          this.error.set('Failed to load deployments');
+          this.loading.set(false);
+          return of([]);
+        })
+      )
+      .subscribe();
   }
 
   protected getStatusClass(status: string): string {
