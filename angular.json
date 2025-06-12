@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "idems": {
+    "idem": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/idems",
+            "outputPath": "dist/idem",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "idems:build:production"
+              "buildTarget": "idem:build:production"
             },
             "development": {
-              "buildTarget": "idems:build:development"
+              "buildTarget": "idem:build:development"
             }
           },
           "defaultConfiguration": "development"
