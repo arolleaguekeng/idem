@@ -233,45 +233,42 @@ export class SidebarDashboard implements OnInit {
       {
         label: 'Dashboard',
         icon: 'pi pi-fw pi-home',
-        command: () =>
-          this.navigateTo(`console/dashboard/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/dashboard`),
       },
       {
         label: 'Branding',
         icon: 'pi pi-fw pi-palette',
-        command: () => this.navigateTo(`console/branding/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/branding`),
       },
       {
         label: 'Planing',
         icon: 'pi pi-fw pi-calendar',
-        command: () => this.navigateTo(`console/planing/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/planing`),
       },
       {
         label: 'Diagrams',
         icon: 'pi pi-fw pi-chart-line',
-        command: () => this.navigateTo(`console/diagrams/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/diagrams`),
       },
       {
         label: 'Landing',
         icon: 'pi pi-fw pi-desktop',
-        command: () => this.navigateTo(`console/landing/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/landing`),
       },
       {
         label: 'Tests',
         icon: 'pi pi-fw pi-check-square',
-        command: () => this.navigateTo(`console/tests/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/tests`),
       },
       {
         label: 'Developement',
         icon: 'pi pi-fw pi-code',
-        command: () =>
-          this.navigateTo(`console/developement/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/developement`),
       },
       {
         label: 'Deployment',
         icon: 'pi pi-fw pi-globe',
-        command: () =>
-          this.navigateTo(`console/deployment/${selectedProjectId}`),
+        command: () => this.navigateTo(`console/deployment`),
       },
     ]);
   }

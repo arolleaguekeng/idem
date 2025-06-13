@@ -22,7 +22,7 @@ export const routes: Routes = [
 
   // Dashboard layout routes
   {
-    path: 'console/dashboard/:id',
+    path: 'console/dashboard',
     loadComponent: () =>
       import('./modules/dashboard/pages/dashboard/dashboard').then(
         (m) => m.DashboardComponent
@@ -30,7 +30,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/branding/:id',
+    path: 'console/branding',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-branding/show-branding').then(
         (m) => m.ShowBrandingComponent
@@ -38,7 +38,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/planing/:id',
+    path: 'console/planing',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-planing/show-planing').then(
         (m) => m.ShowPlaning
@@ -46,7 +46,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/diagrams/:id',
+    path: 'console/diagrams',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-diagrams/show-diagrams').then(
         (m) => m.ShowDiagramsComponent
@@ -54,7 +54,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/landing/:id',
+    path: 'console/landing',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-landing/show-landing').then(
         (m) => m.ShowLandingComponent
@@ -62,7 +62,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/tests/:id',
+    path: 'console/tests',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-tests/show-tests').then(
         (m) => m.ShowTestsComponent
@@ -70,7 +70,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/developement/:id',
+    path: 'console/developement',
     loadComponent: () =>
       import(
         './modules/dashboard/pages/show-development/show-development'
@@ -78,7 +78,7 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/deployment/:id',
+    path: 'console/deployment',
     loadComponent: () =>
       import(
         './modules/dashboard/pages/deployment/show-deployment/show-deployment'
