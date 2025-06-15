@@ -1,453 +1,396 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <!-- Error message display -->
-  <div class="bg-red-500/10 border border-red-500/30 text-red-100 rounded-lg p-4 flex items-center justify-between mb-6" *ngIf="errorMessage()">
+  <!-- Affichage des erreurs (syntaxe @if) -->
+  @if (errorMessage()) {
+  <div
+    class="bg-red-500/10 border border-red-500/30 text-red-100 rounded-lg p-4 flex items-center justify-between mb-6"
+  >
     <div class="flex items-center gap-3">
       <i class="pi pi-exclamation-triangle text-red-400"></i>
       <span>{{ errorMessage() }}</span>
     </div>
-    <button class="text-red-300 hover:text-red-100 hover:bg-red-500/20 p-2 rounded-full transition-colors" (click)="errorMessage.set(null)">
+    <button
+      class="text-red-300 hover:text-red-100 hover:bg-red-500/20 p-2 rounded-full transition-colors"
+      (click)="errorMessage.set(null)"
+    >
       <i class="pi pi-times"></i>
     </button>
   </div>
+  }
 
-  <!-- Header Section -->
+  <!-- Entête -->
   <div class="flex justify-between items-center mb-12">
     <div>
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">Create Deployment</h1>
-      <p class="text-gray-400">Configure and deploy your application</p>
+      <h1
+        class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2"
+      >
+        Créer un Déploiement
+      </h1>
+      <p class="text-gray-400">
+        Concevez, configurez et déployez votre infrastructure cloud.
+      </p>
     </div>
-    <button 
+    <button
       class="px-4 py-2 rounded-lg border border-gray-600 hover:border-gray-500 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 transition-all flex items-center gap-2"
       (click)="navigateToDeploymentsList()"
     >
-      <i class="pi pi-list"></i> View All Deployments
+      <i class="pi pi-list"></i> Voir les déploiements
     </button>
   </div>
 
-  <!-- Mode Selection Section -->
-  <div *ngIf="deploymentMode() === null" class="mb-12">
-    <h2 class="text-2xl font-semibold mb-8 border-l-4 border-l-primary pl-4">Select Deployment Type</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div 
-        class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/20 hover:border-blue-500/40 rounded-xl p-1 cursor-pointer hover:translate-y-[-4px] transition-all duration-300 group overflow-hidden relative shadow-lg shadow-blue-900/10 hover:shadow-blue-800/20"
-        (click)="setDeploymentMode('quick')"
-      >
-        <div class="p-8 flex flex-col items-center text-center h-full rounded-lg bg-gray-900/70">
-          <div class="text-4xl text-blue-500 group-hover:scale-110 transition-transform duration-300 mb-6">
-            <i class="pi pi-bolt"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-2">Quick Deploy</h3>
-          <p class="text-gray-400 mb-8">Deploy with optimized defaults for your project type</p>
-          <div class="mt-auto w-full">
-            <button class="w-full py-2 px-4 bg-blue-600/20 hover:bg-blue-600/40 rounded-md text-blue-300 font-medium transition-colors">Select</button>
-          </div>
-        </div>
-      </div>
+  <!-- Structure principale avec @switch -->
+  @switch (deploymentMode()) {
 
-      <div 
-        class="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/20 hover:border-purple-500/40 rounded-xl p-1 cursor-pointer hover:translate-y-[-4px] transition-all duration-300 group overflow-hidden relative shadow-lg shadow-purple-900/10 hover:shadow-purple-800/20"
-        (click)="setDeploymentMode('advanced')"
+  <!-- CAS 1: Écran de sélection du mode -->
+  @case (null) {
+  <h2 class="text-2xl font-semibold mb-8 border-l-4 border-l-primary pl-4">
+    Choisissez votre méthode de conception
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Carte Assistant IA -->
+    <div
+      class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/20 hover:border-blue-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all duration-300 group"
+      (click)="selectMode('assistant')"
+    >
+      <div
+        class="p-8 flex flex-col items-center text-center h-full rounded-lg bg-gray-900/70"
       >
-        <div class="p-8 flex flex-col items-center text-center h-full rounded-lg bg-gray-900/70">
-          <div class="text-4xl text-purple-500 group-hover:scale-110 transition-transform duration-300 mb-6">
-            <i class="pi pi-cog"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-2">Advanced Setup</h3>
-          <p class="text-gray-400 mb-8">Full control over infrastructure and deployment options</p>
-          <div class="mt-auto w-full">
-            <button class="w-full py-2 px-4 bg-purple-600/20 hover:bg-purple-600/40 rounded-md text-purple-300 font-medium transition-colors">Select</button>
-          </div>
+        <div class="text-4xl text-blue-400 mb-6">
+          <i class="pi pi-comments"></i>
         </div>
+        <h3 class="text-xl font-semibold mb-2">Assistant Complet IA</h3>
+        <p class="text-gray-400 flex-grow">
+          Décrivez vos besoins en langage naturel et laissez l'IA proposer une
+          architecture.
+        </p>
+        <button
+          class="mt-8 w-full py-2 px-4 bg-blue-600/20 hover:bg-blue-600/40 rounded-md text-blue-300 font-medium transition-colors"
+        >
+          Commencer
+        </button>
+      </div>
+    </div>
+
+    <!-- Carte Modèles -->
+    <div
+      class="bg-gradient-to-br from-teal-900/20 to-green-900/20 border border-teal-500/20 hover:border-teal-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all duration-300 group"
+      (click)="selectMode('template')"
+    >
+      <div
+        class="p-8 flex flex-col items-center text-center h-full rounded-lg bg-gray-900/70"
+      >
+        <div class="text-4xl text-teal-400 mb-6">
+          <i class="pi pi-th-large"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Modèles d'Architecture</h3>
+        <p class="text-gray-400 flex-grow">
+          Démarrez rapidement avec des architectures courantes, optimisées et
+          personnalisables.
+        </p>
+        <button
+          class="mt-8 w-full py-2 px-4 bg-teal-600/20 hover:bg-teal-600/40 rounded-md text-teal-300 font-medium transition-colors"
+        >
+          Parcourir
+        </button>
+      </div>
+    </div>
+
+    <!-- Carte Expert -->
+    <div
+      class="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/20 hover:border-purple-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all duration-300 group"
+      (click)="selectMode('expert')"
+    >
+      <div
+        class="p-8 flex flex-col items-center text-center h-full rounded-lg bg-gray-900/70"
+      >
+        <div class="text-4xl text-purple-400 mb-6">
+          <i class="pi pi-sliders-h"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Mode Expert</h3>
+        <p class="text-gray-400 flex-grow">
+          Construisez votre architecture sur mesure en sélectionnant chaque
+          composant.
+        </p>
+        <button
+          class="mt-8 w-full py-2 px-4 bg-purple-600/20 hover:bg-purple-600/40 rounded-md text-purple-300 font-medium transition-colors"
+        >
+          Construire
+        </button>
       </div>
     </div>
   </div>
+  }
 
-  <!-- Quick Deployment Form -->
-  <div class="mb-12" *ngIf="deploymentMode() === 'quick'">
-    <div class="flex justify-between items-center mb-8">
-      <h2 class="text-2xl font-semibold border-l-4 border-l-blue-500 pl-4">Quick Deployment</h2>
-      <button 
-        class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-        (click)="resetForms()"
+  <!-- CAS 2: Mode Assistant IA -->
+  @case ('assistant') {
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-semibold border-l-4 border-l-blue-500 pl-4">
+      Assistant IA
+    </h2>
+    <button
+      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
+      (click)="resetView()"
+    >
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+  </div>
+  <div
+    class="bg-gray-900/50 rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col h-[60vh]"
+  >
+    <div class="flex-grow overflow-y-auto pr-4 space-y-6">
+      @for (message of chatMessages(); track $index) {
+      <div
+        class="flex gap-4"
+        [ngClass]="{'justify-end': message.sender === 'user'}"
       >
-        <i class="pi pi-arrow-left"></i> Back
-      </button>
-    </div>
-
-    <form [formGroup]="gitRepositoryForm" class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 shadow-xl">
-      <div class="mb-6">
-        <label for="repoUrl" class="block text-sm font-medium text-gray-300 mb-2">Git Repository URL</label>
-        <input
-          id="repoUrl"
-          type="text"
-          formControlName="repoUrl"
-          placeholder="https://github.com/username/repository.git"
-          (blur)="fetchGitBranches()"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all placeholder-gray-500"
-        />
+        @if (message.sender === 'ai') {
         <div
-          class="mt-2 text-red-400 text-sm"
-          *ngIf="gitRepositoryForm.get('repoUrl')?.invalid && gitRepositoryForm.get('repoUrl')?.touched"
+          class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0"
         >
-          Please enter a valid Git repository URL
+          <i class="pi pi-sparkles"></i>
+        </div>
+        }
+        <div
+          class="max-w-xl p-4 rounded-xl"
+          [ngClass]="message.sender === 'ai' ? 'bg-gray-800 text-gray-300' : 'bg-blue-600 text-white'"
+        >
+          {{ message.text }}
         </div>
       </div>
+      } @if (aiIsThinking()) {
+      <div class="flex gap-4">
+        <div
+          class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0"
+        >
+          <i class="pi pi-sparkles"></i>
+        </div>
+        <div
+          class="max-w-xl p-4 rounded-xl bg-gray-800 text-gray-300 flex items-center gap-2"
+        >
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Réflexion en cours...</span>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="mt-6 flex gap-4">
+      <input
+        [(ngModel)]="aiPrompt"
+        (keyup.enter)="sendAiPrompt()"
+        type="text"
+        placeholder="Décrivez votre besoin ici..."
+        class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all placeholder-gray-500"
+      />
+      <button
+        (click)="sendAiPrompt()"
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
+        [disabled]="!aiPrompt() || aiIsThinking()"
+      >
+        <i class="pi pi-send"></i> Envoyer
+      </button>
+    </div>
+  </div>
+  }
 
-      <div class="mb-6">
-        <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Deployment Name</label>
+  <!-- CAS 3: Mode Modèles -->
+  @case ('template') {
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-semibold border-l-4 border-l-teal-500 pl-4">
+      Modèles d'Architecture
+    </h2>
+    <button
+      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
+      (click)="resetView()"
+    >
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+  </div>
+
+  @if (!selectedTemplate()) {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (template of availableTemplates(); track template.id) {
+    <div
+      class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 flex flex-col hover:border-teal-500/50 hover:-translate-y-1 transition-all cursor-pointer"
+      (click)="selectTemplate(template)"
+    >
+      <div class="flex items-center gap-4 mb-4">
+        <i class="{{template.icon}} text-2xl text-teal-400"></i>
+        <h3 class="text-lg font-semibold text-gray-100">{{ template.name }}</h3>
+      </div>
+      <p class="text-gray-400 text-sm flex-grow">{{ template.description }}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        @for (tag of template.tags; track tag) {
+        <span
+          class="text-xs font-medium bg-teal-500/20 text-teal-300 px-2 py-1 rounded-full"
+          >{{ tag }}</span
+        >
+        }
+      </div>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="bg-gray-900/50 rounded-xl border border-gray-800 p-8 shadow-xl">
+    <h3 class="text-xl font-semibold mb-2">
+      Configuration pour : {{ selectedTemplate()?.name }}
+    </h3>
+    <p class="text-gray-400 mb-6">
+      Ajustez les paramètres clés pour ce modèle.
+    </p>
+    <form [formGroup]="deploymentConfigForm" class="space-y-6">
+      <!-- Champs de formulaire (simplifiés pour l'exemple) -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-300 mb-2"
+          >Nom du Déploiement</label
+        >
         <input
           id="name"
           type="text"
           formControlName="name"
-          placeholder="My Deployment"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all placeholder-gray-500"
+          class="w-full bg-gray-800/80 border border-gray-700 focus:border-teal-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all"
         />
-        <div
-          class="mt-2 text-red-400 text-sm"
-          *ngIf="gitRepositoryForm.get('name')?.invalid && gitRepositoryForm.get('name')?.touched"
-        >
-          Please enter a valid deployment name
-        </div>
       </div>
-
-      <div class="mb-6">
-        <label for="environment" class="block text-sm font-medium text-gray-300 mb-2">Environment</label>
-        <select 
-          id="environment" 
-          formControlName="environment"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all"
+      <div>
+        <label
+          for="repoUrl"
+          class="block text-sm font-medium text-gray-300 mb-2"
+          >URL du dépôt Git</label
         >
-          <option value="development">Development</option>
-          <option value="staging">Staging</option>
-          <option value="production">Production</option>
-        </select>
+        <input
+          id="repoUrl"
+          type="text"
+          formControlName="repoUrl"
+          placeholder="https://github.com/user/repo.git"
+          class="w-full bg-gray-800/80 border border-gray-700 focus:border-teal-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all"
+        />
       </div>
-
-      <div class="mb-8">
-        <label for="branch" class="block text-sm font-medium text-gray-300 mb-2">Branch to Deploy</label>
-        <select 
-          id="branch" 
-          formControlName="branch"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all"
-        >
-          <option value="" disabled>Select a branch</option>
-          <option *ngFor="let branch of gitBranches()" [value]="branch">
-            {{ branch }}
-          </option>
-        </select>
-        <div class="mt-3 text-blue-300 text-sm flex items-center gap-2" *ngIf="loadingGitInfo()">
-          <i class="pi pi-spin pi-spinner"></i> Loading branches...
-        </div>
-      </div>
-
-      <div class="flex justify-end">
+      <div class="flex justify-end gap-4 mt-8">
         <button
-          class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-600 disabled:to-gray-700 transition-all shadow-lg shadow-blue-900/20"
-          [disabled]="gitRepositoryForm.invalid || loadingDeployment()"
-          (click)="createDeployment()"
+          type="button"
+          (click)="selectedTemplate.set(null)"
+          class="px-6 py-2 rounded-lg border border-gray-600 hover:bg-gray-700/50 text-gray-300 transition-colors"
         >
-          <i class="pi pi-rocket"></i>
-          <span *ngIf="!loadingDeployment()">Deploy</span>
-          <span *ngIf="loadingDeployment()">Deploying...</span>
+          Changer de modèle
+        </button>
+        <button
+          (click)="createDeployment()"
+          class="px-6 py-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
+          [disabled]="deploymentConfigForm.invalid || loadingDeployment()"
+        >
+          <i class="pi pi-rocket"></i> {{ loadingDeployment() ? 'Déploiement...'
+          : 'Déployer' }}
         </button>
       </div>
     </form>
   </div>
+  } }
 
-  <!-- Advanced Deployment Form -->
-  <div class="mb-12" *ngIf="deploymentMode() === 'advanced'">
-    <div class="flex justify-between items-center mb-8">
-      <h2 class="text-2xl font-semibold border-l-4 border-l-purple-500 pl-4">Advanced Deployment</h2>
-      <button 
-        class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-        (click)="resetForms()"
-      >
-        <i class="pi pi-arrow-left"></i> Back
-      </button>
-    </div>
-
-    <!-- Multi-step form for advanced deployment -->
-    <div class="space-y-8">
-      <!-- Step 1: Git Repository -->
-      <div class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 shadow-xl">
-        <h3 class="flex items-center text-xl font-medium mb-6">
-          <span class="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm mr-3">1</span>
-          <span>Git Repository Configuration</span>
-        </h3>
-
-        <form [formGroup]="gitRepositoryForm" class="space-y-6">
-          <div>
-            <label for="adv-name" class="block text-sm font-medium text-gray-300 mb-2">Deployment Name</label>
-            <input
-              id="adv-name"
-              type="text"
-              formControlName="name"
-              placeholder="My Deployment"
-              class="w-full bg-gray-800/80 border border-gray-700 focus:border-purple-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-purple-500/30 focus:outline-none transition-all placeholder-gray-500"
-            />
-            <div
-              class="mt-2 text-red-400 text-sm"
-              *ngIf="gitRepositoryForm.get('name')?.invalid && gitRepositoryForm.get('name')?.touched"
-            >
-              Please enter a valid deployment name
-            </div>
-          </div>
-
-          <div>
-            <label for="adv-environment" class="block text-sm font-medium text-gray-300 mb-2">Environment</label>
-            <select 
-              id="adv-environment" 
-              formControlName="environment"
-              class="w-full bg-gray-800/80 border border-gray-700 focus:border-purple-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-purple-500/30 focus:outline-none transition-all"
-            >
-              <option value="development">Development</option>
-              <option value="staging">Staging</option>
-              <option value="production">Production</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="adv-repoUrl" class="block text-sm font-medium text-gray-300 mb-2">Git Repository URL</label>
-            <input
-              id="adv-repoUrl"
-              type="text"
-              formControlName="repoUrl"
-              placeholder="https://github.com/username/repository.git"
-              (blur)="fetchGitBranches()"
-              class="w-full bg-gray-800/80 border border-gray-700 focus:border-purple-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-purple-500/30 focus:outline-none transition-all placeholder-gray-500"
-            />
-            <div
-              class="mt-2 text-red-400 text-sm"
-              *ngIf="gitRepositoryForm.get('repoUrl')?.invalid && gitRepositoryForm.get('repoUrl')?.touched"
-            >
-              Please enter a valid Git repository URL
-            </div>
-          </div>
-
-          <div>
-            <label for="adv-branch" class="block text-sm font-medium text-gray-300 mb-2">Branch to Deploy</label>
-            <select 
-              id="adv-branch" 
-              formControlName="branch"
-              class="w-full bg-gray-800/80 border border-gray-700 focus:border-purple-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-purple-500/30 focus:outline-none transition-all"
-            >
-              <option value="" disabled>Select a branch</option>
-              <option *ngFor="let branch of gitBranches()" [value]="branch">
-                {{ branch }}
-              </option>
-            </select>
-            <div class="mt-3 text-purple-300 text-sm flex items-center gap-2" *ngIf="loadingGitInfo()">
-              <i class="pi pi-spin pi-spinner"></i> Loading branches...
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Step 2: Cloud Provider -->
-      <div class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 shadow-xl">
-        <h3 class="flex items-center text-xl font-medium mb-6">
-          <span class="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm mr-3">2</span>
-          <span>Cloud Provider Configuration</span>
-        </h3>
-
-        <form [formGroup]="cloudProviderForm" class="space-y-6">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div>
-              <input
-                type="radio"
-                id="aws"
-                formControlName="provider"
-                value="aws"
-                class="peer hidden"
-              />
-              <label 
-                for="aws"
-                class="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-700 bg-gray-800/70 hover:bg-gray-800 transition-all cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-900/20 text-center h-full"
-              >
-                <div class="text-3xl text-blue-500">
-                  <i class="pi pi-cloud"></i>
-                </div>
-                <span class="font-medium">AWS</span>
-              </label>
-            </div>
-
-            <div>
-              <input
-                type="radio"
-                id="gcp"
-                formControlName="provider"
-                value="gcp"
-                class="peer hidden"
-              />
-              <label 
-                for="gcp"
-                class="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-700 bg-gray-800/70 hover:bg-gray-800 transition-all cursor-pointer peer-checked:border-green-500 peer-checked:bg-green-900/20 text-center h-full"
-              >
-                <div class="text-3xl text-green-500">
-                  <i class="pi pi-cloud"></i>
-                </div>
-                <span class="font-medium">Google Cloud</span>
-              </label>
-            </div>
-
-            <div>
-              <input
-                type="radio"
-                id="azure"
-                formControlName="provider"
-                value="azure"
-                class="peer hidden"
-              />
-              <label 
-                for="azure"
-                class="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-700 bg-gray-800/70 hover:bg-gray-800 transition-all cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-900/20 text-center h-full"
-              >
-                <div class="text-3xl text-purple-500">
-                  <i class="pi pi-cloud"></i>
-                </div>
-                <span class="font-medium">Azure</span>
-              </label>
-            </div>
-
-            <div>
-              <input
-                type="radio"
-                id="digitalocean"
-                formControlName="provider"
-                value="digitalocean"
-                class="peer hidden"
-              />
-              <label 
-                for="digitalocean"
-                class="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-700 bg-gray-800/70 hover:bg-gray-800 transition-all cursor-pointer peer-checked:border-cyan-500 peer-checked:bg-cyan-900/20 text-center h-full"
-              >
-                <div class="text-3xl text-cyan-500">
-                  <i class="pi pi-cloud"></i>
-                </div>
-                <span class="font-medium">DigitalOcean</span>
-              </label>
-            </div>
-          </div>
-
-          <div *ngIf="cloudProviderForm.get('provider')?.value">
-            <label for="region" class="block text-sm font-medium text-gray-300 mb-2">Region</label>
-            <select 
-              id="region" 
-              formControlName="region"
-              class="w-full bg-gray-800/80 border border-gray-700 focus:border-purple-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-purple-500/30 focus:outline-none transition-all"
-            >
-              <option value="" disabled>Select a region</option>
-              <option *ngFor="let region of availableRegions()" [value]="region.code">
-                {{ region.name }} ({{ region.code }})
-              </option>
-            </select>
-            <div class="mt-3 text-purple-300 text-sm flex items-center gap-2" *ngIf="loadingRegions()">
-              <i class="pi pi-spin pi-spinner"></i> Loading regions...
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Step 3: Environment Variables & Secrets -->
-      <div class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 shadow-xl">
-        <h3 class="flex items-center text-xl font-medium mb-6">
-          <span class="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm mr-3">3</span>
-          <span>Environment Variables & Secrets</span>
-        </h3>
-
-        <form [formGroup]="environmentVariablesForm">
-          <div class="flex justify-between items-center mb-5">
-            <h4 class="text-lg font-medium text-gray-300">Environment Variables</h4>
-            <button
-              type="button"
-              class="flex items-center gap-2 px-3 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded-md transition-colors"
-              (click)="addEnvironmentVariable()"
-            >
-              <i class="pi pi-plus"></i> Add Variable
-            </button>
-          </div>
-
-          <div
-            formArrayName="variables"
-            class="space-y-4"
+  <!-- CAS 4: Mode Expert -->
+  @case ('expert') {
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-semibold border-l-4 border-l-purple-500 pl-4">
+      Constructeur d'Architecture Expert
+    </h2>
+    <button
+      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
+      (click)="resetView()"
+    >
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Colonne de gauche: Catalogue des composants -->
+    <div
+      class="lg:col-span-2 bg-gray-900/50 rounded-xl border border-gray-800 p-6"
+    >
+      <div class="flex items-center gap-4 mb-6">
+        <h3 class="text-lg font-semibold">Catalogue de Composants</h3>
+        <div class="flex gap-1 bg-gray-800 p-1 rounded-lg">
+          <button
+            (click)="expertSelectedProvider.set('aws')"
+            class="px-3 py-1 text-sm rounded-md transition-colors"
+            [ngClass]="expertSelectedProvider() === 'aws' ? 'bg-blue-600 text-white' : 'hover:bg-gray-700'"
           >
-            <div
-              *ngFor="let envVar of environmentVariablesArray().controls; let i = index"
-              [formGroupName]="i"
-              class="grid grid-cols-12 gap-4 items-center bg-gray-800/60 p-4 rounded-lg border border-gray-700"
-            >
-              <div class="col-span-4">
-                <label [attr.for]="'envVarKey' + i" class="block text-sm font-medium text-gray-300 mb-2">Key</label>
-                <input
-                  [id]="'envVarKey' + i"
-                  type="text"
-                  formControlName="key"
-                  placeholder="VARIABLE_NAME"
-                  class="w-full bg-gray-800 border border-gray-700 focus:border-indigo-500 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none transition-all placeholder-gray-500"
-                />
-              </div>
-              <div class="col-span-5">
-                <label [attr.for]="'envVarValue' + i" class="block text-sm font-medium text-gray-300 mb-2">Value</label>
-                <input
-                  [id]="'envVarValue' + i"
-                  type="text"
-                  formControlName="value"
-                  placeholder="variable_value"
-                  class="w-full bg-gray-800 border border-gray-700 focus:border-indigo-500 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none transition-all placeholder-gray-500"
-                />
-              </div>
-              <div class="col-span-2">
-                <label class="relative flex items-center cursor-pointer mt-5">
-                  <input
-                    [id]="'envVarSecret' + i"
-                    type="checkbox"
-                    formControlName="isSecret"
-                    class="sr-only peer"
-                  />
-                  <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                  <span class="ml-3 text-sm font-medium text-gray-300">Secret</span>
-                </label>
-              </div>
-              <div class="col-span-1 flex justify-end">
-                <button
-                  type="button"
-                  class="p-2 text-gray-400 hover:text-red-400 hover:bg-red-900/20 rounded-full transition-colors"
-                  (click)="removeEnvironmentVariable(i)"
-                >
-                  <i class="pi pi-times"></i>
-                </button>
-              </div>
-            </div>
-
-            <div 
-              class="flex flex-col items-center justify-center p-8 bg-gray-800/30 border border-dashed border-gray-700 rounded-lg text-gray-400" 
-              *ngIf="environmentVariablesArray().length === 0"
-            >
-              <p class="mb-4">No environment variables added yet</p>
-              <button
-                type="button"
-                class="flex items-center gap-2 px-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded-md transition-colors"
-                (click)="addEnvironmentVariable()"
-              >
-                <i class="pi pi-plus"></i> Add First Variable
-              </button>
-            </div>
-          </div>
-        </form>
+            AWS
+          </button>
+          <button
+            (click)="expertSelectedProvider.set('gcp')"
+            class="px-3 py-1 text-sm rounded-md transition-colors"
+            [ngClass]="expertSelectedProvider() === 'gcp' ? 'bg-green-600 text-white' : 'hover:bg-gray-700'"
+          >
+            GCP
+          </button>
+          <button
+            (click)="expertSelectedProvider.set('azure')"
+            class="px-3 py-1 text-sm rounded-md transition-colors"
+            [ngClass]="expertSelectedProvider() === 'azure' ? 'bg-purple-600 text-white' : 'hover:bg-gray-700'"
+          >
+            Azure
+          </button>
+        </div>
       </div>
-
-      <!-- Form Actions -->
-      <div class="flex justify-end mt-8">
-        <button
-          class="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-600 disabled:to-gray-700 transition-all shadow-lg shadow-purple-900/20"
-          [disabled]="gitRepositoryForm.invalid || loadingDeployment()"
-          (click)="createDeployment()"
+      <div class="space-y-4">
+        @for (component of availableComponents(); track component.id) {
+        <div
+          class="bg-gray-800/70 p-4 rounded-lg flex justify-between items-center border border-transparent hover:border-purple-500/50"
         >
-          <i class="pi pi-rocket"></i>
-          <span *ngIf="!loadingDeployment()">Deploy</span>
-          <span *ngIf="loadingDeployment()">Deploying...</span>
-        </button>
+          <div>
+            <h4 class="font-medium text-gray-200">
+              {{ component.name }}
+              <span class="text-xs text-gray-400 ml-2"
+                >{{ component.category }}</span
+              >
+            </h4>
+            <p class="text-sm text-gray-400">{{ component.description }}</p>
+          </div>
+          <button
+            (click)="addComponent(component)"
+            class="p-2 rounded-full bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 transition-colors"
+          >
+            <i class="pi pi-plus"></i>
+          </button>
+        </div>
+        }
       </div>
+    </div>
+    <!-- Colonne de droite: Architecture en cours -->
+    <div
+      class="lg:col-span-1 bg-gray-900/50 rounded-xl border border-gray-800 p-6"
+    >
+      <h3 class="text-lg font-semibold mb-4">Votre Architecture</h3>
+      <div class="space-y-3">
+        @for (component of selectedComponents(); track component.id) {
+        <div
+          class="bg-gray-800 p-3 rounded-lg flex justify-between items-center animate-fade-in"
+        >
+          <span class="text-gray-300">{{ component.name }}</span>
+          <button
+            (click)="removeComponent(component.id)"
+            class="p-1 text-gray-400 hover:text-red-400 rounded-full hover:bg-red-900/20 transition-colors"
+          >
+            <i class="pi pi-times text-sm"></i>
+          </button>
+        </div>
+        } @if (selectedComponents().length === 0) {
+        <div
+          class="text-center text-gray-500 border border-dashed border-gray-700 rounded-lg p-8"
+        >
+          <p>
+            Ajoutez des composants depuis le catalogue de gauche pour commencer.
+          </p>
+        </div>
+        }
+      </div>
+      @if (selectedComponents().length > 0) {
+      <button
+        (click)="createDeployment()"
+        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-lg text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+        [disabled]="loadingDeployment()"
+      >
+        <i class="pi pi-rocket"></i> {{ loadingDeployment() ? 'Déploiement...' :
+        'Configurer & Déployer' }}
+      </button>
+      }
     </div>
   </div>
+  } }
 </div>

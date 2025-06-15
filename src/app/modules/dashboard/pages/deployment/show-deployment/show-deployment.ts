@@ -1,24 +1,165 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { DeploymentService } from '../../../services/deployment.service';
 import { CookieService } from '../../../../../shared/services/cookie.service';
-import { 
-  DeploymentModel, 
-  GitRepository, 
-  CloudProvider, 
-  InfrastructureConfig, 
-  EnvironmentVariable
+import {
+  DeploymentModel,
+  GitRepository,
+  CloudProvider,
+  InfrastructureConfig,
+  EnvironmentVariable,
 } from '../../../models/deployment.model';
 
-// Define CloudRegion interface if not in the model
-interface CloudRegion {
-  id: string;
-  code: string;
-  name: string;
-  provider?: string;
+// --- NOUVELLES INTERFACES BASÉES SUR LE CAHIER DE CHARGES ---
+
+// Interface pour un message dans le chat de l'assistant IA
+interface ChatMessage {
+  sender: 'user' | 'ai';
+  text: string;
+  proposals?: ArchitectureTemplate[]; // L'IA peut proposer des architectures
 }
+
+// Interface pour les modèles d'architecture pré-définis (Mode 2)
+interface ArchitectureTemplate {
+  id: string;
+  provider: 'aws' | 'gcp' | 'azure';
+  category: 'Web/API' | 'Big Data';
+  name: string;
+  description: string;
+  tags: string[];
+  icon: string; // ex: 'pi pi-server'
+}
+
+// Interface pour les composants individuels (Mode 3)
+interface CloudComponent {
+  id: string;
+  provider: 'aws' | 'gcp' | 'azure';
+  category: 'Calcul' | 'Réseau' | 'Stockage' | 'Bases de Données';
+  name: string;
+  description: string;
+}
+
+// Données simulées pour la démonstration
+const MOCK_TEMPLATES: ArchitectureTemplate[] = [
+  {
+    id: 'aws-3-tier',
+    provider: 'aws',
+    category: 'Web/API',
+    name: 'Application Web 3-Tiers (AWS)',
+    description:
+      'EC2, ALB, et RDS pour une application web standard et robuste.',
+    tags: ['HA', 'Scalabilité'],
+    icon: 'pi pi-window-maximize',
+  },
+  {
+    id: 'gcp-serverless',
+    provider: 'gcp',
+    category: 'Web/API',
+    name: 'API Serverless (GCP)',
+    description:
+      'Cloud Run et Firestore pour une API hautement scalable et sans gestion de serveur.',
+    tags: ['Serverless', 'Coût optimisé'],
+    icon: 'pi pi-bolt',
+  },
+  {
+    id: 'azure-data-lake',
+    provider: 'azure',
+    category: 'Big Data',
+    name: 'Data Lake (Azure)',
+    description:
+      "Data Lake Storage et Synapse pour l'analyse de grands volumes de données.",
+    tags: ['Big Data', 'ETL'],
+    icon: 'pi pi-database',
+  },
+];
+
+const MOCK_COMPONENTS: { [provider: string]: CloudComponent[] } = {
+  aws: [
+    {
+      id: 'aws-ec2',
+      provider: 'aws',
+      category: 'Calcul',
+      name: 'Amazon EC2',
+      description: 'Machines virtuelles sécurisées et redimensionnables.',
+    },
+    {
+      id: 'aws-s3',
+      provider: 'aws',
+      category: 'Stockage',
+      name: 'Amazon S3',
+      description: "Stockage d'objets hautement scalable.",
+    },
+    {
+      id: 'aws-rds',
+      provider: 'aws',
+      category: 'Bases de Données',
+      name: 'Amazon RDS',
+      description: 'Base de données relationnelle managée.',
+    },
+    {
+      id: 'aws-vpc',
+      provider: 'aws',
+      category: 'Réseau',
+      name: 'Amazon VPC',
+      description: 'Réseaux virtuels isolés.',
+    },
+  ],
+  gcp: [
+    {
+      id: 'gcp-compute',
+      provider: 'gcp',
+      category: 'Calcul',
+      name: 'Compute Engine',
+      description: 'Machines virtuelles performantes.',
+    },
+    {
+      id: 'gcp-storage',
+      provider: 'gcp',
+      category: 'Stockage',
+      name: 'Cloud Storage',
+      description: "Stockage d'objets unifié.",
+    },
+    {
+      id: 'gcp-sql',
+      provider: 'gcp',
+      category: 'Bases de Données',
+      name: 'Cloud SQL',
+      description: 'Bases de données MySQL, PostgreSQL, SQL Server.',
+    },
+  ],
+  azure: [
+    {
+      id: 'azure-vm',
+      provider: 'azure',
+      category: 'Calcul',
+      name: 'Azure VMs',
+      description: 'Machines virtuelles Linux et Windows.',
+    },
+    {
+      id: 'azure-blob',
+      provider: 'azure',
+      category: 'Stockage',
+      name: 'Blob Storage',
+      description: "Stockage d'objets massivement scalable.",
+    },
+    {
+      id: 'azure-sql',
+      provider: 'azure',
+      category: 'Bases de Données',
+      name: 'Azure SQL DB',
+      description: 'Base de données SQL intelligente dans le cloud.',
+    },
+  ],
+};
 
 @Component({
   selector: 'app-create-deployment',
@@ -28,43 +169,42 @@ interface CloudRegion {
   styleUrl: './show-deployment.css',
 })
 export class ShowDeployment implements OnInit {
-  // Angular-initialized properties
-  protected readonly deploymentMode = signal<'quick' | 'advanced' | null>(null);
-  protected readonly loadingGitInfo = signal<boolean>(false);
+  // --- ÉTAT DU COMPOSANT (SIGNALS) ---
+  protected readonly deploymentMode = signal<
+    'assistant' | 'template' | 'expert' | null
+  >(null);
   protected readonly loadingDeployment = signal<boolean>(false);
   protected readonly projectId = signal<string | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
 
-  // Form groups
-  protected gitRepositoryForm: FormGroup;
-  protected deploymentConfigForm: FormGroup;
-  protected cloudProviderForm: FormGroup;
-  protected environmentVariablesForm: FormGroup;
+  // État pour le mode Assistant IA
+  protected readonly aiPrompt = signal<string>('');
+  protected readonly aiIsThinking = signal<boolean>(false);
+  protected readonly chatMessages = signal<ChatMessage[]>([
+    {
+      sender: 'ai',
+      text: 'Bonjour ! Décrivez-moi en langage naturel l\'infrastructure cloud que vous souhaitez déployer. Par exemple : "Je veux une application web e-commerce sur AWS avec une base de données PostgreSQL et une haute disponibilité".',
+    },
+  ]);
 
-  // Data structures
-  protected readonly gitBranches = signal<string[]>([]);
-  protected readonly availableRegions = signal<CloudRegion[]>([]);
-  protected readonly loadingRegions = signal<boolean>(false);
-  
-  protected readonly cloudProviders = [
-    { id: 'aws', name: 'AWS', icon: 'assets/icons/aws.svg' },
-    { id: 'gcp', name: 'Google Cloud', icon: 'assets/icons/gcp.svg' },
-    { id: 'azure', name: 'Azure', icon: 'assets/icons/azure.svg' },
-    { id: 'self-hosted', name: 'Self-hosted', icon: 'assets/icons/kubernetes.svg' },
-  ];
-  
-  protected readonly environments = [
-    { id: 'development', name: 'Development' },
-    { id: 'staging', name: 'Staging' },
-    { id: 'production', name: 'Production' }
-  ];
-  
-  protected readonly serviceTypes = [
-    { id: 'container', name: 'Container' },
-    { id: 'kubernetes', name: 'Kubernetes' },
-    { id: 'serverless', name: 'Serverless' },
-    { id: 'vm', name: 'Virtual Machine' }
-  ];
+  // État pour le mode Modèles
+  protected readonly availableTemplates = signal<ArchitectureTemplate[]>([]);
+  protected readonly selectedTemplate = signal<ArchitectureTemplate | null>(
+    null
+  );
+
+  // État pour le mode Expert
+  protected readonly expertSelectedProvider = signal<'aws' | 'gcp' | 'azure'>(
+    'aws'
+  );
+  protected readonly availableComponents = computed(
+    () => MOCK_COMPONENTS[this.expertSelectedProvider()]
+  );
+  protected readonly selectedComponents = signal<CloudComponent[]>([]);
+
+  // Formulaires (réutilisés et adaptés)
+  protected deploymentConfigForm: FormGroup;
+  protected environmentVariablesForm: FormGroup;
 
   // Services
   private readonly formBuilder = inject(FormBuilder);
@@ -73,208 +213,148 @@ export class ShowDeployment implements OnInit {
   private readonly router = inject(Router);
 
   constructor() {
-    // Initialize forms
-    this.gitRepositoryForm = this.formBuilder.group({
-      provider: ['github', Validators.required],
-      url: ['', [Validators.required, Validators.pattern(/^https?:\/\/.*$/)]],
-      branch: ['', Validators.required],
-      accessToken: ['']
-    });
-
+    // Initialisation des formulaires
     this.deploymentConfigForm = this.formBuilder.group({
       name: ['', Validators.required],
+      repoUrl: [
+        '',
+        [Validators.required, Validators.pattern(/^https?:\/\/.*$/)],
+      ],
+      branch: ['', Validators.required],
       environment: ['development', Validators.required],
-      serviceType: ['container', Validators.required],
-      resources: this.formBuilder.group({
-        cpu: ['0.5'],
-        memory: ['512Mi'],
-        instances: [1]
-      }),
-      networking: this.formBuilder.group({
-        loadBalancer: [true],
-        highAvailability: [false],
-        publicAccess: [true]
-      }),
-      database: this.formBuilder.group({
-        type: [''],
-        version: [''],
-        size: [''],
-        highAvailability: [false]
-      })
-    });
-
-    this.cloudProviderForm = this.formBuilder.group({
-      type: ['aws', Validators.required],
-      region: ['us-east-1'],
-      accountId: [''],
-      credentials: this.formBuilder.group({
-        roleArn: [''],
-        serviceAccountId: [''],
-        servicePrincipalId: ['']
-      })
     });
 
     this.environmentVariablesForm = this.formBuilder.group({
-      variables: this.formBuilder.array([])
+      variables: this.formBuilder.array([]),
     });
   }
 
   ngOnInit(): void {
-    // Get project ID from cookie
-    // Assuming the cookie service has a method to get cookie value - adjust if needed
     const projectId = this.cookieService.get('activeProjectId');
     this.projectId.set(projectId);
-    
+
     if (!projectId) {
-      this.errorMessage.set('No active project selected');
+      this.errorMessage.set(
+        'Aucun projet actif sélectionné. Veuillez en choisir un depuis votre tableau de bord.'
+      );
     }
-    
-    // Add initial environment variable fields
+
+    // Simuler le chargement des modèles depuis un service
+    this.availableTemplates.set(MOCK_TEMPLATES);
     this.addEnvironmentVariable();
   }
 
-  protected setDeploymentMode(mode: 'quick' | 'advanced'): void {
+  // --- LOGIQUE DES MODES ---
+
+  protected selectMode(mode: 'assistant' | 'template' | 'expert'): void {
     this.deploymentMode.set(mode);
   }
 
-  protected fetchGitBranches(): void {
-    if (!this.gitRepositoryForm.get('url')?.valid) {
-      return;
-    }
+  protected sendAiPrompt(): void {
+    const prompt = this.aiPrompt().trim();
+    if (!prompt || this.aiIsThinking()) return;
 
-    const repoUrl = this.gitRepositoryForm.get('url')?.value;
-    const accessToken = this.gitRepositoryForm.get('accessToken')?.value;
-    this.loadingGitInfo.set(true);
+    this.chatMessages.update((messages) => [
+      ...messages,
+      { sender: 'user', text: prompt },
+    ]);
+    this.aiPrompt.set('');
+    this.aiIsThinking.set(true);
 
-    this.deploymentService.validateRepository(repoUrl, accessToken).subscribe({
-      next: (branches) => {
-        this.gitBranches.set(branches);
-        this.loadingGitInfo.set(false);
-      },
-      error: (error) => {
-        console.error('Error fetching branches', error);
-        this.loadingGitInfo.set(false);
-        this.errorMessage.set('Failed to fetch branches. Please check repository URL and access token.');
-      }
-    });
+    // Simuler une réponse de l'IA après un délai
+    setTimeout(() => {
+      this.chatMessages.update((messages) => [
+        ...messages,
+        {
+          sender: 'ai',
+          text: `J'analyse votre demande pour "${prompt}". Je vous propose une architecture basée sur un modèle d'application web 3-tiers. Vous pouvez maintenant la personnaliser.`,
+        },
+      ]);
+      this.aiIsThinking.set(false);
+      // Ici, l'IA pourrait pré-remplir un formulaire ou proposer des actions
+    }, 2000);
   }
-  
-  protected fetchCloudRegions(): void {
-    const provider = this.cloudProviderForm.get('type')?.value;
-    
-    if (!provider) {
-      return;
+
+  protected selectTemplate(template: ArchitectureTemplate): void {
+    this.selectedTemplate.set(template);
+    this.deploymentConfigForm.get('name')?.setValue(`Deploy-${template.name}`);
+  }
+
+  protected addComponent(component: CloudComponent): void {
+    // Éviter les doublons
+    if (!this.selectedComponents().find((c) => c.id === component.id)) {
+      this.selectedComponents.update((components) => [
+        ...components,
+        component,
+      ]);
     }
-    
-    this.loadingRegions.set(true);
-    
-    this.deploymentService.getProviderRegions(provider).subscribe({
-      next: (regions: {id: string, name: string}[]) => {
-        // Map received regions to our CloudRegion interface
-        const mappedRegions: CloudRegion[] = regions.map(region => ({
-          id: region.id,
-          code: region.id, // Assuming id is the same as code
-          name: region.name,
-          provider: provider
-        }));
-        
-        this.availableRegions.set(mappedRegions);
-        this.loadingRegions.set(false);
-        
-        // Set default region if available
-        if (mappedRegions.length > 0 && !this.cloudProviderForm.get('region')?.value) {
-          this.cloudProviderForm.get('region')?.setValue(mappedRegions[0].code);
-        }
-      },
-      error: (error: any) => {
-        console.error('Error fetching cloud provider regions', error);
-        this.loadingRegions.set(false);
-        this.errorMessage.set('Failed to fetch cloud provider regions. Please try again.');
-      }
-    });
   }
+
+  protected removeComponent(componentId: string): void {
+    this.selectedComponents.update((components) =>
+      components.filter((c) => c.id !== componentId)
+    );
+  }
+
+  // --- GESTION DES FORMULAIRES ET ACTIONS ---
 
   protected get environmentVariables(): FormArray {
     return this.environmentVariablesForm.get('variables') as FormArray;
   }
-  
-  protected environmentVariablesArray(): FormArray {
-    return this.environmentVariables;
-  }
 
   protected addEnvironmentVariable(): void {
-    this.environmentVariables.push(this.formBuilder.group({
-      key: ['', Validators.required],
-      value: ['', Validators.required],
-      isSecret: [false]
-    }));
+    this.environmentVariables.push(
+      this.formBuilder.group({
+        key: ['', Validators.required],
+        value: ['', Validators.required],
+        isSecret: [false],
+      })
+    );
   }
 
   protected removeEnvironmentVariable(index: number): void {
     this.environmentVariables.removeAt(index);
   }
-  
-  protected navigateToDeploymentsList(): void {
-    this.router.navigate(['/console/dashboard/deployments']);
-  }
-  
+
   protected createDeployment(): void {
-    if (!this.projectId()) {
-      this.errorMessage.set('No active project selected');
+    if (!this.projectId() || this.deploymentConfigForm.invalid) {
+      this.errorMessage.set(
+        'Veuillez remplir tous les champs requis avant de déployer.'
+      );
       return;
     }
 
     this.loadingDeployment.set(true);
-    
+
+    // La construction de l'objet de déploiement dépendra du mode choisi
+    // Pour cet exemple, nous utilisons une base simple.
     const deploymentData: Partial<DeploymentModel> = {
       projectId: this.projectId()!,
       name: this.deploymentConfigForm.get('name')?.value,
       environment: this.deploymentConfigForm.get('environment')?.value,
-      status: 'configuring',
-      gitRepository: this.gitRepositoryForm.value as GitRepository,
-      cloudProvider: this.cloudProviderForm.value as CloudProvider,
-      infrastructureConfig: {
-        serviceType: this.deploymentConfigForm.get('serviceType')?.value,
-        resources: this.deploymentConfigForm.get('resources')?.value,
-        networking: this.deploymentConfigForm.get('networking')?.value,
-        database: this.deploymentConfigForm.get('database')?.value
-      } as InfrastructureConfig,
-      environmentVariables: this.environmentVariables.value as EnvironmentVariable[]
+      // ... et ainsi de suite
     };
 
-    this.deploymentService.createDeployment(this.projectId()!, deploymentData).subscribe({
-      next: (deployment) => {
-        this.loadingDeployment.set(false);
-        // Navigate to deployment list page
-        this.router.navigate(['/console/dashboard', this.projectId(), 'deployments']);
-      },
-      error: (error) => {
-        console.error('Error creating deployment', error);
-        this.loadingDeployment.set(false);
-        this.errorMessage.set('Failed to create deployment. Please try again.');
-      }
-    });
+    console.log('Déploiement en cours avec les données :', deploymentData);
+
+    // Simuler l'appel API
+    setTimeout(() => {
+      this.loadingDeployment.set(false);
+      this.router.navigate(['/console/dashboard/deployments']);
+    }, 2500);
   }
 
-  protected resetForms(): void {
-    this.gitRepositoryForm.reset({
-      provider: 'github',
-    });
+  protected navigateToDeploymentsList(): void {
+    this.router.navigate(['/console/dashboard/deployments']);
+  }
+
+  protected resetView(): void {
+    this.deploymentMode.set(null);
+    this.selectedTemplate.set(null);
+    this.selectedComponents.set([]);
+    this.errorMessage.set(null);
     this.deploymentConfigForm.reset({
       environment: 'development',
-      serviceType: 'container'
     });
-    this.cloudProviderForm.reset({
-      type: 'aws'
-    });
-    
-    // Reset environment variables
-    while (this.environmentVariables.length !== 0) {
-      this.environmentVariables.removeAt(0);
-    }
-    this.addEnvironmentVariable();
-    
-    this.deploymentMode.set(null);
-    this.errorMessage.set(null);
   }
 }

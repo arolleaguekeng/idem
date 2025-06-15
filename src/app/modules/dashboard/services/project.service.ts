@@ -94,7 +94,7 @@ export class ProjectService {
   getProjectById(projectId: string): Observable<ProjectModel | null> {
     return this.getAuthHeaders().pipe(
       switchMap((headers) => {
-        return this.http.get<ProjectModel>(`${this.apiUrl}/get/${projectId}`, {
+        return this.http.get<ProjectModel>(`${this.apiUrl}/${projectId}`, {
           headers,
         });
       }),
