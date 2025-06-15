@@ -86,6 +86,14 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
+    path: 'console/deployments',
+    loadComponent: () =>
+      import(
+        './modules/dashboard/pages/deployment/deployment-list/deployment-list'
+      ).then((m) => m.DeploymentList),
+    data: { layout: 'dashboard' },
+  },
+  {
     path: 'console',
     loadComponent: () =>
       import('./modules/dashboard/pages/projects-list/projects-list').then(

@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -265,7 +265,7 @@ const ALL_COMPONENTS_LIST = Object.values(MOCK_COMPONENTS_DETAILED);
 @Component({
   selector: 'app-create-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,RouterLink],
   templateUrl: './show-deployment.html',
   styleUrl: './show-deployment.css',
 })

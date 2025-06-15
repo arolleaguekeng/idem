@@ -15,15 +15,16 @@
       <h1
         class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2"
       >
-        Créer un Déploiement
+        Create Deployment
       </h1>
-      <p class="text-gray-400">Concevez votre infrastructure cloud idéale.</p>
+      <p class="text-gray-400">Design your ideal cloud infrastructure.</p>
     </div>
-    <button
-      class="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 transition-all flex items-center gap-2"
+    <a
+      routerLink="/console/deployments"
+      class="px-4 py-2 cursor-pointer rounded-lg border border-gray-600 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 transition-all flex items-center gap-2"
     >
-      <i class="pi pi-list"></i> Voir les déploiements
-    </button>
+      <i class="pi pi-list"></i> Show Deployments
+    </a>
   </div>
 
   @switch (deploymentMode()) { @case (null) {

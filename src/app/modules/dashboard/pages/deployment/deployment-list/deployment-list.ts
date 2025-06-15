@@ -37,25 +37,57 @@ export class DeploymentList implements OnInit {
     }
   }
 
+  DEPLOYMENTS_DATAS: DeploymentModel[] = [
+    {
+      id: '1',
+      name: 'Deployment 1',
+      status: 'deployed',
+      environment: 'production',
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date('2023-01-01'),
+      projectId: '1',
+    },
+    {
+      id: '2',
+      name: 'Deployment 2',
+      status: 'deployed',
+      environment: 'production',
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date('2023-01-01'),
+      projectId: '1',
+    },
+    {
+      id: '3',
+      name: 'Deployment 3',
+      status: 'deployed',
+      environment: 'production',
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date('2023-01-01'),
+      projectId: '1',
+    },
+  ];
+
   protected fetchDeployments(projectId: string): void {
     this.loading.set(true);
     this.error.set(null);
+    this.deployments.set(this.DEPLOYMENTS_DATAS);
+    this.loading.set(false);
 
-    this.deploymentService
-      .getProjectDeployments(projectId)
-      .pipe(
-        tap((deployments) => {
-          this.deployments.set(deployments);
-          this.loading.set(false);
-        }),
-        catchError((error) => {
-          console.error('Error fetching deployments', error);
-          this.error.set('Failed to load deployments');
-          this.loading.set(false);
-          return of([]);
-        })
-      )
-      .subscribe();
+    // this.deploymentService
+    //   .getProjectDeployments(projectId)
+    //   .pipe(
+    //     tap((deployments) => {
+    //       this.deployments.set(deployments);
+    //       this.loading.set(false);
+    //     }),
+    //     catchError((error) => {
+    //       console.error('Error fetching deployments', error);
+    //       this.error.set('Failed to load deployments');
+    //       this.loading.set(false);
+    //       return of([]);
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   protected getStatusClass(status: string): string {
