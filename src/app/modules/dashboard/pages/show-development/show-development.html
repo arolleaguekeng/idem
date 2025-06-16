@@ -1,1 +1,140 @@
-<p>show-development works!</p>,
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 p-6">
+  <div class="max-w-6xl mx-auto">
+    @if (isLoaded() === true) {
+    <div class="h-screen w-full flex items-center justify-center">
+      <app-loader />
+    </div>
+    } @else {
+    <section class="mb-12">
+      <h1 class="text-4xl font-bold text-white mb-4">
+        Generate Project Application
+      </h1>
+      <p class="text-lg text-gray-400 max-w-3xl">
+        Select a frontend technology to generate a high-converting application
+        page for your project.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2
+        class="text-2xl font-semibold text-white mb-6 border-b border-gray-800 pb-3"
+      >
+        Choose Your Stack
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @for (stack of stacks; track stack.id) {
+        <div
+          class="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-xl border border-gray-800 transition-all cursor-pointer hover:border-primary hover:shadow-lg"
+          [class.border-primary]="selectedStackId === stack.id"
+          (click)="selectStack(stack.id)"
+        >
+          <div class="flex items-start">
+            <div
+              class="w-10 h-10 rounded-lg flex items-center justify-center mr-4"
+              [style.backgroundColor]="stack.color + '20'"
+            >
+              <span class="text-xl" [style.color]="stack.color"
+                >{{ stack.icon }}</span
+              >
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-white">{{ stack.name }}</h3>
+                <div
+                  class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                  [class.border-primary]="selectedStackId === stack.id"
+                  [class.border-gray-600]="selectedStackId !== stack.id"
+                >
+                  @if (selectedStackId === stack.id) {
+                  <div class="w-3 h-3 rounded-full bg-primary"></div>
+                  }
+                </div>
+              </div>
+              <p class="text-gray-400 mt-2 text-sm">{{ stack.description }}</p>
+              @if (stack.badges) {
+              <div class="mt-4 flex flex-wrap gap-2">
+                @for (badge of stack.badges; track badge) {
+                <span
+                  class="text-xs px-2 py-1 rounded-full bg-gray-700 text-gray-300"
+                >
+                  {{ badge }}
+                </span>
+                }
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-white mb-6">
+        Advanced Configurations
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (option of pageOptions; track option.id) {
+        <div
+          class="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-5 rounded-xl border border-gray-800 transition-all cursor-pointer"
+          [class.border-primary]="option.enabled"
+          (click)="toggleOption(option.id)"
+        >
+          <div class="flex items-center">
+            <div
+              class="w-8 h-8 rounded-md mr-4 flex items-center justify-center"
+              [class.bg-primary]="option.enabled"
+              [class.bg-gray-800]="!option.enabled"
+            >
+              <span class="text-lg">{{ option.icon }}</span>
+            </div>
+            <div>
+              <h3 class="font-medium text-white">{{ option.name }}</h3>
+              <p class="text-gray-400 text-sm mt-1">{{ option.description }}</p>
+            </div>
+            <div class="ml-auto">
+              <div
+                class="relative w-10 h-5 rounded-full p-1"
+                [class.bg-primary]="option.enabled"
+                [class.bg-gray-700]="!option.enabled"
+              >
+                <div
+                  class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
+                  [class.left-1]="!option.enabled"
+                  [class.left-6]="option.enabled"
+                ></div>
+              </div>
+            </div>
+          </div>
+          @if (option.enabled && option.features) {
+          <div class="mt-4 pt-4 border-t border-gray-800">
+            <h4 class="text-sm font-medium text-gray-300 mb-2">Features:</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (feature of option.features; track feature) {
+              <span
+                class="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
+              >
+                {{ feature }}
+              </span>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </section>
+
+    <div class="flex justify-end">
+      <button
+        class="px-6 py-3 bg-gradient-to-r from-primary to-blue-600 rounded-lg text-white font-medium transition-all hover:from-primary/90 hover:to-blue-600/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="!selectedStackId"
+        (click)="onGenerateApplication()"
+      >
+        Generate Application Page
+      </button>
+    </div>
+    }
+  </div>
+</div>

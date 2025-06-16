@@ -251,19 +251,14 @@ export class SidebarDashboard implements OnInit {
         command: () => this.navigateTo(`console/diagrams`),
       },
       {
-        label: 'Landing',
-        icon: 'pi pi-fw pi-desktop',
-        command: () => this.navigateTo(`console/landing`),
+        label: 'Developement',
+        icon: 'pi pi-fw pi-code',
+        command: () => this.navigateTo(`console/developement`),
       },
       {
         label: 'Tests',
         icon: 'pi pi-fw pi-check-square',
         command: () => this.navigateTo(`console/tests`),
-      },
-      {
-        label: 'Developement',
-        icon: 'pi pi-fw pi-code',
-        command: () => this.navigateTo(`console/developement`),
       },
       {
         label: 'Deployment',

@@ -54,14 +54,6 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/landing',
-    loadComponent: () =>
-      import('./modules/dashboard/pages/show-landing/show-landing').then(
-        (m) => m.ShowLandingComponent
-      ),
-    data: { layout: 'dashboard' },
-  },
-  {
     path: 'console/tests',
     loadComponent: () =>
       import('./modules/dashboard/pages/show-tests/show-tests').then(
