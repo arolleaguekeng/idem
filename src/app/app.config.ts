@@ -4,7 +4,7 @@ import {
   REQUEST,
   SecurityContext,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withViewTransitions, withPreloading, withRouterConfig, withDebugTracing, PreloadAllModules } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -83,14 +83,13 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'system',
           cssLayer: false,
         },
-      },  
+      },
     }),
     provideAnimations(),
     provideHttpClient(),
     provideMarkdown({
       sanitize: SecurityContext.NONE,
       mermaidOptions: {
-        
         provide: MERMAID_OPTIONS,
         useValue: {
           darkMode: false,
