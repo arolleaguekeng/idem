@@ -21,6 +21,13 @@ import {
   ArchitectureComponent,
 } from '../../../models/deployment.model';
 
+// Import child components
+import { ModeSelectorComponent } from './components/mode-selector/mode-selector.component';
+import { QuickDeploymentComponent } from './components/quick-deployment/quick-deployment.component';
+import { AiAssistantComponent } from './components/ai-assistant/ai-assistant.component';
+import { TemplateDeploymentComponent } from './components/template-deployment/template-deployment.component';
+import { ExpertDeploymentComponent } from './components/expert-deployment/expert-deployment.component';
+
 const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   {
     id: 'aws-3-tier',
@@ -173,7 +180,16 @@ const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
 @Component({
   selector: 'app-create-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModeSelectorComponent,
+    QuickDeploymentComponent,
+    AiAssistantComponent,
+    TemplateDeploymentComponent,
+    ExpertDeploymentComponent,
+  ],
   templateUrl: './create-deployment.html',
   styleUrl: './create-deployment.css',
 })
@@ -296,7 +312,106 @@ export class CreateDeployment implements OnInit {
     }
 
     this.projectId.set(projectId);
-    this.loadAvailableTemplates();
+  }
+
+  // --- MODE SELECTION ---
+  selectMode(mode: DeploymentFormData['mode']): void {
+    console.log('Selected deployment mode:', mode);
+    this.deploymentMode.set(mode);
+    this.clearErrors();
+    this.resetModeSpecificState();
+
+    // Load templates for template mode
+    if (mode === 'template') {
+      this.loadAvailableTemplates();
+    }
+  }
+
+  selectTemplate(template: ArchitectureTemplate): void {
+    console.log('Selected template:', template);
+    this.selectedTemplate.set(template);
+  }
+
+  // --- CHILD COMPONENT EVENT HANDLERS ---
+
+  // Quick Deployment handlers
+  protected handleQuickFetchGitBranches(): void {
+    this.fetchGitBranches();
+  }
+
+  protected handleQuickCreateDeployment(): void {
+    this.createDeployment();
+  }
+
+  protected handleQuickResetView(): void {
+    this.resetView();
+  }
+
+  // AI Assistant handlers
+  protected handleAiPromptChange(prompt: string): void {
+    this.aiPrompt.set(prompt);
+  }
+
+  protected handleAiSendPrompt(): void {
+    this.sendAiPrompt();
+  }
+
+  protected handleAiCreateDeployment(): void {
+    this.createDeployment();
+  }
+
+  protected handleAiResetView(): void {
+    this.resetView();
+  }
+
+  // Template handlers
+  protected handleTemplateSelect(template: ArchitectureTemplate): void {
+    this.selectTemplate(template);
+  }
+
+  protected handleTemplateCreateDeployment(): void {
+    this.createDeployment();
+  }
+
+  protected handleTemplateResetView(): void {
+    this.resetView();
+  }
+
+  protected handleTemplateBackToTemplates(): void {
+    this.selectedTemplate.set(null);
+  }
+
+  // Expert mode handlers
+  protected handleExpertProviderChange(
+    provider: 'aws' | 'gcp' | 'azure'
+  ): void {
+    this.expertSelectedProvider.set(provider);
+  }
+
+  protected handleExpertSearchTermChange(term: string): void {
+    this.expertSearchTerm.set(term);
+  }
+
+  protected handleExpertAddComponent(componentId: string): void {
+    this.addComponentToArchitecture(componentId);
+  }
+
+  protected handleExpertRemoveComponent(instanceId: string): void {
+    this.removeComponentFromArchitecture(instanceId);
+  }
+
+  protected handleExpertSelectComponent(
+    component: ArchitectureComponent
+  ): void {
+    this.selectComponentForConfiguration(component);
+  }
+
+  protected handleExpertCreateDeployment(): void {
+    this.createDeployment();
+  }
+
+  protected handleExpertResetView(): void {
+    this.resetView();
   }
 
   // --- SETUP METHODS ---
@@ -364,18 +479,6 @@ export class CreateDeployment implements OnInit {
     ]);
   }
 
-  // --- MODE SELECTION ---
-  protected selectMode(mode: DeploymentFormData['mode']): void {
-    this.deploymentMode.set(mode);
-    this.clearErrors();
-    this.resetModeSpecificState();
-  }
-
-  protected selectTemplate(template: ArchitectureTemplate): void {
-    this.selectedTemplate.set(template);
-    this.validateCurrentForm();
-  }
-
   // --- GIT OPERATIONS ---
   protected fetchGitBranches(): void {
     const repoUrl = this.deploymentConfigForm.get('repoUrl')?.value;
@@ -425,6 +528,7 @@ export class CreateDeployment implements OnInit {
     const architectureComponent: ArchitectureComponent = {
       ...component,
       instanceId: `${component.id}_${Date.now()}`,
+      type: component.category, // Use category as the component type
       configuration: {},
       dependencies: [],
     };
@@ -567,28 +671,27 @@ export class CreateDeployment implements OnInit {
   // --- UTILITY METHODS ---
   protected resetView(): void {
     this.deploymentMode.set(null);
-    this.selectedTemplate.set(null);
-    this.activeExpertComponent.set(null);
-    this.expertArchitecture.set([]);
-    this.expertForm = this.formBuilder.group({});
     this.clearErrors();
-    this.deploymentConfigForm.reset({
-      environment: 'development',
-      branch: 'main',
-    });
+    this.resetModeSpecificState();
   }
 
   private resetModeSpecificState(): void {
+    // Reset AI Assistant state
+    this.chatMessages.set([]);
+    this.aiPrompt.set('');
+    this.aiIsThinking.set(false);
+
+    // Reset Template state
     this.selectedTemplate.set(null);
+
+    // Reset Expert mode state
+    this.expertSelectedProvider.set('aws');
+    this.expertSearchTerm.set('');
     this.expertArchitecture.set([]);
     this.activeExpertComponent.set(null);
-    this.aiPrompt.set('');
-    this.chatMessages.set([
-      {
-        sender: 'ai',
-        text: "Bonjour ! Décrivez-moi l'infrastructure que vous souhaitez.",
-      },
-    ]);
+
+    // Reset form validation
+    this.validateCurrentForm();
   }
 
   private clearErrors(): void {

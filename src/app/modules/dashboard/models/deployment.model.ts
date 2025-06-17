@@ -127,6 +127,7 @@ export interface CloudComponentDetailed {
 
 export interface ArchitectureComponent extends CloudComponentDetailed {
   instanceId: string;
+  type: string; // Component type identifier (e.g., 'database', 'compute', 'storage')
   configuration?: { [key: string]: any };
   dependencies?: string[];
 }

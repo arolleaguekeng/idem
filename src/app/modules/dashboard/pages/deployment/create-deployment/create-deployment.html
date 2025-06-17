@@ -21,578 +21,73 @@
     </div>
   </div>
 
-  @switch (deploymentMode()) { @case (null) {
-  <h2 class="text-2xl font-semibold mb-8 border-l-4 border-l-primary pl-4">
-    Choose your method
-  </h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div
-      class="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-600/50 hover:border-primary/50 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all"
-      (click)="selectMode('beginner')"
-    >
-      <div
-        class="p-8 flex flex-col text-center h-full rounded-lg bg-gray-900/70"
-      >
-        <i class="pi pi-rocket text-4xl text-primary mb-6"></i>
-        <h3 class="text-xl font-semibold mb-2">Quick Deployment</h3>
-        <p class="text-gray-400 flex-grow">
-          The simplest way: a link, a branch, and you're done.
-        </p>
-        <button
-          class="mt-8 w-full py-2 px-4 bg-primary/20 hover:bg-primary/40 rounded-md text-primary font-medium"
-        >
-          Quick Launch
-        </button>
-      </div>
-    </div>
-    <!-- Carte Assistant IA -->
-    <div
-      class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/20 hover:border-blue-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all"
-      (click)="selectMode('assistant')"
-    >
-      <div
-        class="p-8 flex flex-col text-center h-full rounded-lg bg-gray-900/70"
-      >
-        <i class="pi pi-comments text-4xl text-blue-400 mb-6"></i>
-        <h3 class="text-xl font-semibold mb-2">AI Assistant</h3>
-        <p class="text-gray-400 flex-grow">
-          Describe your needs in natural language.
-        </p>
-        <button
-          class="mt-8 w-full py-2 px-4 bg-blue-600/20 hover:bg-blue-600/40 rounded-md text-blue-300 font-medium"
-        >
-          Start
-        </button>
-      </div>
-    </div>
-    <!-- Carte Modèles -->
-    <div
-      class="bg-gradient-to-br from-teal-900/20 to-green-900/20 border border-teal-500/20 hover:border-teal-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all"
-      (click)="selectMode('template')"
-    >
-      <div
-        class="p-8 flex flex-col text-center h-full rounded-lg bg-gray-900/70"
-      >
-        <i class="pi pi-th-large text-4xl text-teal-400 mb-6"></i>
-        <h3 class="text-xl font-semibold mb-2">Architecture Templates</h3>
-        <p class="text-gray-400 flex-grow">Start with proven architectures.</p>
-        <button
-          class="mt-8 w-full py-2 px-4 bg-teal-600/20 hover:bg-teal-600/40 rounded-md text-teal-300 font-medium"
-        >
-          Browse
-        </button>
-      </div>
-    </div>
-    <!-- Carte Expert -->
-    <div
-      class="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/20 hover:border-purple-500/40 rounded-xl p-1 cursor-pointer hover:-translate-y-1 transition-all"
-      (click)="selectMode('expert')"
-    >
-      <div
-        class="p-8 flex flex-col text-center h-full rounded-lg bg-gray-900/70"
-      >
-        <i class="pi pi-sliders-h text-4xl text-purple-400 mb-6"></i>
-        <h3 class="text-xl font-semibold mb-2">Expert Mode</h3>
-        <p class="text-gray-400 flex-grow">Build your custom architecture.</p>
-        <button
-          class="mt-8 w-full py-2 px-4 bg-purple-600/20 hover:bg-purple-600/40 rounded-md text-purple-300 font-medium"
-        >
-          Build
-        </button>
-      </div>
-    </div>
-  </div>
-  } @case ('expert') {
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-semibold border-l-4 border-l-purple-500 pl-4">
-      Constructeur d'Architecture
-    </h2>
-    <button
-      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-      (click)="resetView()"
-    >
-      <i class="pi pi-arrow-left"></i> Retour
-    </button>
-  </div>
-
-  <div class="grid grid-cols-12 gap-6 h-[75vh]">
-    <!-- TAB 1: CATALOGUE -->
-    <div
-      class="col-span-12 lg:col-span-3 bg-gray-900/50 rounded-xl border border-gray-800 flex flex-col"
-    >
-      <div class="p-4 border-b border-gray-700">
-        <div class="flex gap-1 bg-gray-800 p-1 rounded-lg mb-4">
-          <button
-            (click)="expertSelectedProvider.set('aws')"
-            class="w-full px-3 py-1 text-sm rounded-md"
-            [ngClass]="expertSelectedProvider() === 'aws' ? 'bg-blue-600' : 'hover:bg-gray-700'"
-          >
-            AWS
-          </button>
-          <button
-            (click)="expertSelectedProvider.set('gcp')"
-            class="w-full px-3 py-1 text-sm rounded-md"
-            [ngClass]="expertSelectedProvider() === 'gcp' ? 'bg-green-600' : 'hover:bg-gray-700'"
-          >
-            GCP
-          </button>
-          <button
-            (click)="expertSelectedProvider.set('azure')"
-            class="w-full px-3 py-1 text-sm rounded-md"
-            [ngClass]="expertSelectedProvider() === 'azure' ? 'bg-purple-600' : 'hover:bg-gray-700'"
-          >
-            Azure
-          </button>
-        </div>
-        <div class="relative">
-          <i
-            class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-          ></i
-          ><input
-            [(ngModel)]="expertSearchTerm"
-            type="text"
-            placeholder="Rechercher..."
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 pl-9 focus:outline-none focus:border-purple-500"
-          />
-        </div>
-      </div>
-      <div class="overflow-y-auto p-4 flex-grow custom-scrollbar">
-        @for (category of objectKeys(filteredCatalogue()); track category) {
-        <div class="mb-4">
-          <h4
-            class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2"
-          >
-            {{ category }}
-          </h4>
-          <div class="space-y-2">
-            @for (component of filteredCatalogue()[category]; track
-            component.id) {
-            <div
-              class="bg-gray-800/70 p-3 rounded-lg flex justify-between items-center border border-transparent hover:border-gray-600"
-            >
-              <h5 class="font-medium flex items-center gap-2">
-                <i class="{{component.icon}}"></i> {{ component.name }}
-              </h5>
-              <button
-                (click)="addComponentToArchitecture(component.id)"
-                class="p-2 h-8 w-8 flex items-center justify-center rounded-md bg-purple-600/30 hover:bg-purple-600/50 text-purple-300"
-                title="Ajouter"
-              >
-                <i class="pi pi-plus"></i>
-              </button>
-            </div>
-            }
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-
-    <!-- VOLET 2: CANVAS -->
-    <div
-      class="col-span-12 lg:col-span-5 bg-gray-900/50 rounded-xl border border-gray-800 flex flex-col"
-    >
-      <div
-        class="p-4 border-b border-gray-700 flex justify-between items-center"
-      >
-        <h3 class="text-lg font-semibold">Your Architecture</h3>
-        <button
-          class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
-          [disabled]="!expertForm.valid || expertArchitecture().length === 0 || loadingDeployment()"
-          (click)="createDeployment()"
-        >
-          <i class="pi pi-rocket"></i>{{ loadingDeployment() ? 'Deployment...' :
-          'Deploy' }}
-        </button>
-      </div>
-      <div class="overflow-y-auto p-4 flex-grow space-y-3 custom-scrollbar">
-        @for (component of expertArchitecture(); track component.instanceId) {
-        <div
-          class="bg-gray-800 p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center justify-between animate-fade-in"
-          [class.border-purple-500]="activeExpertComponent()?.instanceId === component.instanceId"
-          [class.border-transparent]="activeExpertComponent()?.instanceId !== component.instanceId"
-          (click)="selectComponentForConfiguration(component)"
-        >
-          <div class="flex items-center gap-3">
-            <i class="{{component.icon}} text-xl"></i
-            ><span class="font-medium">{{ component.name }}</span> @if
-            (expertForm.get(component.instanceId)?.invalid) {<span
-              class="text-xs text-yellow-400 bg-yellow-900/50 px-2 py-0.5 rounded-full flex items-center gap-1"
-              ><i class="pi pi-exclamation-triangle text-xs"></i> Not
-              configured</span
-            >} @else {<span
-              class="text-xs text-green-400 bg-green-900/50 px-2 py-0.5 rounded-full flex items-center gap-1"
-              ><i class="pi pi-check-circle text-xs"></i> Ready</span
-            >}
-          </div>
-          <button
-            (click)="removeComponentFromArchitecture(component.instanceId); $event.stopPropagation()"
-            class="p-2 text-gray-500 hover:text-red-400 hover:bg-red-900/20 rounded-full"
-          >
-            <i class="pi pi-trash"></i>
-          </button>
-        </div>
-        } @if (expertArchitecture().length === 0) {
-        <div
-          class="h-full flex flex-col items-center justify-center text-center text-gray-500 border-2 border-dashed border-gray-700 rounded-lg p-8"
-        >
-          <i class="pi pi-sitemap text-4xl mb-4"></i>
-          <h4 class="font-semibold text-lg text-gray-400">Start building</h4>
-          <p>Add components from the catalog.</p>
-        </div>
-        }
-      </div>
-    </div>
-
-    <!-- VOLET 3: CONFIGURATION -->
-    <div
-      class="col-span-12 lg:col-span-4 bg-gray-900/50 rounded-xl border border-gray-800 flex flex-col"
-    >
-      @if (activeExpertComponent(); as activeComponent) {
-      <div class="p-4 border-b border-gray-700">
-        <h3 class="text-lg font-semibold flex items-center gap-3">
-          <i class="{{activeComponent.icon}}"></i> Configuration: {{
-          activeComponent.name }}
-        </h3>
-      </div>
-      <div
-        class="overflow-y-auto p-4 flex-grow custom-scrollbar"
-        [formGroup]="getActiveComponentForm()!"
-      >
-        @for (option of getActiveComponentModel()?.options; track option.name) {
-        <div class="mb-4">
-          <label
-            [for]="option.name"
-            class="text-sm font-medium mb-2 flex items-center gap-2"
-            >{{ option.label }} @if (option.required) {<span
-              class="text-red-400"
-              >*</span
-            >} @if (option.description) {<i
-              class="pi pi-info-circle text-gray-500"
-              [title]="option.description"
-            ></i
-            >}</label
-          >
-          @switch (option.type) { @case ('text') {
-          <input
-            [id]="option.name"
-            type="text"
-            [formControlName]="option.name"
-            [placeholder]="option.placeholder"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 focus:outline-none focus:border-purple-500"
-          />
-          } @case ('number') {
-          <input
-            [id]="option.name"
-            type="number"
-            [formControlName]="option.name"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 focus:outline-none focus:border-purple-500"
-          />
-          } @case ('select') {<select
-            [id]="option.name"
-            [formControlName]="option.name"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 focus:outline-none focus:border-purple-500"
-          >
-            @for (opt of option.options; track opt.value) {
-            <option [value]="opt.value">{{ opt.label }}</option>
-            }</select
-          >} @case ('toggle') {<label
-            class="relative inline-flex items-center cursor-pointer"
-            ><input
-              type="checkbox"
-              [formControlName]="option.name"
-              class="sr-only peer" />
-            <div
-              class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"
-            ></div></label
-          >} } @if (getActiveComponentForm()?.get(option.name)?.invalid &&
-          getActiveComponentForm()?.get(option.name)?.touched) {
-          <p class="text-red-400 text-sm mt-1">This field is required.</p>
-          }
-        </div>
-        }
-      </div>
-      } @else {
-      <div
-        class="h-full flex flex-col items-center justify-center text-center text-gray-500 p-8"
-      >
-        <i class="pi pi-sliders-h text-4xl mb-4"></i>
-        <h4 class="font-semibold text-lg text-gray-400">Properties</h4>
-        <p>Select a component to configure it.</p>
-      </div>
-      }
-    </div>
-  </div>
+  <!-- Mode Selection -->
+  @if (!deploymentMode()) {
+    <app-mode-selector 
+      (onModeSelect)="selectMode($event)">
+    </app-mode-selector>
   }
 
-  <!-- ======================= -->
-  <!-- CAS 2: Mode Assistant IA -->
-  <!-- ======================= -->
-  @case ('assistant') {
-  <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-semibold border-l-4 border-l-blue-500 pl-4">
-      Assistant IA Conversationnel
-    </h2>
-    <button
-      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-      (click)="resetView()"
-    >
-      <i class="pi pi-arrow-left"></i> Retour
-    </button>
-  </div>
-  <div
-    class="bg-gray-900/50 rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col h-[70vh]"
-  >
-    <!-- Zone d'affichage des messages -->
-    <div class="flex-grow overflow-y-auto pr-4 space-y-6 custom-scrollbar">
-      @for (message of chatMessages(); track $index) {
-      <div
-        class="flex gap-4 animate-fade-in"
-        [ngClass]="{'justify-end': message.sender === 'user'}"
-      >
-        @if (message.sender === 'ai') {
-        <div
-          class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0"
-        >
-          <i class="pi pi-sparkles"></i>
-        </div>
-        }
-        <div
-          class="max-w-xl p-4 rounded-xl"
-          [ngClass]="message.sender === 'ai' ? 'bg-gray-800 text-gray-300' : 'bg-blue-600 text-white'"
-        >
-          <p class="whitespace-pre-wrap">{{ message.text }}</p>
-        </div>
-      </div>
-      } @if (aiIsThinking()) {
-      <div class="flex gap-4 animate-fade-in">
-        <div
-          class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0"
-        >
-          <i class="pi pi-sparkles"></i>
-        </div>
-        <div
-          class="max-w-xl p-4 rounded-xl bg-gray-800 text-gray-300 flex items-center gap-3"
-        >
-          <i class="pi pi-spin pi-spinner"></i>
-          <span>Thinking...</span>
-        </div>
-      </div>
-      }
-    </div>
-    <!-- Zone de saisie -->
-    <div class="mt-6 flex gap-4 border-t border-gray-700 pt-4">
-      <input
-        [(ngModel)]="aiPrompt"
-        (keyup.enter)="sendAiPrompt()"
-        type="text"
-        placeholder="Describe your need here..."
-        class="w-full bg-gray-800/80 border border-gray-700 focus:border-blue-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all placeholder-gray-500"
-      />
-      <button
-        (click)="sendAiPrompt()"
-        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        [disabled]="!aiPrompt() || aiIsThinking()"
-      >
-        <i class="pi pi-send"></i> <span>Send</span>
-      </button>
-    </div>
-  </div>
+  <!-- Quick Deployment -->
+  @if (deploymentMode() === 'beginner') {
+    <app-quick-deployment
+      [deploymentForm]="deploymentConfigForm"
+      [gitBranches]="gitBranches()"
+      [loadingGitInfo]="loadingGitInfo()"
+      [isFormValid]="isFormValid()"
+      (onFetchGitBranches)="handleQuickFetchGitBranches()"
+      (onCreateDeployment)="handleQuickCreateDeployment()"
+      (onResetView)="handleQuickResetView()">
+    </app-quick-deployment>
   }
 
-  <!-- ======================= -->
-  <!-- CAS 3: Mode Modèles      -->
-  <!-- ======================= -->
-  @case ('template') {
-  <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-semibold border-l-4 border-l-teal-500 pl-4">
-      Modèles d'Architecture
-    </h2>
-    <button
-      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-      (click)="resetView()"
-    >
-      <i class="pi pi-arrow-left"></i> Back
-    </button>
-  </div>
-
-  <!-- Étape 1: Afficher la galerie de modèles -->
-  @if (!selectedTemplate()) {
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    @for (template of availableTemplates(); track template.id) {
-    <div
-      class="bg-gray-900/50 rounded-xl border border-gray-800 p-6 flex flex-col hover:border-teal-500/50 hover:-translate-y-1 transition-all cursor-pointer animate-fade-in"
-      (click)="selectTemplate(template)"
-    >
-      <div class="flex items-center gap-4 mb-4">
-        <i class="{{template.icon}} text-2xl text-teal-400"></i>
-        <h3 class="text-lg font-semibold text-gray-100">{{ template.name }}</h3>
-      </div>
-      <p class="text-gray-400 text-sm flex-grow">{{ template.description }}</p>
-      <div class="mt-4 flex flex-wrap gap-2">
-        @for (tag of template.tags; track tag) {
-        <span
-          class="text-xs font-medium bg-teal-500/20 text-teal-300 px-2 py-1 rounded-full"
-          >{{ tag }}</span
-        >
-        }
-      </div>
-    </div>
-    }
-  </div>
+  <!-- AI Assistant -->
+  @if (deploymentMode() === 'assistant') {
+    <app-ai-assistant
+      [deploymentForm]="deploymentConfigForm"
+      [chatMessages]="chatMessages()"
+      [aiPrompt]="aiPrompt()"
+      [aiIsThinking]="aiIsThinking()"
+      [isFormValid]="isFormValid()"
+      (onPromptChange)="handleAiPromptChange($event)"
+      (onSendAiPrompt)="handleAiSendPrompt()"
+      (onCreateDeployment)="handleAiCreateDeployment()"
+      (onResetView)="handleAiResetView()">
+    </app-ai-assistant>
   }
-  <!-- Étape 2: Afficher le formulaire de configuration pour le modèle choisi -->
-  @else {
-  <div
-    class="bg-gray-900/50 rounded-xl border border-gray-800 p-8 shadow-xl max-w-3xl mx-auto animate-fade-in"
-  >
-    <h3 class="text-xl font-semibold mb-2 flex items-center gap-3">
-      <i class="{{selectedTemplate()?.icon}} text-teal-400"></i> Configuration
-      for : {{ selectedTemplate()?.name }}
-    </h3>
-    <p class="text-gray-400 mb-6">{{ selectedTemplate()?.description }}</p>
 
-    <form [formGroup]="deploymentConfigForm" class="space-y-6">
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-300 mb-2"
-          >Nom du Déploiement</label
-        >
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-teal-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all"
-        />
-      </div>
-      <div>
-        <label
-          for="repoUrl"
-          class="block text-sm font-medium text-gray-300 mb-2"
-          >URL du dépôt Git</label
-        >
-        <input
-          id="repoUrl"
-          type="text"
-          formControlName="repoUrl"
-          placeholder="https://github.com/user/repo.git"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-teal-500 text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all"
-        />
-      </div>
+  <!-- Template Deployment -->
+  @if (deploymentMode() === 'template') {
+    <app-template-deployment
+      [deploymentForm]="deploymentConfigForm"
+      [availableTemplates]="availableTemplates()"
+      [selectedTemplate]="selectedTemplate()"
+      [isFormValid]="isFormValid()"
+      (onSelectTemplate)="handleTemplateSelect($event)"
+      (onCreateDeployment)="handleTemplateCreateDeployment()"
+      (onResetView)="handleTemplateResetView()"
+      (onBackToTemplates)="handleTemplateBackToTemplates()">
+    </app-template-deployment>
+  }
 
-      <div class="flex justify-end gap-4 pt-4 border-t border-gray-700/50">
-        <button
-          type="button"
-          (click)="selectedTemplate.set(null)"
-          class="px-6 py-2 rounded-lg border border-gray-600 hover:bg-gray-700/50 text-gray-300 transition-colors"
-        >
-          Change template
-        </button>
-        <button
-          (click)="createDeployment()"
-          class="px-6 py-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
-          [disabled]="deploymentConfigForm.invalid || loadingDeployment()"
-        >
-          <i class="pi pi-rocket"></i> {{ loadingDeployment() ? 'Deployment...'
-          : 'Deploy the Model' }}
-        </button>
-      </div>
-    </form>
-  </div>
-  } } @case ('beginner') {
-  <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-semibold border-l-4 border-l-primary pl-4">
-      Beginner Deployment
-    </h2>
-    <button
-      class="px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-all flex items-center gap-2"
-      (click)="resetView()"
-    >
-      <i class="pi pi-arrow-left"></i> Back
-    </button>
-  </div>
-  <div
-    class="bg-gray-900/50 rounded-xl border border-gray-800 p-8 shadow-xl max-w-3xl mx-auto animate-fade-in"
-  >
-    <form [formGroup]="deploymentConfigForm" class="space-y-6">
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-300 mb-2"
-          >Deployment Name</label
-        >
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          placeholder="Ex: mon-app-web"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-primary text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all"
-        />
-      </div>
-      <div>
-        <label
-          for="repoUrl"
-          class="block text-sm font-medium text-gray-300 mb-2"
-          >Git Repository URL</label
-        >
-        <input
-          id="repoUrl"
-          type="text"
-          formControlName="repoUrl"
-          placeholder="https://github.com/user/repo.git"
-          (blur)="fetchGitBranches()"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-primary text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all"
-        />
-      </div>
-      <div>
-        <label for="branch" class="block text-sm font-medium text-gray-300 mb-2"
-          >Branch to deploy</label
-        >
-        <div class="relative">
-          <select
-            id="branch"
-            formControlName="branch"
-            class="w-full bg-gray-800/80 border border-gray-700 focus:border-primary text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all appearance-none"
-          >
-            <option value="" disabled>Select a branch</option>
-            @for (branch of gitBranches(); track branch) {
-            <option [value]="branch">{{ branch }}</option>
-            }
-          </select>
-          <i
-            class="pi pi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
-          ></i>
-        </div>
-        @if (loadingGitInfo()) {
-        <div class="mt-2 text-primary text-sm flex items-center gap-2">
-          <i class="pi pi-spin pi-spinner"></i> Loading branches...
-        </div>
-        }
-      </div>
-      <div>
-        <label
-          for="environment"
-          class="block text-sm font-medium text-gray-300 mb-2"
-          >Environment</label
-        >
-        <select
-          id="environment"
-          formControlName="environment"
-          class="w-full bg-gray-800/80 border border-gray-700 focus:border-primary text-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all"
-        >
-          <option value="development">Development</option>
-          <option value="staging">Staging</option>
-          <option value="production">Production</option>
-        </select>
-      </div>
-      <div class="flex justify-end pt-4 border-t border-gray-700/50">
-        <button
-          (click)="createDeployment()"
-          class="px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 rounded-lg text-white font-bold flex items-center gap-2 disabled:opacity-50"
-          [disabled]="deploymentConfigForm.invalid || loadingDeployment()"
-        >
-          <i class="pi pi-rocket"></i> {{ loadingDeployment() ? 'Deployment...'
-          : 'Deploy' }}
-        </button>
-      </div>
-    </form>
-  </div>
-  } }
+  <!-- Expert Mode -->
+  @if (deploymentMode() === 'expert') {
+    <app-expert-deployment
+      [deploymentForm]="deploymentConfigForm"
+      [expertForm]="expertForm"
+      [expertSelectedProvider]="expertSelectedProvider()"
+      [expertSearchTerm]="expertSearchTerm()"
+      [expertArchitecture]="expertArchitecture()"
+      [activeExpertComponent]="activeExpertComponent()"
+      [filteredCatalogue]="filteredCatalogue()"
+      [isFormValid]="isFormValid()"
+      (onProviderChange)="handleExpertProviderChange($event)"
+      (onSearchTermChange)="handleExpertSearchTermChange($event)"
+      (onAddComponent)="handleExpertAddComponent($event)"
+      (onRemoveComponent)="handleExpertRemoveComponent($event)"
+      (onSelectComponent)="handleExpertSelectComponent($event)"
+      (onCreateDeployment)="handleExpertCreateDeployment()"
+      (onResetView)="handleExpertResetView()">
+    </app-expert-deployment>
+  }
 </div>
