@@ -1,25 +1,24 @@
 export const environment = {
-  environment: 'prod',
+  environment: 'dev',
   firebase: {
-    apiKey: '[YOUR API KEY]',
-    authDomain: '[YOUR AUTH DOMAIN]',
-    projectId: '[YOUR PROJECT ID]',
-    storageBucket: '[YOUR STORAGE BUCKET]',
-    messagingSenderId: '[YOUR MESSAGING SENDER ID]',
-    appId: '[YOUR APP ID]',
+    apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',
+    authDomain: 'lexis-ia.firebaseapp.com',
+    projectId: 'lexis-ia',
+    storageBucket: 'lexis-ia.firebasestorage.app',
+    messagingSenderId: '78825247320',
+    appId: '1:78825247320:web:2a69ba8ceabad513f3f02d',
   },
   services: {
     api: {
-      url: '[YOUR API URL]',
+      url: 'http://localhost:3000/api',
       version: 'v1',
       llmModel: 'gpt-3.5-turbo',
     },
     webgen: {
-      url: '[YOUR WEBGEN URL]',
+      url: 'http://localhost:5173',
     },
     diagen: {
-      url: '[YOUR DIAGEN URL]',
+      url: 'http://localhost:3001',
     },
   },
 };
-

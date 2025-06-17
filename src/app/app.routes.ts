@@ -70,11 +70,11 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
-    path: 'console/deployment',
+    path: 'console/deployments/create',
     loadComponent: () =>
       import(
-        './modules/dashboard/pages/deployment/show-deployment/show-deployment'
-      ).then((m) => m.ShowDeployment),
+        './modules/dashboard/pages/deployment/create-deployment/create-deployment'
+      ).then((m) => m.CreateDeployment),
     data: { layout: 'dashboard' },
   },
   {

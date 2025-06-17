@@ -263,7 +263,7 @@ export class SidebarDashboard implements OnInit {
       {
         label: 'Deployment',
         icon: 'pi pi-fw pi-globe',
-        command: () => this.navigateTo(`console/deployment`),
+        command: () => this.navigateTo(`/console/deployments`),
       },
     ]);
   }

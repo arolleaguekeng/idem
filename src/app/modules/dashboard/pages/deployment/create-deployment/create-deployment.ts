@@ -265,11 +265,11 @@ const ALL_COMPONENTS_LIST = Object.values(MOCK_COMPONENTS_DETAILED);
 @Component({
   selector: 'app-create-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,RouterLink],
-  templateUrl: './show-deployment.html',
-  styleUrl: './show-deployment.css',
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './create-deployment.html',
+  styleUrl: './create-deployment.css',
 })
-export class ShowDeployment implements OnInit {
+export class CreateDeployment implements OnInit {
   // Helper pour utiliser Object.keys dans le template
   public objectKeys = Object.keys;
 
