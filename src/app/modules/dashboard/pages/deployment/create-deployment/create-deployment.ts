@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -10,53 +10,17 @@ import {
 } from '@angular/forms';
 import { DeploymentService } from '../../../services/deployment.service';
 import { CookieService } from '../../../../../shared/services/cookie.service';
-import { DeploymentModel } from '../../../models/deployment.model';
+import {
+  DeploymentModel,
+  DeploymentFormData,
+  DeploymentValidators,
+  DeploymentMapper,
+  ChatMessage,
+  ArchitectureTemplate,
+  CloudComponentDetailed,
+  ArchitectureComponent,
+} from '../../../models/deployment.model';
 
-// --- INTERFACES DE DONNÉES COMMUNES ---
-interface ChatMessage {
-  sender: 'user' | 'ai';
-  text: string;
-}
-interface ArchitectureTemplate {
-  id: string;
-  provider: 'aws' | 'gcp' | 'azure';
-  category: string;
-  name: string;
-  description: string;
-  tags: string[];
-  icon: string;
-}
-
-// --- INTERFACES SPÉCIFIQUES ET ENRICHIES POUR LE MODE EXPERT ---
-interface FormOption {
-  name: string;
-  label: string;
-  type: 'text' | 'number' | 'select' | 'toggle';
-  required: boolean;
-  defaultValue?: any;
-  placeholder?: string;
-  options?: { value: string; label: string }[];
-  description?: string;
-}
-
-interface CloudComponentDetailed {
-  id: string;
-  provider: 'aws' | 'gcp' | 'azure';
-  category: string;
-  name: string;
-  icon: string;
-  description: string;
-  options: FormOption[];
-}
-
-interface ArchitectureComponent {
-  instanceId: string;
-  componentId: string;
-  name: string;
-  icon: string;
-}
-
-// --- DONNÉES SIMULÉES COMPLETES POUR LA DÉMONSTRATION ---
 const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   {
     id: 'aws-3-tier',
@@ -87,180 +51,124 @@ const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   },
 ];
 
-const MOCK_COMPONENTS_DETAILED: { [id: string]: CloudComponentDetailed } = {
-  // AWS Components
-  'aws-ec2': {
-    id: 'aws-ec2',
-    provider: 'aws',
+const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
+  {
+    id: 'ec2',
+    name: 'EC2 Instance',
+    description: 'Virtual compute capacity in the cloud',
     category: 'Compute',
-    name: 'Amazon EC2',
-    icon: 'pi pi-desktop',
-    description: 'Secure virtual machines.',
+    provider: 'aws',
+    icon: 'pi pi-server',
+    pricing: '$0.0116/hour',
     options: [
       {
-        name: 'instance_type',
-        label: 'Instance type',
+        name: 'instanceType',
+        label: 'Instance Type',
         type: 'select',
         required: true,
-        defaultValue: 't2.micro',
         options: [
-          { value: 't2.micro', label: 't2.micro' },
-          { value: 'm5.large', label: 'm5.large' },
+          { label: 't2.micro', value: 't2.micro' },
+          { label: 't2.small', value: 't2.small' },
+          { label: 't2.medium', value: 't2.medium' },
         ],
-        description: 'VM size.',
       },
       {
-        name: 'ami_id',
-        label: 'Image (AMI)',
-        type: 'text',
+        name: 'storage',
+        label: 'Storage (GB)',
+        type: 'number',
         required: true,
-        placeholder: 'ami-0abcdef123',
-        description: 'Amazon Machine Image ID.',
+        defaultValue: 20,
       },
     ],
   },
-  'aws-rds': {
-    id: 'aws-rds',
+  {
+    id: 'rds',
+    name: 'RDS Database',
+    description: 'Managed relational database service',
+    category: 'Database',
     provider: 'aws',
-    category: 'Databases',
-    name: 'Amazon RDS',
     icon: 'pi pi-database',
-    description: 'Managed relational database.',
+    pricing: '$0.017/hour',
     options: [
       {
         name: 'engine',
-        label: 'Engine',
+        label: 'Database Engine',
         type: 'select',
         required: true,
-        defaultValue: 'postgres',
         options: [
-          { value: 'postgres', label: 'PostgreSQL' },
-          { value: 'mysql', label: 'MySQL' },
+          { label: 'MySQL', value: 'mysql' },
+          { label: 'PostgreSQL', value: 'postgres' },
+          { label: 'MariaDB', value: 'mariadb' },
         ],
       },
       {
-        name: 'multi_az',
-        label: 'High Availability',
-        type: 'toggle',
-        required: false,
-        defaultValue: false,
-        description: 'Provision a replica in another AZ.',
-      },
-    ],
-  },
-  'aws-s3': {
-    id: 'aws-s3',
-    provider: 'aws',
-    category: 'Storage',
-    name: 'Amazon S3',
-    icon: 'pi pi-inbox',
-    description: 'Highly scalable object storage.',
-    options: [
-      {
-        name: 'bucket_name',
-        label: 'Bucket name',
-        type: 'text',
-        required: true,
-        placeholder: 'my-unique-bucket',
-      },
-      {
-        name: 'public_access',
-        label: 'Public access',
+        name: 'multiAZ',
+        label: 'Multi-AZ Deployment',
         type: 'toggle',
         required: false,
         defaultValue: false,
       },
     ],
   },
-  // GCP Components
-  'gcp-compute': {
-    id: 'gcp-compute',
-    provider: 'gcp',
-    category: 'Compute',
+  {
+    id: 'compute-engine',
     name: 'Compute Engine',
-    icon: 'pi pi-desktop',
-    description: 'High-performance virtual machines.',
-    options: [
-      {
-        name: 'machine_type',
-        label: 'Machine type',
-        type: 'select',
-        required: true,
-        defaultValue: 'e2-micro',
-        options: [
-          { value: 'e2-micro', label: 'e2-micro' },
-          { value: 'n2-standard-2', label: 'n2-standard-2' },
-        ],
-      },
-    ],
-  },
-  'gcp-sql': {
-    id: 'gcp-sql',
-    provider: 'gcp',
-    category: 'Databases',
-    name: 'Cloud SQL',
-    icon: 'pi pi-database',
-    description: 'Managed relational databases.',
-    options: [
-      {
-        name: 'database_version',
-        label: 'Version',
-        type: 'select',
-        required: true,
-        defaultValue: 'POSTGRES_13',
-        options: [
-          { value: 'POSTGRES_13', label: 'PostgreSQL 13' },
-          { value: 'MYSQL_8_0', label: 'MySQL 8.0' },
-        ],
-      },
-    ],
-  },
-  // Azure Components
-  'azure-vm': {
-    id: 'azure-vm',
-    provider: 'azure',
+    description: 'Virtual machines running in Google Cloud',
     category: 'Compute',
-    name: 'Azure VM',
-    icon: 'pi pi-desktop',
-    description: 'Virtual machines with Linux and Windows.',
+    provider: 'gcp',
+    icon: 'pi pi-server',
+    pricing: '$0.0104/hour',
     options: [
       {
-        name: 'vm_size',
-        label: 'VM size',
+        name: 'machineType',
+        label: 'Machine Type',
         type: 'select',
         required: true,
-        defaultValue: 'Standard_B1s',
         options: [
-          { value: 'Standard_B1s', label: 'Standard_B1s' },
-          { value: 'Standard_D2s_v3', label: 'Standard_D2s_v3' },
+          { label: 'e2-micro', value: 'e2-micro' },
+          { label: 'e2-small', value: 'e2-small' },
+          { label: 'e2-medium', value: 'e2-medium' },
         ],
+      },
+      {
+        name: 'bootDiskSize',
+        label: 'Boot Disk Size (GB)',
+        type: 'number',
+        required: true,
+        defaultValue: 10,
       },
     ],
   },
-  'azure-sql': {
-    id: 'azure-sql',
+  {
+    id: 'virtual-machine',
+    name: 'Virtual Machine',
+    description: 'Virtual machines in Azure',
+    category: 'Compute',
     provider: 'azure',
-    category: 'Databases',
-    name: 'Azure SQL DB',
-    icon: 'pi pi-database',
-    description: 'Intelligent SQL database.',
+    icon: 'pi pi-server',
+    pricing: '$0.0124/hour',
     options: [
       {
-        name: 'service_tier',
-        label: 'Service tier',
+        name: 'vmSize',
+        label: 'VM Size',
         type: 'select',
         required: true,
-        defaultValue: 'GeneralPurpose',
         options: [
-          { value: 'GeneralPurpose', label: 'General Purpose' },
-          { value: 'BusinessCritical', label: 'Business Critical' },
+          { label: 'Standard_B1s', value: 'Standard_B1s' },
+          { label: 'Standard_B1ms', value: 'Standard_B1ms' },
+          { label: 'Standard_B2s', value: 'Standard_B2s' },
         ],
+      },
+      {
+        name: 'osDiskSize',
+        label: 'OS Disk Size (GB)',
+        type: 'number',
+        required: true,
+        defaultValue: 30,
       },
     ],
   },
-};
-
-const ALL_COMPONENTS_LIST = Object.values(MOCK_COMPONENTS_DETAILED);
+];
 
 @Component({
   selector: 'app-create-deployment',
@@ -270,19 +178,21 @@ const ALL_COMPONENTS_LIST = Object.values(MOCK_COMPONENTS_DETAILED);
   styleUrl: './create-deployment.css',
 })
 export class CreateDeployment implements OnInit {
-  // Helper pour utiliser Object.keys dans le template
-  public objectKeys = Object.keys;
+  // Public utilities for template
+  public objectKeys(obj: any): string[] {
+    return Object.keys(obj || {});
+  }
 
-  // --- SIGNAUX D'ÉTAT PRINCIPAUX ---
-  protected readonly deploymentMode = signal<
-    'beginner' | 'assistant' | 'template' | 'expert' | null
-  >(null);
+  // Core state signals
+  protected readonly deploymentMode = signal<DeploymentFormData['mode'] | null>(
+    null
+  );
   protected readonly loadingDeployment = signal<boolean>(false);
   protected readonly projectId = signal<string | null>(null);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly errorMessages = signal<string[]>([]);
+  protected readonly validationErrors = signal<string[]>([]);
 
-  // --- SIGNAUX ET FORMULAIRES POUR CHAQUE MODE ---
-  // Mode Assistant IA
+  // AI Assistant state
   protected readonly aiPrompt = signal<string>('');
   protected readonly aiIsThinking = signal<boolean>(false);
   protected readonly chatMessages = signal<ChatMessage[]>([
@@ -292,14 +202,13 @@ export class CreateDeployment implements OnInit {
     },
   ]);
 
-  // Mode Modèles
+  // Template mode state
   protected readonly availableTemplates = signal<ArchitectureTemplate[]>([]);
   protected readonly selectedTemplate = signal<ArchitectureTemplate | null>(
     null
   );
-  protected deploymentConfigForm: FormGroup;
 
-  // Mode Expert
+  // Expert mode state
   protected readonly expertSelectedProvider = signal<'aws' | 'gcp' | 'azure'>(
     'aws'
   );
@@ -307,125 +216,245 @@ export class CreateDeployment implements OnInit {
   protected readonly expertArchitecture = signal<ArchitectureComponent[]>([]);
   protected readonly activeExpertComponent =
     signal<ArchitectureComponent | null>(null);
+
+  // Forms
+  protected deploymentConfigForm: FormGroup;
   protected expertForm: FormGroup;
-  protected readonly filteredCatalogue = computed(() => {
-    const provider = this.expertSelectedProvider();
-    const term = this.expertSearchTerm().toLowerCase();
-    return ALL_COMPONENTS_LIST.filter(
-      (c) =>
-        c.provider === provider &&
-        (c.name.toLowerCase().includes(term) ||
-          c.description.toLowerCase().includes(term))
-    ).reduce((acc, comp) => {
-      (acc[comp.category] = acc[comp.category] || []).push(comp);
-      return acc;
-    }, {} as { [cat: string]: CloudComponentDetailed[] });
-  });
 
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly router = inject(Router);
-  private readonly cookieService = inject(CookieService);
-
-  constructor() {
-    this.deploymentConfigForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      repoUrl: ['', Validators.required],
-    });
-    this.expertForm = this.formBuilder.group({});
-  }
-
-  ngOnInit(): void {
-    this.projectId.set(this.cookieService.get('activeProjectId'));
-    if (!this.projectId())
-      this.errorMessage.set('Aucun projet actif sélectionné.');
-    this.availableTemplates.set(MOCK_TEMPLATES);
-  }
+  // Git repository state
   protected readonly gitBranches = signal<string[]>([]);
   protected readonly loadingGitInfo = signal<boolean>(false);
 
-  // --- LOGIQUE DE GESTION DES MODES ---
-  protected selectMode(
-    mode: 'beginner' | 'assistant' | 'template' | 'expert'
-  ): void {
-    this.deploymentMode.set(mode);
+  // Computed properties
+  protected readonly filteredCatalogue = computed(() =>
+    this.getComponentCatalogue()
+  );
+
+  protected readonly isFormValid = computed(() => {
+    const mode = this.deploymentMode();
+    if (!mode) return false;
+
+    const formData = this.getFormData();
+    const basicErrors = DeploymentValidators.validateBasicInfo(formData);
+
+    switch (mode) {
+      case 'beginner':
+      case 'template':
+        return this.deploymentConfigForm.valid && basicErrors.length === 0;
+
+      case 'assistant':
+        return (
+          this.deploymentConfigForm.valid &&
+          basicErrors.length === 0 &&
+          this.aiPrompt().trim().length > 0
+        );
+
+      case 'expert':
+        const compErrors = DeploymentValidators.validateArchitectureComponents(
+          this.expertArchitecture()
+        );
+        return (
+          this.deploymentConfigForm.valid &&
+          basicErrors.length === 0 &&
+          compErrors.length === 0
+        );
+
+      default:
+        return false;
+    }
+  });
+
+  // Injected services
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly cookieService = inject(CookieService);
+  private readonly deploymentService = inject(DeploymentService);
+
+  constructor() {
+    this.deploymentConfigForm = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      environment: ['development', Validators.required],
+      repoUrl: [''],
+      branch: ['main'],
+    });
+
+    this.expertForm = this.formBuilder.group({});
+
+    // Set up form validation
+    this.setupFormValidation();
   }
+
+  ngOnInit(): void {
+    // Get project ID from cookies
+    const projectId = this.cookieService.get('projectId');
+    if (!projectId) {
+      this.errorMessages.set([
+        'No active project found. Please select a project first.',
+      ]);
+      this.router.navigate(['/projects']);
+      return;
+    }
+
+    this.projectId.set(projectId);
+    this.loadAvailableTemplates();
+  }
+
+  // --- SETUP METHODS ---
+  private setupFormValidation(): void {
+    this.deploymentConfigForm.valueChanges.subscribe(() => {
+      this.validateCurrentForm();
+    });
+  }
+
+  private validateCurrentForm(): void {
+    const mode = this.deploymentMode();
+    if (!mode) return;
+
+    const formData = this.getFormData();
+    const errors: string[] = [];
+
+    // Basic validation
+    errors.push(...DeploymentValidators.validateBasicInfo(formData));
+
+    // Git repository validation (if provided)
+    if (formData.repoUrl) {
+      const gitRepo = { url: formData.repoUrl, branch: formData.branch };
+      errors.push(...DeploymentValidators.validateGitRepository(gitRepo));
+    }
+
+    // Mode-specific validation
+    switch (mode) {
+      case 'assistant':
+        if (!this.aiPrompt().trim()) {
+          errors.push('AI prompt is required for assistant mode');
+        }
+        break;
+
+      case 'expert':
+        errors.push(
+          ...DeploymentValidators.validateArchitectureComponents(
+            this.expertArchitecture()
+          )
+        );
+        break;
+
+      case 'template':
+        if (!this.selectedTemplate()) {
+          errors.push('Please select an architecture template');
+        }
+        break;
+    }
+
+    this.validationErrors.set(errors);
+  }
+
+  private loadAvailableTemplates(): void {
+    // Mock data - replace with actual service call
+    this.availableTemplates.set([
+      {
+        id: 'template-1',
+        provider: 'aws',
+        category: 'web',
+        name: 'Full Stack Web App',
+        description: 'Complete web application with database',
+        tags: ['web', 'database', 'cdn'],
+        icon: '🌐',
+      },
+      // Add more templates
+    ]);
+  }
+
+  // --- MODE SELECTION ---
+  protected selectMode(mode: DeploymentFormData['mode']): void {
+    this.deploymentMode.set(mode);
+    this.clearErrors();
+    this.resetModeSpecificState();
+  }
+
   protected selectTemplate(template: ArchitectureTemplate): void {
     this.selectedTemplate.set(template);
+    this.validateCurrentForm();
   }
 
+  // --- GIT OPERATIONS ---
   protected fetchGitBranches(): void {
-    if (!this.deploymentConfigForm.get('repoUrl')?.valid) return;
+    const repoUrl = this.deploymentConfigForm.get('repoUrl')?.value;
+    if (!repoUrl) return;
 
     this.loadingGitInfo.set(true);
-    this.gitBranches.set([]); // Vider les anciennes branches
-    this.deploymentConfigForm.get('branch')?.reset(''); // Réinitialiser la sélection
 
-    // Simuler un appel à un service
-    console.log(
-      'Récupération des branches pour :',
-      this.deploymentConfigForm.get('repoUrl')?.value
-    );
+    // Mock implementation - replace with actual service
     setTimeout(() => {
-      this.gitBranches.set(['main', 'develop', 'feature/new-design']);
+      this.gitBranches.set(['main', 'develop', 'feature/new-ui']);
       this.loadingGitInfo.set(false);
-      // Sélectionner 'main' par défaut si elle existe
-      if (this.gitBranches().includes('main')) {
-        this.deploymentConfigForm.get('branch')?.setValue('main');
-      }
     }, 1500);
   }
 
+  // --- AI ASSISTANT ---
   protected sendAiPrompt(): void {
     const prompt = this.aiPrompt().trim();
-    if (!prompt || this.aiIsThinking()) return;
-    this.chatMessages.update((m) => [...m, { sender: 'user', text: prompt }]);
-    this.aiPrompt.set('');
+    if (!prompt) return;
+
     this.aiIsThinking.set(true);
+
+    // Add user message
+    this.chatMessages.update((messages) => [
+      ...messages,
+      { sender: 'user', text: prompt },
+    ]);
+
+    // Mock AI response - replace with actual service
     setTimeout(() => {
-      this.chatMessages.update((m) => [
-        ...m,
+      this.chatMessages.update((messages) => [
+        ...messages,
         {
           sender: 'ai',
-          text: `Analyse de: "${prompt}". Je vous propose une architecture simple.`,
+          text: `Excellent ! Basé sur votre demande "${prompt}", je recommande une architecture avec AWS EC2, RDS et CloudFront.`,
         },
       ]);
       this.aiIsThinking.set(false);
-    }, 1500);
+      this.aiPrompt.set('');
+    }, 2000);
   }
 
-  // --- LOGIQUE DÉTAILLÉE DU MODE EXPERT ---
+  // --- EXPERT MODE ---
   protected addComponentToArchitecture(componentId: string): void {
-    const model = MOCK_COMPONENTS_DETAILED[componentId];
-    const instanceId = `${componentId}-${Date.now()}`;
-    const newComponent: ArchitectureComponent = {
-      instanceId,
-      componentId,
-      name: model.name,
-      icon: model.icon,
-    };
-    this.expertArchitecture.update((arch) => [...arch, newComponent]);
+    const component = this.getComponentById(componentId);
+    if (!component) return;
 
-    const formGroup = this.formBuilder.group({});
-    model.options.forEach((opt) =>
-      formGroup.addControl(
-        opt.name,
-        this.formBuilder.control(
-          opt.defaultValue,
-          opt.required ? [Validators.required] : []
-        )
-      )
-    );
-    this.expertForm.addControl(instanceId, formGroup);
-    this.selectComponentForConfiguration(newComponent);
+    const architectureComponent: ArchitectureComponent = {
+      ...component,
+      instanceId: `${component.id}_${Date.now()}`,
+      configuration: {},
+      dependencies: [],
+    };
+
+    this.expertArchitecture.update((arch) => [...arch, architectureComponent]);
+
+    // Create form group for this component
+    if (component.options) {
+      const formGroup = this.formBuilder.group({});
+      component.options.forEach((option) => {
+        const validators = option.required ? [Validators.required] : [];
+        formGroup.addControl(
+          option.name,
+          this.formBuilder.control(option.defaultValue || '', validators)
+        );
+      });
+      this.expertForm.addControl(architectureComponent.instanceId, formGroup);
+    }
   }
 
   protected removeComponentFromArchitecture(instanceId: string): void {
     this.expertArchitecture.update((arch) =>
-      arch.filter((c) => c.instanceId !== instanceId)
+      arch.filter((comp) => comp.instanceId !== instanceId)
     );
     this.expertForm.removeControl(instanceId);
-    if (this.activeExpertComponent()?.instanceId === instanceId)
+
+    // Clear active component if it was the one being removed
+    if (this.activeExpertComponent()?.instanceId === instanceId) {
       this.activeExpertComponent.set(null);
+    }
   }
 
   protected selectComponentForConfiguration(
@@ -433,63 +462,164 @@ export class CreateDeployment implements OnInit {
   ): void {
     this.activeExpertComponent.set(component);
   }
-  protected getActiveComponentForm = (): FormGroup | null =>
-    this.activeExpertComponent()
-      ? (this.expertForm.get(
-          this.activeExpertComponent()!.instanceId
-        ) as FormGroup)
+
+  // --- HELPER METHODS ---
+  protected getActiveComponentForm(): FormGroup | null {
+    const activeComponent = this.activeExpertComponent();
+    return activeComponent
+      ? (this.expertForm.get(activeComponent.instanceId) as FormGroup)
       : null;
-  protected getActiveComponentModel = (): CloudComponentDetailed | null =>
-    this.activeExpertComponent()
-      ? MOCK_COMPONENTS_DETAILED[this.activeExpertComponent()!.componentId]
-      : null;
-
-  // --- ACTIONS FINALES ---
-  protected createDeployment(): void {
-    this.loadingDeployment.set(true);
-    let deploymentPayload: any = {
-      projectId: this.projectId(),
-      mode: this.deploymentMode(),
-    };
-
-    if (this.deploymentMode() === 'expert') {
-      if (!this.expertForm.valid) {
-        this.errorMessage.set(
-          'Certains composants ne sont pas correctement configurés.'
-        );
-        this.loadingDeployment.set(false);
-        return;
-      }
-      deploymentPayload.architecture = {
-        name: 'Architecture Personnalisée',
-        components: this.expertArchitecture().map((c) => ({
-          instanceId: c.instanceId,
-          type: c.componentId,
-          config: this.expertForm.value[c.instanceId],
-        })),
-      };
-    } else {
-      // Logique pour les autres modes...
-      deploymentPayload.config = this.deploymentConfigForm.value;
-    }
-
-    console.log(
-      'Payload de déploiement envoyé au backend:',
-      JSON.stringify(deploymentPayload, null, 2)
-    );
-
-    setTimeout(() => {
-      this.loadingDeployment.set(false);
-      this.router.navigate(['/console/dashboard/deployments']);
-    }, 2000);
   }
 
+  protected getActiveComponentModel(): CloudComponentDetailed | null {
+    const activeComponent = this.activeExpertComponent();
+    return activeComponent
+      ? this.getComponentById(activeComponent.id) || null
+      : null;
+  }
+
+  private getFormData(): DeploymentFormData {
+    const mode = this.deploymentMode();
+    const formValue = this.deploymentConfigForm.value;
+
+    return {
+      mode: mode!,
+      name: formValue.name,
+      environment: formValue.environment,
+      repoUrl: formValue.repoUrl,
+      branch: formValue.branch,
+      templateId: this.selectedTemplate()?.id,
+      aiPrompt: this.aiPrompt(),
+      customComponents: this.expertArchitecture(),
+    };
+  }
+
+  // --- DEPLOYMENT CREATION ---
+  protected async createDeployment(): Promise<void> {
+    if (!this.isFormValid() || !this.projectId()) {
+      this.validateCurrentForm();
+      return;
+    }
+
+    this.loadingDeployment.set(true);
+    this.clearErrors();
+
+    try {
+      const formData = this.getFormData();
+      const payload = DeploymentMapper.fromFormToPayload(
+        formData,
+        this.projectId()!
+      );
+
+      // Add expert mode configuration
+      if (formData.mode === 'expert' && formData.customComponents) {
+        payload.customArchitecture!.components = formData.customComponents.map(
+          (comp) => ({
+            instanceId: comp.instanceId,
+            type: comp.id,
+            config: this.expertForm.get(comp.instanceId)?.value || {},
+          })
+        );
+      }
+
+      console.log('🚀 Creating deployment with payload:', payload);
+      console.log('📋 Form data used:', formData);
+
+      // Call the deployment service - convert payload to DeploymentModel format
+      const deploymentData: Partial<DeploymentModel> = {
+        name: payload.name,
+        environment: payload.environment,
+        projectId: this.projectId()!,
+        status: 'configuring',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        gitRepository: payload.gitRepository as any, // Type assertion for now
+        environmentVariables: payload.environmentVariables,
+      };
+
+      const deployment = await this.deploymentService
+        .createDeployment(this.projectId()!, deploymentData)
+        .toPromise();
+
+      console.log('✅ Deployment created successfully:', deployment);
+      console.log('📊 Deployment details:');
+      console.table({
+        ID: deployment?.id,
+        Name: deployment?.name,
+        Environment: deployment?.environment,
+        Status: deployment?.status,
+        'Created At': deployment?.createdAt,
+        'Project ID': deployment?.projectId,
+      });
+
+      // Navigate to deployment list
+      this.router.navigate(['/console/dashboard/deployments']);
+    } catch (error) {
+      console.error('❌ Error creating deployment:', error);
+      this.errorMessages.set([
+        'Failed to create deployment. Please try again.',
+      ]);
+    } finally {
+      this.loadingDeployment.set(false);
+    }
+  }
+
+  // --- UTILITY METHODS ---
   protected resetView(): void {
     this.deploymentMode.set(null);
     this.selectedTemplate.set(null);
     this.activeExpertComponent.set(null);
     this.expertArchitecture.set([]);
     this.expertForm = this.formBuilder.group({});
-    this.errorMessage.set(null);
+    this.clearErrors();
+    this.deploymentConfigForm.reset({
+      environment: 'development',
+      branch: 'main',
+    });
+  }
+
+  private resetModeSpecificState(): void {
+    this.selectedTemplate.set(null);
+    this.expertArchitecture.set([]);
+    this.activeExpertComponent.set(null);
+    this.aiPrompt.set('');
+    this.chatMessages.set([
+      {
+        sender: 'ai',
+        text: "Bonjour ! Décrivez-moi l'infrastructure que vous souhaitez.",
+      },
+    ]);
+  }
+
+  private clearErrors(): void {
+    this.errorMessages.set([]);
+    this.validationErrors.set([]);
+  }
+
+  private getComponentById(id: string): CloudComponentDetailed | undefined {
+    const catalogue = this.getComponentCatalogue();
+    for (const category of Object.values(catalogue)) {
+      const component = category.find((comp) => comp.id === id);
+      if (component) return component;
+    }
+    return undefined;
+  }
+
+  private getComponentCatalogue(): { [cat: string]: CloudComponentDetailed[] } {
+    const provider = this.expertSelectedProvider();
+    const term = this.expertSearchTerm().toLowerCase();
+
+    const filteredComponents = ALL_COMPONENTS_LIST.filter(
+      (c) =>
+        c.provider === provider &&
+        (c.name.toLowerCase().includes(term) ||
+          c.description.toLowerCase().includes(term) ||
+          c.category.toLowerCase().includes(term))
+    );
+
+    return filteredComponents.reduce((acc, comp) => {
+      (acc[comp.category] = acc[comp.category] || []).push(comp);
+      return acc;
+    }, {} as { [cat: string]: CloudComponentDetailed[] });
   }
 }

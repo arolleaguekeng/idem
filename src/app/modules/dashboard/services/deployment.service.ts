@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { DeploymentModel, GitRepository, CloudProvider, InfrastructureConfig } from '../models/deployment.model';
+import { DeploymentModel } from '../models/deployment.model';
 
 @Injectable({
   providedIn: 'root'
