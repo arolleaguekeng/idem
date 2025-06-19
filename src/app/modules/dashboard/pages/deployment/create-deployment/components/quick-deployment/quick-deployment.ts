@@ -7,7 +7,7 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './quick-deployment.html',
-  styleUrl: './quick-deployment.css'
+  styleUrl: './quick-deployment.css',
 })
 export class QuickDeployment {
   readonly deploymentForm = input.required<FormGroup>();
@@ -25,9 +25,5 @@ export class QuickDeployment {
 
   protected createDeployment(): void {
     this.onCreateDeployment.emit();
-  }
-
-  protected resetView(): void {
-    this.onResetView.emit();
   }
 }

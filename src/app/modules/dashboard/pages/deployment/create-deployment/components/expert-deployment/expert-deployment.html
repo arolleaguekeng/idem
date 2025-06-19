@@ -48,8 +48,8 @@
           {{ category }}
         </h4>
         <div class="space-y-2">
-          @for (component of filteredCatalogue()[category]; track
-          component.id) {
+          @for (component of filteredCatalogue()[category]; track component.id)
+          {
           <div
             class="bg-gray-800/70 p-3 rounded-lg flex justify-between items-center border border-transparent hover:border-gray-600"
           >
@@ -75,9 +75,7 @@
   <div
     class="col-span-12 lg:col-span-5 bg-gray-900/50 rounded-xl border border-gray-800 flex flex-col"
   >
-    <div
-      class="p-4 border-b border-gray-700 flex justify-between items-center"
-    >
+    <div class="p-4 border-b border-gray-700 flex justify-between items-center">
       <h3 class="text-lg font-semibold">Your Architecture</h3>
       <button
         class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
@@ -147,8 +145,7 @@
         <label
           [for]="option.name"
           class="text-sm font-medium mb-2 flex items-center gap-2"
-          >{{ option.label }} @if (option.required) {<span
-            class="text-red-400"
+          >{{ option.label }} @if (option.required) {<span class="text-red-400"
             >*</span
           >} @if (option.description) {<i
             class="pi pi-info-circle text-gray-500"

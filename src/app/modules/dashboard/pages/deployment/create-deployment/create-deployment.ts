@@ -17,7 +17,6 @@ import {
   DeploymentMapper,
   ChatMessage,
   ArchitectureTemplate,
-  CloudComponentDetailed,
   ArchitectureComponent,
 } from '../../../models/deployment.model';
 
@@ -27,36 +26,6 @@ import { QuickDeployment } from './components/quick-deployment/quick-deployment'
 import { AiAssistant } from './components/ai-assistant/ai-assistant';
 import { TemplateDeployment } from './components/template-deployment/template-deployment';
 import { ExpertDeployment } from './components/expert-deployment/expert-deployment';
-
-const MOCK_TEMPLATES: ArchitectureTemplate[] = [
-  {
-    id: 'aws-3-tier',
-    provider: 'aws',
-    category: 'Web/API',
-    name: '3-Tier Web Application (AWS)',
-    description: 'EC2, ALB, and RDS for a standard and robust web application.',
-    tags: ['High Availability', 'Scalability'],
-    icon: 'pi pi-window-maximize',
-  },
-  {
-    id: 'gcp-serverless',
-    provider: 'gcp',
-    category: 'Web/API',
-    name: 'Serverless API (GCP)',
-    description: 'Cloud Run and Firestore for a highly scalable API.',
-    tags: ['Serverless', 'Cost Optimized'],
-    icon: 'pi pi-bolt',
-  },
-  {
-    id: 'azure-data-lake',
-    provider: 'azure',
-    category: 'Big Data',
-    name: 'Data Lake (Azure)',
-    description: 'Data Lake Storage and Synapse for data analysis.',
-    tags: ['Big Data', 'ETL'],
-    icon: 'pi pi-database',
-  },
-];
 
 @Component({
   selector: 'app-create-deployment',
@@ -268,7 +237,6 @@ export class CreateDeployment implements OnInit {
     this.expertSearchTerm.set(term);
   }
 
-
   protected handleExpertSelectComponent(
     component: ArchitectureComponent
   ): void {
@@ -388,7 +356,6 @@ export class CreateDeployment implements OnInit {
       this.aiPrompt.set('');
     }, 2000);
   }
-
 
   protected selectComponentForConfiguration(
     component: ArchitectureComponent

@@ -36,8 +36,4 @@ export class AiAssistant {
   protected createDeployment(): void {
     this.onCreateDeployment.emit();
   }
-
-  protected resetView(): void {
-    this.onResetView.emit();
-  }
 }

@@ -173,8 +173,6 @@ export class ExpertDeployment {
 
   protected createDeployment(): void {}
 
-  protected resetView(): void {}
-
   constructor() {
     this.deploymentConfigForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -196,7 +194,7 @@ export class ExpertDeployment {
       instanceId: `${component.id}_${Date.now()}`,
       configuration: {},
       dependencies: [],
-      type: ''
+      type: '',
     };
 
     this.expertArchitecture.update((arch) => [...arch, architectureComponent]);
