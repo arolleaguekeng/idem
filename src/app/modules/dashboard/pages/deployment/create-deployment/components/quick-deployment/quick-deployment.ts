@@ -6,10 +6,10 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-quick-deployment',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './quick-deployment.component.html',
-  styleUrl: './quick-deployment.component.css'
+  templateUrl: './quick-deployment.html',
+  styleUrl: './quick-deployment.css'
 })
-export class QuickDeploymentComponent {
+export class QuickDeployment {
   readonly deploymentForm = input.required<FormGroup>();
   readonly gitBranches = input<string[]>([]);
   readonly loadingGitInfo = input<boolean>(false);

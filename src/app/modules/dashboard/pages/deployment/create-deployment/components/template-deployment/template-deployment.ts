@@ -7,10 +7,10 @@ import { ArchitectureTemplate } from '../../../../../models/deployment.model';
   selector: 'app-template-deployment',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './template-deployment.component.html',
-  styleUrl: './template-deployment.component.css',
+  templateUrl: './template-deployment.html',
+  styleUrl: './template-deployment.css',
 })
-export class TemplateDeploymentComponent {
+export class TemplateDeployment {
   readonly deploymentForm = input.required<FormGroup>();
   readonly availableTemplates = input<ArchitectureTemplate[]>([]);
   readonly selectedTemplate = input<ArchitectureTemplate | null>(null);

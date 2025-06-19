@@ -23,71 +23,56 @@
 
   <!-- Mode Selection -->
   @if (!deploymentMode()) {
-    <app-mode-selector 
-      (onModeSelect)="selectMode($event)">
-    </app-mode-selector>
+  <app-mode-selector (onModeSelect)="selectMode($event)"> </app-mode-selector>
   }
 
   <!-- Quick Deployment -->
   @if (deploymentMode() === 'beginner') {
-    <app-quick-deployment
-      [deploymentForm]="deploymentConfigForm"
-      [gitBranches]="gitBranches()"
-      [loadingGitInfo]="loadingGitInfo()"
-      [isFormValid]="isFormValid()"
-      (onFetchGitBranches)="handleQuickFetchGitBranches()"
-      (onCreateDeployment)="handleQuickCreateDeployment()"
-      (onResetView)="handleQuickResetView()">
-    </app-quick-deployment>
+  <app-quick-deployment
+    [deploymentForm]="deploymentConfigForm"
+    [gitBranches]="gitBranches()"
+    [loadingGitInfo]="loadingGitInfo()"
+    [isFormValid]="isFormValid()"
+    (onFetchGitBranches)="handleQuickFetchGitBranches()"
+    (onCreateDeployment)="handleQuickCreateDeployment()"
+    (onResetView)="handleQuickResetView()"
+  >
+  </app-quick-deployment>
   }
 
   <!-- AI Assistant -->
   @if (deploymentMode() === 'assistant') {
-    <app-ai-assistant
-      [deploymentForm]="deploymentConfigForm"
-      [chatMessages]="chatMessages()"
-      [aiPrompt]="aiPrompt()"
-      [aiIsThinking]="aiIsThinking()"
-      [isFormValid]="isFormValid()"
-      (onPromptChange)="handleAiPromptChange($event)"
-      (onSendAiPrompt)="handleAiSendPrompt()"
-      (onCreateDeployment)="handleAiCreateDeployment()"
-      (onResetView)="handleAiResetView()">
-    </app-ai-assistant>
+  <app-ai-assistant
+    [deploymentForm]="deploymentConfigForm"
+    [chatMessages]="chatMessages()"
+    [aiPrompt]="aiPrompt()"
+    [aiIsThinking]="aiIsThinking()"
+    [isFormValid]="isFormValid()"
+    (onPromptChange)="handleAiPromptChange($event)"
+    (onSendAiPrompt)="handleAiSendPrompt()"
+    (onCreateDeployment)="handleAiCreateDeployment()"
+    (onResetView)="handleAiResetView()"
+  >
+  </app-ai-assistant>
   }
 
   <!-- Template Deployment -->
   @if (deploymentMode() === 'template') {
-    <app-template-deployment
-      [deploymentForm]="deploymentConfigForm"
-      [availableTemplates]="availableTemplates()"
-      [selectedTemplate]="selectedTemplate()"
-      [isFormValid]="isFormValid()"
-      (onSelectTemplate)="handleTemplateSelect($event)"
-      (onCreateDeployment)="handleTemplateCreateDeployment()"
-      (onResetView)="handleTemplateResetView()"
-      (onBackToTemplates)="handleTemplateBackToTemplates()">
-    </app-template-deployment>
+  <app-template-deployment
+    [deploymentForm]="deploymentConfigForm"
+    [availableTemplates]="availableTemplates()"
+    [selectedTemplate]="selectedTemplate()"
+    [isFormValid]="isFormValid()"
+    (onSelectTemplate)="handleTemplateSelect($event)"
+    (onCreateDeployment)="handleTemplateCreateDeployment()"
+    (onResetView)="handleTemplateResetView()"
+    (onBackToTemplates)="handleTemplateBackToTemplates()"
+  >
+  </app-template-deployment>
   }
 
   <!-- Expert Mode -->
   @if (deploymentMode() === 'expert') {
-    <app-expert-deployment
-      [deploymentForm]="deploymentConfigForm"
-      [expertForm]="expertForm"
-      [expertSelectedProvider]="expertSelectedProvider()"
-      [expertSearchTerm]="expertSearchTerm()"
-      [expertArchitecture]="expertArchitecture()"
-      [activeExpertComponent]="activeExpertComponent()"
-      [filteredCatalogue]="filteredCatalogue()"
-      [isFormValid]="isFormValid()"
-      (onProviderChange)="handleExpertProviderChange($event)"
-      (onSearchTermChange)="handleExpertSearchTermChange($event)"
-      (onAddComponent)="handleExpertAddComponent($event)"
-      (onRemoveComponent)="handleExpertRemoveComponent($event)"
-      (onSelectComponent)="handleExpertSelectComponent($event)"
-      (onCreateDeployment)="handleExpertCreateDeployment()"
-      (onResetView)="handleExpertResetView()">
-    </app-expert-deployment>
+  <app-expert-deployment/>
   }
 </div>

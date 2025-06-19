@@ -22,11 +22,11 @@ import {
 } from '../../../models/deployment.model';
 
 // Import child components
-import { ModeSelectorComponent } from './components/mode-selector/mode-selector.component';
-import { QuickDeploymentComponent } from './components/quick-deployment/quick-deployment.component';
-import { AiAssistantComponent } from './components/ai-assistant/ai-assistant.component';
-import { TemplateDeploymentComponent } from './components/template-deployment/template-deployment.component';
-import { ExpertDeploymentComponent } from './components/expert-deployment/expert-deployment.component';
+import { ModeSelector } from './components/mode-selector/mode-selector';
+import { QuickDeployment } from './components/quick-deployment/quick-deployment';
+import { AiAssistant } from './components/ai-assistant/ai-assistant';
+import { TemplateDeployment } from './components/template-deployment/template-deployment';
+import { ExpertDeployment } from './components/expert-deployment/expert-deployment';
 
 const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   {
@@ -58,125 +58,6 @@ const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   },
 ];
 
-const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
-  {
-    id: 'ec2',
-    name: 'EC2 Instance',
-    description: 'Virtual compute capacity in the cloud',
-    category: 'Compute',
-    provider: 'aws',
-    icon: 'pi pi-server',
-    pricing: '$0.0116/hour',
-    options: [
-      {
-        name: 'instanceType',
-        label: 'Instance Type',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 't2.micro', value: 't2.micro' },
-          { label: 't2.small', value: 't2.small' },
-          { label: 't2.medium', value: 't2.medium' },
-        ],
-      },
-      {
-        name: 'storage',
-        label: 'Storage (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 20,
-      },
-    ],
-  },
-  {
-    id: 'rds',
-    name: 'RDS Database',
-    description: 'Managed relational database service',
-    category: 'Database',
-    provider: 'aws',
-    icon: 'pi pi-database',
-    pricing: '$0.017/hour',
-    options: [
-      {
-        name: 'engine',
-        label: 'Database Engine',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'MySQL', value: 'mysql' },
-          { label: 'PostgreSQL', value: 'postgres' },
-          { label: 'MariaDB', value: 'mariadb' },
-        ],
-      },
-      {
-        name: 'multiAZ',
-        label: 'Multi-AZ Deployment',
-        type: 'toggle',
-        required: false,
-        defaultValue: false,
-      },
-    ],
-  },
-  {
-    id: 'compute-engine',
-    name: 'Compute Engine',
-    description: 'Virtual machines running in Google Cloud',
-    category: 'Compute',
-    provider: 'gcp',
-    icon: 'pi pi-server',
-    pricing: '$0.0104/hour',
-    options: [
-      {
-        name: 'machineType',
-        label: 'Machine Type',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'e2-micro', value: 'e2-micro' },
-          { label: 'e2-small', value: 'e2-small' },
-          { label: 'e2-medium', value: 'e2-medium' },
-        ],
-      },
-      {
-        name: 'bootDiskSize',
-        label: 'Boot Disk Size (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 10,
-      },
-    ],
-  },
-  {
-    id: 'virtual-machine',
-    name: 'Virtual Machine',
-    description: 'Virtual machines in Azure',
-    category: 'Compute',
-    provider: 'azure',
-    icon: 'pi pi-server',
-    pricing: '$0.0124/hour',
-    options: [
-      {
-        name: 'vmSize',
-        label: 'VM Size',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'Standard_B1s', value: 'Standard_B1s' },
-          { label: 'Standard_B1ms', value: 'Standard_B1ms' },
-          { label: 'Standard_B2s', value: 'Standard_B2s' },
-        ],
-      },
-      {
-        name: 'osDiskSize',
-        label: 'OS Disk Size (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 30,
-      },
-    ],
-  },
-];
-
 @Component({
   selector: 'app-create-deployment',
   standalone: true,
@@ -184,11 +65,11 @@ const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ModeSelectorComponent,
-    QuickDeploymentComponent,
-    AiAssistantComponent,
-    TemplateDeploymentComponent,
-    ExpertDeploymentComponent,
+    ModeSelector,
+    QuickDeployment,
+    AiAssistant,
+    TemplateDeployment,
+    ExpertDeployment,
   ],
   templateUrl: './create-deployment.html',
   styleUrl: './create-deployment.css',
@@ -240,11 +121,6 @@ export class CreateDeployment implements OnInit {
   // Git repository state
   protected readonly gitBranches = signal<string[]>([]);
   protected readonly loadingGitInfo = signal<boolean>(false);
-
-  // Computed properties
-  protected readonly filteredCatalogue = computed(() =>
-    this.getComponentCatalogue()
-  );
 
   protected readonly isFormValid = computed(() => {
     const mode = this.deploymentMode();
@@ -392,13 +268,6 @@ export class CreateDeployment implements OnInit {
     this.expertSearchTerm.set(term);
   }
 
-  protected handleExpertAddComponent(componentId: string): void {
-    this.addComponentToArchitecture(componentId);
-  }
-
-  protected handleExpertRemoveComponent(instanceId: string): void {
-    this.removeComponentFromArchitecture(instanceId);
-  }
 
   protected handleExpertSelectComponent(
     component: ArchitectureComponent
@@ -520,66 +389,11 @@ export class CreateDeployment implements OnInit {
     }, 2000);
   }
 
-  // --- EXPERT MODE ---
-  protected addComponentToArchitecture(componentId: string): void {
-    const component = this.getComponentById(componentId);
-    if (!component) return;
-
-    const architectureComponent: ArchitectureComponent = {
-      ...component,
-      instanceId: `${component.id}_${Date.now()}`,
-      type: component.category, // Use category as the component type
-      configuration: {},
-      dependencies: [],
-    };
-
-    this.expertArchitecture.update((arch) => [...arch, architectureComponent]);
-
-    // Create form group for this component
-    if (component.options) {
-      const formGroup = this.formBuilder.group({});
-      component.options.forEach((option) => {
-        const validators = option.required ? [Validators.required] : [];
-        formGroup.addControl(
-          option.name,
-          this.formBuilder.control(option.defaultValue || '', validators)
-        );
-      });
-      this.expertForm.addControl(architectureComponent.instanceId, formGroup);
-    }
-  }
-
-  protected removeComponentFromArchitecture(instanceId: string): void {
-    this.expertArchitecture.update((arch) =>
-      arch.filter((comp) => comp.instanceId !== instanceId)
-    );
-    this.expertForm.removeControl(instanceId);
-
-    // Clear active component if it was the one being removed
-    if (this.activeExpertComponent()?.instanceId === instanceId) {
-      this.activeExpertComponent.set(null);
-    }
-  }
 
   protected selectComponentForConfiguration(
     component: ArchitectureComponent
   ): void {
     this.activeExpertComponent.set(component);
-  }
-
-  // --- HELPER METHODS ---
-  protected getActiveComponentForm(): FormGroup | null {
-    const activeComponent = this.activeExpertComponent();
-    return activeComponent
-      ? (this.expertForm.get(activeComponent.instanceId) as FormGroup)
-      : null;
-  }
-
-  protected getActiveComponentModel(): CloudComponentDetailed | null {
-    const activeComponent = this.activeExpertComponent();
-    return activeComponent
-      ? this.getComponentById(activeComponent.id) || null
-      : null;
   }
 
   private getFormData(): DeploymentFormData {
@@ -642,7 +456,7 @@ export class CreateDeployment implements OnInit {
       };
 
       const deployment = await this.deploymentService
-        .createDeployment(this.projectId()!, deploymentData)
+        .createDeployment(deploymentData)
         .toPromise();
 
       console.log('✅ Deployment created successfully:', deployment);
@@ -697,32 +511,5 @@ export class CreateDeployment implements OnInit {
   private clearErrors(): void {
     this.errorMessages.set([]);
     this.validationErrors.set([]);
-  }
-
-  private getComponentById(id: string): CloudComponentDetailed | undefined {
-    const catalogue = this.getComponentCatalogue();
-    for (const category of Object.values(catalogue)) {
-      const component = category.find((comp) => comp.id === id);
-      if (component) return component;
-    }
-    return undefined;
-  }
-
-  private getComponentCatalogue(): { [cat: string]: CloudComponentDetailed[] } {
-    const provider = this.expertSelectedProvider();
-    const term = this.expertSearchTerm().toLowerCase();
-
-    const filteredComponents = ALL_COMPONENTS_LIST.filter(
-      (c) =>
-        c.provider === provider &&
-        (c.name.toLowerCase().includes(term) ||
-          c.description.toLowerCase().includes(term) ||
-          c.category.toLowerCase().includes(term))
-    );
-
-    return filteredComponents.reduce((acc, comp) => {
-      (acc[comp.category] = acc[comp.category] || []).push(comp);
-      return acc;
-    }, {} as { [cat: string]: CloudComponentDetailed[] });
   }
 }

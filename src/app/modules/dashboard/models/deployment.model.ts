@@ -170,57 +170,63 @@ export interface DeploymentFormData {
 export class DeploymentValidators {
   static validateBasicInfo(data: Partial<DeploymentFormData>): string[] {
     const errors: string[] = [];
-    
+
     if (!data.name?.trim()) {
       errors.push('Deployment name is required');
     }
-    
+
     if (!data.environment) {
       errors.push('Environment is required');
     }
-    
+
     return errors;
   }
 
   static validateGitRepository(repo?: Partial<GitRepository>): string[] {
     const errors: string[] = [];
-    
+
     if (repo) {
       if (!repo.url?.trim()) {
         errors.push('Repository URL is required');
       }
-      
+
       if (!repo.branch?.trim()) {
         errors.push('Branch is required');
       }
-      
+
       if (repo.url && !this.isValidGitUrl(repo.url)) {
         errors.push('Invalid Git repository URL');
       }
     }
-    
+
     return errors;
   }
 
-  static validateArchitectureComponents(components?: ArchitectureComponent[]): string[] {
+  static validateArchitectureComponents(
+    components?: ArchitectureComponent[]
+  ): string[] {
     const errors: string[] = [];
-    
+
     if (components && components.length === 0) {
       errors.push('At least one architecture component is required');
     }
-    
+
     return errors;
   }
 
   private static isValidGitUrl(url: string): boolean {
-    const gitUrlPattern = /^(https?:\/\/)?([\w\.-]+@)?[\w\.-]+[:\.][\w\.-]+(\/[\w\.-]*)*\/?$/;
+    const gitUrlPattern =
+      /^(https?:\/\/)?([\w\.-]+@)?[\w\.-]+[:\.][\w\.-]+(\/[\w\.-]*)*\/?$/;
     return gitUrlPattern.test(url);
   }
 }
 
 // Mapping utilities
 export class DeploymentMapper {
-  static fromFormToPayload(formData: DeploymentFormData, projectId: string): CreateDeploymentPayload {
+  static fromFormToPayload(
+    formData: DeploymentFormData,
+    projectId: string
+  ): CreateDeploymentPayload {
     const payload: CreateDeploymentPayload = {
       name: formData.name,
       environment: formData.environment,
@@ -240,25 +246,25 @@ export class DeploymentMapper {
       case 'template':
         payload.architectureTemplate = formData.templateId;
         break;
-      
+
       case 'expert':
         if (formData.customComponents && formData.customComponents.length > 0) {
           payload.customArchitecture = {
             name: 'Custom Architecture',
-            components: formData.customComponents.map(comp => ({
+            components: formData.customComponents.map((comp) => ({
               instanceId: comp.instanceId,
               type: comp.id,
-              config: {} // This should be filled with actual form data
-            }))
+              config: {},
+            })),
           };
         }
         break;
-      
+
       case 'assistant':
         if (formData.aiPrompt) {
           payload.aiGeneratedConfig = {
             prompt: formData.aiPrompt,
-            generatedInfrastructure: {}
+            generatedInfrastructure: {},
           };
         }
         break;
@@ -287,7 +293,8 @@ export class DeploymentMapper {
     if (url.includes('github.com')) return 'github';
     if (url.includes('gitlab.com')) return 'gitlab';
     if (url.includes('bitbucket.org')) return 'bitbucket';
-    if (url.includes('azure.com') || url.includes('visualstudio.com')) return 'azure-repos';
+    if (url.includes('azure.com') || url.includes('visualstudio.com'))
+      return 'azure-repos';
     return 'github'; // default
   }
 }

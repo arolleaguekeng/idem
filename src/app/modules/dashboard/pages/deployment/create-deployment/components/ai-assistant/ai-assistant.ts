@@ -7,10 +7,10 @@ import { ChatMessage } from '../../../../../models/deployment.model';
   selector: 'app-ai-assistant',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './ai-assistant.component.html',
-  styleUrl: './ai-assistant.component.css',
+  templateUrl: './ai-assistant.html',
+  styleUrl: './ai-assistant.css',
 })
-export class AiAssistantComponent {
+export class AiAssistant {
   readonly deploymentForm = input.required<FormGroup>();
   readonly chatMessages = input<ChatMessage[]>([]);
   readonly aiPrompt = input<string>('');

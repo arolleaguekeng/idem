@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DeploymentFormData } from '../../../../../models/deployment.model';
 
@@ -6,10 +6,10 @@ import { DeploymentFormData } from '../../../../../models/deployment.model';
   selector: 'app-mode-selector',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './mode-selector.component.html',
-  styleUrl: './mode-selector.component.css'
+  templateUrl: './mode-selector.html',
+  styleUrl: './mode-selector.css',
 })
-export class ModeSelectorComponent {
+export class ModeSelector {
   readonly onModeSelect = output<DeploymentFormData['mode']>();
 
   protected selectMode(mode: DeploymentFormData['mode']): void {
