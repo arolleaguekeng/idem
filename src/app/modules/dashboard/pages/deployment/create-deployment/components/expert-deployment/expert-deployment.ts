@@ -17,7 +17,12 @@ import {
 import {
   CloudComponentDetailed,
   ArchitectureComponent,
+  DeploymentFormData,
+  DeploymentMapper,
 } from '../../../../../models/deployment.model';
+import { DeploymentService } from '../../../../../services/deployment.service';
+import { Router } from '@angular/router';
+import { CookieService } from '../../../../../../../shared/services/cookie.service';
 
 const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
   {
@@ -170,8 +175,42 @@ export class ExpertDeployment {
   );
   // Utility method for template
   objectKeys = Object.keys;
+  protected readonly cookiesService = inject(CookieService);
+  protected readonly projectId = this.cookiesService.get('projectId');
+  protected readonly deploymentService = inject(DeploymentService);
+  protected readonly router = inject(Router);
+  protected readonly errorMessages = signal<string[]>([]);
 
-  protected createDeployment(): void {}
+  protected getFormData(): DeploymentFormData {
+    return {
+      name: this.deploymentConfigForm.value.name,
+      environment: this.deploymentConfigForm.value.environment,
+      repoUrl: this.deploymentConfigForm.value.repoUrl,
+      branch: this.deploymentConfigForm.value.branch,
+      mode: 'expert',
+    };
+  }
+
+  protected createDeployment(): void {
+    console.log('Creating deployment...');
+    this.loadingDeployment.set(true);
+    const finalFormData = DeploymentMapper.fromFormToPayload(
+      this.getFormData(),
+      this.projectId!
+    );
+    this.deploymentService.createDeployment(finalFormData).subscribe({
+      next: (deployment) => {
+        console.log('Deployment created successfully:', deployment);
+        this.loadingDeployment.set(false);
+        // this.router.navigate(['/dashboard/deployments', deployment.id]);
+      },
+      error: (error) => {
+        console.error('Error creating deployment:', error);
+        this.loadingDeployment.set(false);
+        this.errorMessages.set([error.message]);
+      },
+    });
+  }
 
   constructor() {
     this.deploymentConfigForm = this.formBuilder.group({

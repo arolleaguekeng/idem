@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { DeploymentModel } from '../models/deployment.model';
+import { CreateDeploymentPayload, DeploymentModel } from '../models/deployment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +18,9 @@ export class DeploymentService {
    * @param deployment The deployment configuration
    */
   createDeployment(
-    deployment: Partial<DeploymentModel>
+    deployment: Partial<CreateDeploymentPayload>
   ): Observable<DeploymentModel> {
+    console.log('Creating deployment:', deployment);
     return this.http
       .post<DeploymentModel>(`${this.apiUrl}/deployments/create`, deployment)
       .pipe(
