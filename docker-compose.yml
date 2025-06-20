@@ -3,7 +3,7 @@ version: '3.8'
 services:
   idem:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     container_name: idem
     ports:
@@ -13,7 +13,7 @@ services:
       - idem
 
   idem-api:
-    image: idem-api:latest
+    image: ghcr.io/idem-ia/idem-api:latest
     container_name: idem-api
     environment:
       DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY}"
@@ -34,7 +34,7 @@ services:
       - idem
 
   idem-webgen:
-    image: webgen:v1 
+    image: ghcr.io/idem-ia/idem-webgen:latest
     container_name: idem-webgen
     ports:
       - '5173:5173'
