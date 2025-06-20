@@ -38,15 +38,18 @@ services:
     container_name: idem-webgen
     ports:
       - '5173:5173'
+    env_file:
+     - .env
     environment:
       VITE_LOG_LEVEL: "${VITE_LOG_LEVEL}"
       VITE_API_BASE_URL: "${VITE_API_BASE_URL}"
       GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GOOGLE_GENERATIVE_AI_API_KEY: "${GEMINI_API_KEY}"
     networks:
       - idem
 
   idem-chart:
-    image: ghcr.io/mermaid-js/mermaid-live-editor
+    image: ghcr.io/idem-ia/idem-chart:latest
     container_name: idem-chart
     ports:
       - "8040:8080"
