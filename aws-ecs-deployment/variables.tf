@@ -48,11 +48,6 @@ variable "route53_zone_id" {
   default     = ""
 }
 
-variable "gemini_api_key" {
-  description = "API key for Google Gemini AI service"
-  type        = string
-}
-
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
@@ -98,7 +93,7 @@ variable "idem-api_port" {
 
 variable "idem-chart_port" {
   type        = number
-  description = "port du service result"
+  description = "port du service idem-chart"
   default     = 8080
 }
 
@@ -249,15 +244,4 @@ variable "vite_log_level" {
   description = "Log level for Vite front-end application"
   type        = string
   default     = "info"  # ou "debug", "warn", etc.
-}
-
-variable "vite_api_base_url" {
-  description = "Base URL for the Vite API"
-  type        = string
-}
-
-variable "gemini_api_key" {
-  description = "API Key for Gemini / Google Generative AI"
-  type        = string
-  sensitive   = true
 }
