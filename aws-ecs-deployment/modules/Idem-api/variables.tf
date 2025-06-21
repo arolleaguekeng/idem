@@ -1,24 +1,3 @@
-variable "db_endpoint" {
-  type        = string
-  description = "Endpoint de la base de données RDS"
-}
-
-variable "db_username" {
-  type        = string
-  sensitive   = true
-  description = "Nom d'utilisateur de la base de données"
-}
-
-variable "db_password" {
-  type        = string
-  sensitive   = true
-  description = "Mot de passe de la base de données"
-}
-
-variable "db_name" {
-  type        = string
-  description = "Nom de la base de données"
-}
 
 variable "image_url" {
   type        = string
@@ -149,44 +128,4 @@ variable "firebase_client_email" {
   type        = string
 }
 
-variable "openrouter_api_key" {
-  description = "API key for OpenRouter"
-  type        = string
-  sensitive   = true
-}
 
-# Optional: Add URLs as variables if needed
-variable "api_url" {
-  description = "Base URL of the API service"
-  type        = string
-  default     = "https://api.idem.africa"
-}
-
-variable "api_version" {
-  description = "Version of the API"
-  type        = string
-  default     = "v1"
-}
-
-variable "api_llm_model" {
-  description = "LLM model used by the API"
-  type        = string
-  default     = "gpt-3.5-turbo"
-}
-
-variable "webgen_url" {
-  description = "URL of Webgen service"
-  type        = string
-  default     = "https://webgen.idem.africa"
-}
-
-variable "diagen_url" {
-  description = "URL of Diagen service"
-  type        = string
-  default     = "http://chart.idem.africa"
-}
-variable "idem_url" {
-  description = "URL of the Idem service"
-  type        = string
-  default     = "https://idem.africa"
-}

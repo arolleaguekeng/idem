@@ -36,7 +36,7 @@ module "idem" {
 
 # Module IDem API
 module "idem-api" {
-  source                     = "./modules/idem-api"
+  source                     = "./modules/Idem-api"
   deployment_name            = var.deployment_name
   region                     = var.region
   private_subnet_ids         = module.networking.private_subnet_ids
@@ -48,6 +48,17 @@ module "idem-api" {
   tags                       = var.tags
   image_url                  = var.idem-api_image
   container_port             = var.idem-api_port
+  deepseek_api_key            = var.deepseek_api_key
+  gemini_api_key              = var.gemini_api_key
+
+  firebase_api_key            = var.firebase_api_key
+  firebase_auth_domain        = var.firebase_auth_domain
+  firebase_project_id         = var.firebase_project_id
+  firebase_storage_bucket     = var.firebase_storage_bucket
+  firebase_messaging_sender_id = var.firebase_messaging_sender_id
+  firebase_app_id             = var.firebase_app_id
+  firebase_private_key        = var.firebase_private_key
+  firebase_client_email       = var.firebase_client_email
 }
 
 # Module IDem Chart
