@@ -12,7 +12,7 @@ locals {
   idem-api_env = [
     { name = "DEEPSEEK_API_KEY",              value = var.deepseek_api_key },
     { name = "GEMINI_API_KEY",                value = var.gemini_api_key },
-    { name = "PORT",                          value = var.port},
+    { name = "PORT",                          value = tostring(var.port)},
     { name = "FIREBASE_API_KEY",              value = var.firebase_api_key },
     { name = "FIREBASE_AUTH_DOMAIN",          value = var.firebase_auth_domain },
     { name = "FIREBASE_PROJECT_ID",           value = var.firebase_project_id },
