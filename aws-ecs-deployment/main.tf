@@ -14,6 +14,26 @@ module "iam" {
   tags           = var.tags
 }
 
+
+# Module Idem frontend
+
+module "idem" {
+  source                    = "./modules/Idem"
+  deployment_name           = var.deployment_name
+  region                    = var.region
+  image_url                 = var.idem_image
+  container_port            = var.idem
+  task_cpu                  = 256
+  task_memory               = 512
+  private_subnet_ids        = module.network.private_subnet_ids
+  public_subnet_ids         = module.network.public_subnet_ids
+  ecs_security_group_id     = module.security.ecs_sg_id
+  alb_security_group_id     = module.security.alb_sg_id
+  ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  vpc_id                    = module.network.vpc_id
+  tags                      = var.tags
+}
+
 # Module IDem API
 module "idem-api" {
   source                     = "./modules/idem-api"
