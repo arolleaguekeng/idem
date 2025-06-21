@@ -10,7 +10,10 @@ variable "region" {
   default     = "us-east-1"
 }
 
-
+variable "aws_access_key" {}
+variable "aws_secret_key" {
+  sensitive = true
+}
 
 variable "availability_zones" {
   description = "List of availability zones"

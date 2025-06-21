@@ -13,6 +13,9 @@ tags = {
   Terraform   = "true"
 }
 
+aws_access_key = "AKIAxxxxxxxxxxxxxxxx"
+aws_secret_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
 route53_zone_id = ""
 
 # Images des services
