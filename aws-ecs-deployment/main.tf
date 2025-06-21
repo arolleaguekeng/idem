@@ -30,7 +30,7 @@ module "idem" {
   ecs_security_group_id     = module.networking.ecs_security_group_id
   alb_security_group_id     = module.networking.alb_security_group_id
   ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
-  vpc_id                    = module.network.vpc_id
+  vpc_id                    = module.networking.vpc_id
   tags                      = var.tags
 }
 
@@ -91,12 +91,12 @@ module "idem-webgen" {
 
   private_subnet_ids         = module.networking.private_subnet_ids
   public_subnet_ids          = module.networking.public_subnet_ids
-  ecs_security_group_id      = module.security.ecs_sg_id
-  alb_security_group_id      = module.security.alb_sg_id
+  ecs_security_group_id      = module.networking.ecs_security_group_id
+  alb_security_group_id      = module.networking.alb_security_group_id
   ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
 
   vite_log_level             = var.vite_log_level
-  vite_api_base_url          = module.idem-api.api_base_url
+  vite_api_base_url          = module.idem-api.idem-api_url
   gemini_api_key             = var.gemini_api_key
 
   vpc_id                     = module.networking.vpc_id
