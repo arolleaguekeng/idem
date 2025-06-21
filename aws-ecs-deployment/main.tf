@@ -122,7 +122,7 @@ module "cdn-idem" {
 module "cdn-idem-chart" {
   source = "./modules/aws-waf-cdn-acm-route53"
   domain-name  = var.idem-chart_domain
-  cdn-name     = var.cdn_idem
+  cdn-name     = "${var.deployment_name}-idem-chart-cdn"
   deployment_name = var.deployment_name
   web_acl_name = var.web-acl-name-idem
   alb          =  "${var.deployment_name}-idem-chart-lb"
