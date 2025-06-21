@@ -6,7 +6,7 @@ variable "image_url" {
 
 variable "container_port" {
   type        = number
-  default     = 80
+  default     = 3000
   description = "Port du container"
 }
 

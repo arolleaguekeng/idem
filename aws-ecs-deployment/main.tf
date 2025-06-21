@@ -105,6 +105,19 @@ module "idem-webgen" {
 }
 
 
+# Module CDN et WAF pour IDem 
+module "cdn-idem" {
+  source = "./modules/aws-waf-cdn-acm-route53"
+  domain-name  = var.root-domain
+  cdn-name     = var.cdn_idem
+  deployment_name = var.deployment_name
+  web_acl_name = var.web-acl-name-idem
+  alb          =  "${var.deployment_name}-idem-lb"  
+  root-domain  =  var.root-domain
+  depends_on = [module.idem]
+}
+
+
 # Module CDN et WAF pour IDem Chart
 module "cdn-idem-chart" {
   source = "./modules/aws-waf-cdn-acm-route53"
@@ -114,6 +127,7 @@ module "cdn-idem-chart" {
   web_acl_name = var.web-acl-name-idem
   alb          =  "${var.deployment_name}-idem-chart-lb"
   root-domain  =  var.root-domain
+   depends_on = [module.idem-chart]
 }
 
 # Module CDN et WAF pour IDem API
@@ -123,7 +137,7 @@ module "cdn-idem-api" {
   cdn-name     = var.cdn_idem-api
   deployment_name = var.deployment_name
   web_acl_name = var.web-acl-name-idem-api
-  alb          =  "${var.deployment_name}-idem-api-lb"
+  alb          =  "${var.deployment_name}-idem-api-lb"  
   root-domain  =  var.root-domain
   depends_on = [module.idem-api]
 }
