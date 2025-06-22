@@ -3,7 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { CreateDeploymentPayload, DeploymentModel } from '../models/deployment.model';
+import { DeploymentModel } from '../models/deployment.model';
+
+// Interfaces nécessaires après la suppression de deployment.api.model.ts
+interface GitRepositoryValidationRequest {
+  repoUrl: string;
+  accessToken?: string;
+}
+
+interface GitRepositoryValidationResponse {
+  valid: boolean;
+  branches: string[];
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +26,10 @@ export class DeploymentService {
 
   /**
    * Create a new deployment
-   * @param projectId The ID of the project
    * @param deployment The deployment configuration
    */
   createDeployment(
-    deployment: Partial<CreateDeploymentPayload>
+    deployment: Partial<DeploymentModel>
   ): Observable<DeploymentModel> {
     console.log('Creating deployment:', deployment);
     return this.http
@@ -179,11 +190,13 @@ export class DeploymentService {
     repoUrl: string,
     accessToken?: string
   ): Observable<string[]> {
+    const request: GitRepositoryValidationRequest = {
+      repoUrl,
+      accessToken,
+    };
+    
     return this.http
-      .post<{ branches: string[] }>(`${this.apiUrl}/git/validate`, {
-        repoUrl,
-        accessToken,
-      })
+      .post<GitRepositoryValidationResponse>(`${this.apiUrl}/git/validate`, request)
       .pipe(
         map((response) => response.branches),
         tap((branches) => console.log('Fetched branches', branches)),

@@ -17,9 +17,12 @@ import {
 import {
   CloudComponentDetailed,
   ArchitectureComponent,
-  DeploymentFormData,
-  DeploymentMapper,
+  DeploymentModel,
 } from '../../../../../models/deployment.model';
+import {
+  DeploymentFormData,
+  DeploymentMapper
+} from '../../../create-deployment/create-deployment';
 import { DeploymentService } from '../../../../../services/deployment.service';
 import { Router } from '@angular/router';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
@@ -180,6 +183,7 @@ export class ExpertDeployment {
   protected readonly deploymentService = inject(DeploymentService);
   protected readonly router = inject(Router);
   protected readonly errorMessages = signal<string[]>([]);
+  protected readonly deploymentModel = signal<DeploymentModel | null>(null);
 
   protected getFormData(): DeploymentFormData {
     return {
@@ -194,20 +198,36 @@ export class ExpertDeployment {
   protected createDeployment(): void {
     console.log('Creating deployment...');
     this.loadingDeployment.set(true);
-    const finalFormData = DeploymentMapper.fromFormToPayload(
-      this.getFormData(),
-      this.projectId!
-    );
-    this.deploymentService.createDeployment(finalFormData).subscribe({
+    
+    // Récupérer les données du formulaire
+    const formData = this.getFormData();
+    
+    // Ajouter les composants d'architecture avec leurs configurations
+    formData.customComponents = this.expertArchitecture().map(comp => {
+      const config = this.expertForm.get(comp.instanceId)?.value || {};
+      return {
+        ...comp,
+        configuration: config
+      };
+    });
+    
+    // Utiliser DeploymentMapper pour créer l'objet de déploiement
+    const deploymentData = DeploymentMapper.formDataToDeploymentModel(formData, this.projectId!);
+    
+    // Log du payload pour debugging
+    console.log('🚀 Creating deployment with payload:', deploymentData);
+    
+    // Soumettre au service
+    this.deploymentService.createDeployment(deploymentData).subscribe({
       next: (deployment) => {
-        console.log('Deployment created successfully:', deployment);
+        console.log('✅ Deployment created successfully:', deployment);
         this.loadingDeployment.set(false);
-        // this.router.navigate(['/dashboard/deployments', deployment.id]);
+        this.router.navigate(['/console/dashboard/deployments']);
       },
       error: (error) => {
-        console.error('Error creating deployment:', error);
+        console.error('❌ Error creating deployment:', error);
         this.loadingDeployment.set(false);
-        this.errorMessages.set([error.message]);
+        this.errorMessages.set([error.message || 'Failed to create deployment']);
       },
     });
   }
@@ -233,8 +253,11 @@ export class ExpertDeployment {
       instanceId: `${component.id}_${Date.now()}`,
       configuration: {},
       dependencies: [],
-      type: '',
+      // Définir le type en utilisant la catégorie du composant
+      type: component.category,
     };
+
+    console.log('Architecture component:', architectureComponent);
 
     this.expertArchitecture.update((arch) => [...arch, architectureComponent]);
 

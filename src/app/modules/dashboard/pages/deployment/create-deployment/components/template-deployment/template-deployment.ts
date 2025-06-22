@@ -7,11 +7,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ArchitectureTemplate } from '../../../../../models/deployment.model';
 import {
-  ArchitectureTemplate,
   DeploymentFormData,
   DeploymentValidators,
-} from '../../../../../models/deployment.model';
+  DeploymentMapper,
+} from '../../../create-deployment/create-deployment';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
 
@@ -65,6 +67,7 @@ export class TemplateDeployment {
   private readonly formBuilder = inject(FormBuilder);
   private readonly cookieService = inject(CookieService);
   private readonly deploymentService = inject(DeploymentService);
+  private readonly router = inject(Router); // Injection de Router
 
   constructor() {
     this.deploymentConfigForm = this.formBuilder.group({
@@ -117,12 +120,16 @@ export class TemplateDeployment {
     const formData = this.getFormData();
     const errors: string[] = [];
 
-    // Basic validation
-    errors.push(...DeploymentValidators.validateBasicInfo(formData));
+    // Validation complète du formulaire
+    errors.push(...DeploymentValidators.validateFormData(formData));
 
-    // Git repository validation (if provided)
+    // Validation spécifique du repository Git (si fourni)
     if (formData.repoUrl) {
-      const gitRepo = { url: formData.repoUrl, branch: formData.branch };
+      const gitRepo = {
+        url: formData.repoUrl,
+        branch: formData.branch || 'main',
+        provider: 'github' as 'github' | 'gitlab' | 'bitbucket' | 'azure-repos', // Cast vers le type correct
+      };
       errors.push(...DeploymentValidators.validateGitRepository(gitRepo));
     }
 
@@ -142,16 +149,38 @@ export class TemplateDeployment {
     }
 
     this.loadingDeployment.set(true);
+
+    // Récupérer les données du formulaire
     const formData = this.getFormData();
-    console.log('Creating deployment:', formData);
-    this.deploymentService.createDeployment(formData).subscribe({
-      next: (response) => {
-        console.log('Deployment created successfully:', response);
+
+    // Utiliser le template sélectionné pour les composants d'architecture
+    if (this.selectedTemplate()) {
+      // TODO: Générer les composants d'architecture correspondant au template sélectionné
+      formData.customComponents = [];
+    }
+
+    // Utiliser DeploymentMapper pour créer l'objet de déploiement
+    const deploymentData = DeploymentMapper.formDataToDeploymentModel(
+      formData,
+      this.projectId()!
+    );
+
+    // Log du payload pour debugging
+    console.log('🚀 Creating deployment with payload:', deploymentData);
+
+    // Soumettre au service
+    this.deploymentService.createDeployment(deploymentData).subscribe({
+      next: (deployment) => {
+        console.log('✅ Deployment created successfully:', deployment);
         this.loadingDeployment.set(false);
+        this.router.navigate(['/console/dashboard/deployments']);
       },
       error: (error) => {
-        console.error('Error creating deployment:', error);
+        console.error('❌ Error creating deployment:', error);
         this.loadingDeployment.set(false);
+        this.errorMessages.set([
+          error.message || 'Failed to create deployment',
+        ]);
       },
     });
   }
