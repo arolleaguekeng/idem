@@ -1,6 +1,6 @@
 import { Component, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeploymentFormData } from '../../create-deployment';
+import { DeploymentFormData } from '../../../../../models/api/deployments/deployments.api.model';
 
 @Component({
   selector: 'app-mode-selector',

@@ -13,7 +13,7 @@ import {
   DeploymentFormData,
   DeploymentValidators,
   DeploymentMapper,
-} from '../../../create-deployment/create-deployment';
+} from '../../../../../models/api/deployments/deployments.api.model';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
 

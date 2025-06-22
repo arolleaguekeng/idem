@@ -11,149 +11,14 @@ import {
 import { DeploymentService } from '../../../services/deployment.service';
 import { CookieService } from '../../../../../shared/services/cookie.service';
 import {
-  DeploymentModel,
   ChatMessage,
   ArchitectureTemplate,
   ArchitectureComponent,
-  GitRepository,
-  EnvironmentVariable,
-  CloudComponentDetailed,
-  FormOption
 } from '../../../models/deployment.model';
-
-// Interfaces qui étaient dans deployment.api.model.ts
-export interface DeploymentFormData {
-  mode: 'beginner' | 'assistant' | 'template' | 'expert';
-  name: string;
-  environment: 'development' | 'staging' | 'production';
-  repoUrl?: string;
-  branch?: string;
-  templateId?: string;
-  aiPrompt?: string;
-  customComponents?: ArchitectureComponent[];
-  gitRepository?: GitRepository;
-  customArchitecture?: {
-    components: Array<{
-      instanceId: string;
-      type: string;
-      config: Record<string, any>;
-    }>;
-  };
-  environmentVariables?: EnvironmentVariable[];
-}
-
-export interface GitRepositoryValidationRequest {
-  repoUrl: string;
-  accessToken?: string;
-}
-
-export interface GitRepositoryValidationResponse {
-  valid: boolean;
-  branches: string[];
-  error?: string;
-}
-
-// Helpers qui étaient dans deployment.api.model.ts
-export class DeploymentValidators {
-  static validateFormData(formData: DeploymentFormData): string[] {
-    const errors: string[] = [];
-
-    if (!formData.name) errors.push('Name is required');
-    if (!formData.environment) errors.push('Environment is required');
-
-    // Mode-specific validation
-    switch (formData.mode) {
-      case 'beginner':
-      case 'expert':
-        if (formData.repoUrl && !formData.branch) {
-          errors.push('Branch is required when repository URL is provided');
-        }
-        break;
-      case 'template':
-        if (!formData.templateId) errors.push('Template selection is required');
-        break;
-      case 'assistant':
-        if (!formData.aiPrompt) errors.push('AI prompt is required');
-        break;
-    }
-
-    return errors;
-  }
-
-  static validateGitRepository(repo?: GitRepository): string[] {
-    const errors: string[] = [];
-    if (!repo) return errors;
-
-    if (!repo.url) errors.push('Repository URL is required');
-    if (!repo.branch) errors.push('Branch name is required');
-    if (!repo.provider) errors.push('Git provider is required');
-
-    return errors;
-  }
-
-  static validateArchitectureComponents(components?: ArchitectureComponent[]): string[] {
-    const errors: string[] = [];
-    if (!components || components.length === 0) return errors;
-
-    components.forEach((comp, index) => {
-      if (!comp.instanceId) errors.push(`Component ${index + 1} is missing an instance ID`);
-      if (!comp.type) errors.push(`Component ${index + 1} is missing a type`); 
-    });
-
-    return errors;
-  }
-}
-
-export class DeploymentMapper {
-  static formDataToDeploymentModel(formData: DeploymentFormData, projectId: string): Partial<DeploymentModel> {
-    const deployment: Partial<DeploymentModel> = {
-      projectId,
-      name: formData.name,
-      environment: formData.environment,
-      status: 'configuring',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    // Add Git repository if present
-    if (formData.repoUrl) {
-      deployment.gitRepository = {
-        provider: 'github',
-        url: formData.repoUrl,
-        branch: formData.branch || 'main'
-      };
-    } else if (formData.gitRepository) {
-      deployment.gitRepository = formData.gitRepository;
-    }
-
-    // Add environment variables if present
-    if (formData.environmentVariables?.length) {
-      deployment.environmentVariables = formData.environmentVariables;
-    }
-
-    // Add architecture components for expert mode
-    if (formData.customComponents?.length) {
-      deployment.architectureComponents = formData.customComponents;
-    }
-
-    // Add template details for template mode
-    if (formData.templateId) {
-      deployment.architectureTemplates = [
-        {
-          id: formData.templateId,
-          provider: 'aws',
-          category: 'general',
-          name: 'Selected Template',
-          description: 'Template selected for deployment',
-          tags: [],
-          icon: '🏗️',
-        },
-      ];
-    }
-
-    return deployment;
-  }
-}
+import {
+  DeploymentFormData,
+  DeploymentMapper,
+} from '../../../models/api/deployments/deployments.api.model';
 
 // Import child components
 import { ModeSelector } from './components/mode-selector/mode-selector';
@@ -285,7 +150,7 @@ export class CreateDeployment implements OnInit {
   }
 
   // --- MODE SELECTION ---
-  selectMode(mode: "beginner" | "assistant" | "template" | "expert"): void {
+  selectMode(mode: 'beginner' | 'assistant' | 'template' | 'expert'): void {
     console.log('Selected deployment mode:', mode);
     this.deploymentMode.set(mode);
     this.clearErrors();
@@ -493,7 +358,7 @@ export class CreateDeployment implements OnInit {
       customComponents: this.expertArchitecture(),
       gitRepository: formValue.gitRepository,
       customArchitecture: formValue.customArchitecture,
-      environmentVariables: formValue.environmentVariables
+      environmentVariables: formValue.environmentVariables,
     };
   }
 
@@ -514,25 +379,28 @@ export class CreateDeployment implements OnInit {
       // Add expert mode configuration
       if (this.deploymentMode() === 'expert' && this.expertArchitecture()) {
         // Mettre à jour les composants avec leurs configurations
-        formData.customComponents = this.expertArchitecture().map(comp => {
+        formData.customComponents = this.expertArchitecture().map((comp) => {
           const config = this.expertForm.get(comp.instanceId)?.value || {};
           return {
             ...comp,
-            configuration: config
+            configuration: config,
           };
         });
       }
 
       console.log('🚀 Form data:', formData);
-      
+
       // Utiliser DeploymentMapper pour créer un objet DeploymentModel
-      const deploymentData = DeploymentMapper.formDataToDeploymentModel(formData, this.projectId()!);
-      
+      const deploymentData = DeploymentMapper.formDataToDeploymentModel(
+        formData,
+        this.projectId()!
+      );
+
       // Ajouter les détails spécifiques au mode
       if (this.deploymentMode() === 'assistant') {
         deploymentData.chatMessages = this.chatMessages();
       }
-      
+
       console.log('🚀 Creating deployment with payload:', deploymentData);
 
       // Envoyer l'objet au service

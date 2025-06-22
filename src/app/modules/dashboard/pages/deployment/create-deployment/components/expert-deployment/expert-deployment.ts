@@ -21,8 +21,8 @@ import {
 } from '../../../../../models/deployment.model';
 import {
   DeploymentFormData,
-  DeploymentMapper
-} from '../../../create-deployment/create-deployment';
+  DeploymentMapper,
+} from '../../../../../models/api/deployments/deployments.api.model';
 import { DeploymentService } from '../../../../../services/deployment.service';
 import { Router } from '@angular/router';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
@@ -198,25 +198,28 @@ export class ExpertDeployment {
   protected createDeployment(): void {
     console.log('Creating deployment...');
     this.loadingDeployment.set(true);
-    
+
     // Récupérer les données du formulaire
     const formData = this.getFormData();
-    
+
     // Ajouter les composants d'architecture avec leurs configurations
-    formData.customComponents = this.expertArchitecture().map(comp => {
+    formData.customComponents = this.expertArchitecture().map((comp) => {
       const config = this.expertForm.get(comp.instanceId)?.value || {};
       return {
         ...comp,
-        configuration: config
+        configuration: config,
       };
     });
-    
+
     // Utiliser DeploymentMapper pour créer l'objet de déploiement
-    const deploymentData = DeploymentMapper.formDataToDeploymentModel(formData, this.projectId!);
-    
+    const deploymentData = DeploymentMapper.formDataToDeploymentModel(
+      formData,
+      this.projectId!
+    );
+
     // Log du payload pour debugging
     console.log('🚀 Creating deployment with payload:', deploymentData);
-    
+
     // Soumettre au service
     this.deploymentService.createDeployment(deploymentData).subscribe({
       next: (deployment) => {
@@ -227,7 +230,9 @@ export class ExpertDeployment {
       error: (error) => {
         console.error('❌ Error creating deployment:', error);
         this.loadingDeployment.set(false);
-        this.errorMessages.set([error.message || 'Failed to create deployment']);
+        this.errorMessages.set([
+          error.message || 'Failed to create deployment',
+        ]);
       },
     });
   }
