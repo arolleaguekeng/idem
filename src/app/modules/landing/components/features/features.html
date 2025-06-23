@@ -1,110 +1,114 @@
-<div
-  class="relative px-6 py-16  text-white"
->
-  <div class="absolute  opacity-10">
-    <img
-      src="/assets/images/home/abstract-bg.svg"
-      alt="Background"
-      class="w-full h-full object-cover"
-    />
+<div class="features-section relative px-6 py-20 text-white bg-glass-gradient">
+  <!-- Dynamic background elements -->
+  <div class="absolute inset-0 z-0">
+    <div class="glass-orb glass-orb-1 absolute"></div>
+    <div class="glass-orb glass-orb-2 absolute"></div>
+    <div class="glass-orb glass-orb-3 absolute"></div>
+    <div class="diagonal-line absolute top-1/4 left-0 right-0"></div>
+    <div class="diagonal-line absolute top-3/4 left-0 right-0"></div>
   </div>
 
-  <h1 class="text-center text-4xl md:text-5xl font-bold py-8 ">
-    Why Choose Idem?
-  </h1>
-  <p class="text-center text-lg max-w-2xl mx-auto mb-8 ">
-    Discover how our AI transforms your project ideas into a complete digital
-    solution—design, architecture, feasibility, and automation, all in one
-    click!
-  </p>
-
-  <div
-    class="flex flex-col md:flex-row gap-6 items-center md:h-[90vh] relative z-10"
-  >
-    <!-- Image Illustration -->
-    <div class="w-full md:w-1/2 flex items-center justify-center ">
-      <div class="relative">
-        <img
-          src="/assets/images/home/person-computer.svg"
-          alt="Person using computer"
-          class="max-w-full h-auto"
-        />
-        <div
-          class="absolute -top-6 -left-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg text-sm animate-bounce"
+  <div class="container max-w-7xl mx-auto relative z-10">
+    <!-- Header with asymmetric design -->
+    <div
+      class="flex flex-col md:flex-row items-start md:items-end justify-between mb-16"
+    >
+      <div class="md:w-1/2">
+        <span class="inline-block glass-pill px-4 py-1.5 mb-3"
+          >Our Features</span
         >
-          ⚡ AI-Powered Innovation
-        </div>
+        <h1
+          class="text-4xl md:text-6xl font-bold glass-text mb-2 leading-tight"
+        >
+          Why Choose
+          <span class="inline-block"
+            >Idem<span
+              class="absolute -top-1 -right-2 w-2 h-2 bg-white rounded-full glass-dot pulse-animation"
+            ></span
+          ></span>
+        </h1>
       </div>
+      <p class="md:w-2/5 text-lg opacity-90 mt-4 md:mt-0">
+        Discover our AI that transforms project ideas into complete digital
+        solutions with a single click
+      </p>
     </div>
 
-    <!-- Key Benefits -->
-    <div
-      class="w-full md:w-1/2 glass-card rounded-3xl md:p-12 text-white"
-    >
-      <ul class="grid grid-cols-1 gap-6 text-left w-full">
-        <li class="flex items-center gap-4 stagger-item">
-          <span
-            class="inline-flex items-center justify-center w-12 h-12 bg-blue-600 text-white text-2xl font-bold rounded-xl shadow-lg"
-            >🚀</span
-          >
+    <!-- Ultra-modern asymmetric feature layout -->
+    <div class="features-grid">
+      <!-- Hero feature with dynamic placement -->
+      <div
+        class="feature-card feature-hero glass-feature-card flex flex-col justify-between relative overflow-hidden"
+      >
+        <div
+          class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between"
+        >
           <div>
-            <h3 class="font-semibold text-lg">AI-Generated Solutions</h3>
-            <p class="text-gray-100 text-sm">
-              From idea to execution, our AI handles it all.
+            <span class="glass-chip mb-4">Featured</span>
+            <h3 class="text-2xl font-semibold mb-3">AI-Generated Solutions</h3>
+            <p class="opacity-80 md:max-w-md">
+              Our AI handles everything from idea to execution, creating optimal
+              solutions perfectly tailored to your needs.
             </p>
           </div>
-        </li>
-        <li class="flex items-center gap-4 stagger-item">
-          <span
-            class="inline-flex items-center justify-center w-12 h-12 bg-purple-600 text-white text-2xl font-bold rounded-xl shadow-lg"
-            >🎨</span
-          >
-          <div>
-            <h3 class="font-semibold text-lg">Unique Branding & Design</h3>
-            <p class="text-gray-100 text-sm">
-              Create stunning visuals and branding effortlessly.
-            </p>
+          <div class="mt-6 flex items-center gap-2">
+            <span class="glass-icon-wrapper text-xl">🚀</span>
+            <span class="text-sm font-medium opacity-80"
+              >Fully automated workflow</span
+            >
           </div>
-        </li>
-        <li class="flex items-center gap-4 stagger-item">
-          <span
-            class="inline-flex items-center justify-center w-12 h-12 bg-green-600 text-white text-2xl font-bold rounded-xl shadow-lg"
-            >📊</span
-          >
-          <div>
-            <h3 class="font-semibold text-lg">
-              Comprehensive Feasibility Study
-            </h3>
-            <p class="text-gray-100 text-sm">
-              Ensure project success with in-depth analysis.
-            </p>
-          </div>
-        </li>
-        <li class="flex items-center gap-4 stagger-item">
-          <span
-            class="inline-flex items-center justify-center w-12 h-12 bg-red-600 text-white text-2xl font-bold rounded-xl shadow-lg"
-            >⚡</span
-          >
-          <div>
-            <h3 class="font-semibold text-lg">Optimized Tech Stack</h3>
-            <p class="text-gray-100 text-sm">
-              Leverage the best technologies tailored to your needs.
-            </p>
-          </div>
-        </li>
-        <li class="flex items-center gap-4 stagger-item">
-          <span
-            class="inline-flex items-center justify-center w-12 h-12 bg-yellow-600 text-white text-2xl font-bold rounded-xl shadow-lg"
-            >📜</span
-          >
-          <div>
-            <h3 class="font-semibold text-lg">Automatic Documentation</h3>
-            <p class="text-gray-100 text-sm">
-              Every generated project includes detailed documentation.
-            </p>
-          </div>
-        </li>
-      </ul>
+        </div>
+        <div
+          class="absolute top-1/2 -right-12 transform -translate-y-1/2 opacity-10 w-64 h-64 blur-3xl bg-white rounded-full"
+        ></div>
+      </div>
+
+      <!-- Asymmetrically placed features in dynamic grid -->
+      <div class="feature-card glass-feature-card relative overflow-hidden">
+        <div class="glass-highlight"></div>
+        <div class="p-6 relative z-10">
+          <span class="glass-icon-wrapper mb-4">🎨</span>
+          <h3 class="font-semibold text-lg mb-2">Unique Branding & Design</h3>
+          <p class="opacity-80 text-sm">
+            Create stunning visuals and branding that capture your identity
+            effortlessly.
+          </p>
+        </div>
+      </div>
+
+      <div class="feature-card glass-feature-card relative overflow-hidden">
+        <div class="glass-highlight"></div>
+        <div class="p-6 relative z-10">
+          <span class="glass-icon-wrapper mb-4">📊</span>
+          <h3 class="font-semibold text-lg mb-2">Feasibility Analysis</h3>
+          <p class="opacity-80 text-sm">
+            Ensure project success with sophisticated data-driven analysis.
+          </p>
+        </div>
+      </div>
+
+      <div class="feature-card glass-feature-card relative overflow-hidden">
+        <div class="glass-highlight"></div>
+        <div class="p-6 relative z-10">
+          <span class="glass-icon-wrapper mb-4">⚡</span>
+          <h3 class="font-semibold text-lg mb-2">Optimized Tech Stack</h3>
+          <p class="opacity-80 text-sm">
+            Leverage cutting-edge technologies perfectly matched to your
+            requirements.
+          </p>
+        </div>
+      </div>
+
+      <div class="feature-card glass-feature-card relative overflow-hidden">
+        <div class="glass-highlight"></div>
+        <div class="p-6 relative z-10">
+          <span class="glass-icon-wrapper mb-4">📜</span>
+          <h3 class="font-semibold text-lg mb-2">Automatic Documentation</h3>
+          <p class="opacity-80 text-sm">
+            Save time with comprehensive auto-generated documentation.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,21 +1,21 @@
-<section id="pricing" class="m-4 md:p-[10%]">
+<section id="pricing" class="pricing-section relative m-4 md:p-[10%] overflow-hidden">
   <h2
     class="text-2xl w-full md:text-5xl font-bold text-gray-100 mb-8 border-b border-gray-400 pb-2"
   >
     OUR PRICING
   </h2>
 
-  <div class="grid md:grid-cols-3 gap-0 border border-gray-400">
+  <div class="grid md:grid-cols-3 gap-0 border border-gray-400 glass-effect">
     <!-- Free Column -->
-    <div class="border-r border-gray-400 text-gray-100 p-6 pricing-card">
+    <div class="border-r border-gray-400 text-gray-100 p-6 pricing-card glass-effect">
       <div class="h-full flex flex-col">
         <h3 class="text-xl font-bold text-gray-100 mb-4">FREE</h3>
         <div class="text-gray-100 mb-6">
-          <span class="text-3xl font-bold">$0</span>
+          <span class="price-value text-3xl font-bold">$0</span>
           <span class="text-sm">/month</span>
         </div>
         <ul class="space-y-3 mb-8 flex-grow">
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -31,7 +31,7 @@
             </svg>
             <span>1 active project</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -47,7 +47,7 @@
             </svg>
             <span>Basic design assets</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -63,7 +63,7 @@
             </svg>
             <span>Core documentation</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -80,23 +80,23 @@
             <span>Email support</span>
           </li>
         </ul>
-        <button class="w-full py-3 outer-button">Get Started</button>
+        <button class="w-full py-3 outer-button pricing-button">Get Started</button>
       </div>
     </div>
 
     <!-- Standard Column -->
-    <div class="border-r border-gray-400 p-6 bg-gray-900 text-gray-100 pricing-card pricing-popular">
+    <div class="border-r border-gray-400 p-6 bg-gray-900 text-gray-100 pricing-card pricing-popular glass-effect">
       <div class="h-full flex flex-col">
         <div class="flex justify-between items-start">
           <h3 class="text-xl font-bold text-gray-100 mb-4">STANDARD</h3>
           <span class="text-xs bg-orange-400 text-white px-2 py-1">POPULAR</span>
         </div>
         <div class="text-gray-100 mb-6">
-          <span class="text-3xl font-bold">$29</span>
+          <span class="price-value text-3xl font-bold">$29</span>
           <span class="text-sm">/month</span>
         </div>
         <ul class="space-y-3 mb-8 flex-grow">
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -112,7 +112,7 @@
             </svg>
             <span>10 active projects</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -128,7 +128,7 @@
             </svg>
             <span>Advanced design assets</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -144,7 +144,7 @@
             </svg>
             <span>Full documentation</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -162,7 +162,7 @@
           </li>
         </ul>
         <button
-          class="w-full py-3 inner-button bg-primary text-white font-medium hover:bg-blue-600 transition-colors"
+          class="w-full py-3 inner-button bg-primary text-white font-medium hover:bg-blue-600 transition-colors pricing-button"
         >
           Choose this plan
         </button>
@@ -170,15 +170,15 @@
     </div>
 
     <!-- Premium Column -->
-    <div class="p-6 text-gray-100 pricing-card">
+    <div class="p-6 text-gray-100 pricing-card glass-effect">
       <div class="h-full flex flex-col">
         <h3 class="text-xl font-bold text-gray-100 mb-4">PREMIUM</h3>
         <div class="text-gray-100 mb-6">
-          <span class="text-3xl font-bold">$99</span>
+          <span class="price-value text-3xl font-bold">$99</span>
           <span class="text-sm">/month</span>
         </div>
         <ul class="space-y-3 mb-8 flex-grow">
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -194,7 +194,7 @@
             </svg>
             <span>Unlimited projects</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -210,7 +210,7 @@
             </svg>
             <span>Custom design assets</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -226,7 +226,7 @@
             </svg>
             <span>Enterprise documentation</span>
           </li>
-          <li class="flex items-start">
+          <li class="feature-item flex items-start">
             <svg
               class="w-5 h-5 text-gray-100 mr-2 mt-0.5"
               fill="none"
@@ -243,7 +243,7 @@
             <span>24/7 dedicated support</span>
           </li>
         </ul>
-        <button class="w-full py-3 outer-button glow-primary font-medium">Contact us</button>
+        <button class="w-full py-3 outer-button glow-primary font-medium pricing-button premium-button">Contact us</button>
       </div>
     </div>
   </div>

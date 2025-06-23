@@ -1,0 +1,65 @@
+/* Hero-specific animations and effects */
+
+/* Enhanced parallax effects */
+.hero-section {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Reveal animations specific to hero section */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Apply animations on component load */
+:host(.animate-in) .reveal-left,
+:host(.animate-in) .reveal-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Enhanced glass effects for hero */
+.glass-card-hover {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Apple-style pulse animations for accents */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.accent-pulse {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+/* Custom spotlight effect on mouse move */
+.spotlight {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: radial-gradient(
+    circle at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px), 
+    var(--color-primary-glow) 0%,
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.has-spotlight:hover .spotlight {
+  opacity: 0.15;
+}

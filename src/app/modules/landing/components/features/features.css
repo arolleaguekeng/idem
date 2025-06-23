@@ -1,1 +1,277 @@
-/* Features component-specific styles */
+/* Ultra-modern asymmetric glass design system for features */
+
+.features-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Elegant glass background gradient */
+.bg-glass-gradient {
+  background: linear-gradient(to bottom right, rgba(10, 10, 20, 0.98), rgba(25, 25, 45, 0.99));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Dynamic background elements */
+.glass-orb-1 {
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  top: -20vw;
+  right: -20vw;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.03), rgba(79, 182, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  filter: blur(30px);
+}
+
+.glass-orb-2 {
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  bottom: -15vw;
+  left: -15vw;
+  background: radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.02), rgba(148, 108, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  filter: blur(30px);
+}
+
+.glass-orb-3 {
+  width: 30vw;
+  height: 30vw;
+  border-radius: 50%;
+  bottom: 20vh;
+  right: 10vw;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.02), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.01);
+  filter: blur(20px);
+}
+
+/* Diagonal lines for visual division */
+.diagonal-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07) 20%, rgba(255, 255, 255, 0.07) 80%, transparent);
+  transform: rotate(-2deg);
+}
+
+/* Glass text effect with modern gradient */
+.glass-text {
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 25px rgba(255, 255, 255, 0.15);
+  letter-spacing: -0.02em;
+}
+
+/* Glass dot with pulse animation */
+.glass-dot {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Animated pulse effect */
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+/* Ultra-modern grid layout */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(180px, auto);
+  gap: 24px;
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(8, 80px);
+    gap: 20px;
+  }
+  
+  /* Asymmetric feature layout for desktop */
+  .feature-hero {
+    grid-column: 1 / 8;
+    grid-row: 1 / 5;
+  }
+  
+  .feature-card:nth-of-type(2) {
+    grid-column: 8 / 13;
+    grid-row: 1 / 3;
+  }
+  
+  .feature-card:nth-of-type(3) {
+    grid-column: 8 / 13;
+    grid-row: 3 / 5;
+  }
+  
+  .feature-card:nth-of-type(4) {
+    grid-column: 1 / 6;
+    grid-row: 5 / 7;
+  }
+  
+  .feature-card:nth-of-type(5) {
+    grid-column: 6 / 13;
+    grid-row: 5 / 7;
+  }
+}
+
+/* Glass card shared properties with ergonomic styling */
+.glass-feature-card {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+/* Ergonomic hover interactions */
+.glass-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-feature-card:hover .glass-icon-wrapper {
+  transform: scale(1.1) translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Glass highlight effect */
+.glass-highlight {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glass pill for labels */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Mini label chip */
+.glass-chip {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Glass icon wrapper */
+.glass-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 22px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+}
+
+/* Subtle entry animations */
+@media (min-width: 768px) {
+  .feature-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+  }
+  
+  .feature-hero {
+    animation-delay: 0.1s;
+  }
+  
+  .feature-card:nth-of-type(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .feature-card:nth-of-type(3) {
+    animation-delay: 0.3s;
+  }
+  
+  .feature-card:nth-of-type(4) {
+    animation-delay: 0.4s;
+  }
+  
+  .feature-card:nth-of-type(5) {
+    animation-delay: 0.5s;
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating animation for image */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-image {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Bounce animation for labels */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.bounce-animation {
+  animation: bounce-subtle 4s ease-in-out infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

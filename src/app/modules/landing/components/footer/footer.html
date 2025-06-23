@@ -1,46 +1,57 @@
-<footer
-  class="bg-gray-500 bg-gradient-to-t from-gray-800 to-gray-900 text-white py-12"
->
-  <div class="container mx-auto px-6">
-    <!-- Responsive Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+<footer class="glass-footer text-white py-16">
+  <!-- Decorative glass orbs -->
+  <div class="glass-orb-footer orb-1"></div>
+  <div class="glass-orb-footer orb-2"></div>
+  <div class="container mx-auto px-6 relative z-10">
+    <!-- Ultra-modern asymmetric grid layout -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
       <!-- Section 1: Logo and Description -->
-      <div class="mb-8 md:mb-0">
-        <a href="#" class="text-2xl font-bold text-white">Idem</a>
-        <p class="mt-4 text-gray-200">
-          Automated design and configuration of software architectures.
+      <div class="mb-8 md:mb-0 md:col-span-4 glass-footer-card">
+        <div class="flex items-center mb-3">
+          <a href="#" class="text-2xl font-bold text-white relative group">
+            Idem
+            <span class="absolute -top-1 -right-3 w-2 h-2 bg-white rounded-full opacity-60"></span>
+          </a>
+        </div>
+        <div class="glass-diagonal my-3"></div>
+        <p class="mt-4 text-gray-200 leading-relaxed">
+          Automated design and configuration of software architectures with our cutting-edge AI technology.
         </p>
       </div>
 
       <!-- Section 2: Quick Links -->
-      <div class="mb-8 md:mb-0">
-        <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
-        <ul class="space-y-2">
+      <div class="mb-8 md:mb-0 md:col-span-3 md:col-start-6 glass-footer-card">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <span class="w-1.5 h-1.5 bg-white rounded-full mr-2 opacity-70"></span>
+          Quick Links
+        </h3>
+        <div class="glass-diagonal my-3"></div>
+        <ul class="space-y-3 mt-5">
           <li>
             <a
               href="#"
-              class="text-gray-200 hover:text-white transition duration-300"
+              class="text-gray-200 hover:text-white transition duration-300 glass-footer-link inline-block"
               >Home</a
             >
           </li>
           <li>
             <a
               href="#"
-              class="text-gray-200 hover:text-white transition duration-300"
+              class="text-gray-200 hover:text-white transition duration-300 glass-footer-link inline-block"
               >Features</a
             >
           </li>
           <li>
             <a
               href="#"
-              class="text-gray-200 hover:text-white transition duration-300"
+              class="text-gray-200 hover:text-white transition duration-300 glass-footer-link inline-block"
               >Pricing</a
             >
           </li>
           <li>
             <a
               href="#"
-              class="text-gray-200 hover:text-white transition duration-300"
+              class="text-gray-200 hover:text-white transition duration-300 glass-footer-link inline-block"
               >Contact</a
             >
           </li>
@@ -48,45 +59,53 @@
       </div>
 
       <!-- Section 3: Social Media -->
-      <div class="mb-8 md:mb-0">
-        <h3 class="text-lg font-semibold text-white mb-4">Follow Us</h3>
-        <div class="flex space-x-4">
+      <div class="mb-8 md:mb-0 md:col-span-2 md:col-start-10 glass-footer-card">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <span class="w-1.5 h-1.5 bg-white rounded-full mr-2 opacity-70"></span>
+          Follow Us
+        </h3>
+        <div class="glass-diagonal my-3"></div>
+        <div class="flex space-x-3 mt-5">
           <a
             href="#"
-            class="text-gray-200 hover:text-white transition duration-300"
+            class="glass-social-icon w-12 h-12 flex items-center justify-center text-gray-200 hover:text-white transition duration-300"
           >
-            <i class="pi pi-github mr-2 text-6xl" style="font-size: 2rem"></i>
+            <i class="pi pi-github" style="font-size: 1.5rem"></i>
           </a>
           <a
             href="#"
-            class="text-gray-200 hover:text-white transition duration-300"
+            class="glass-social-icon w-12 h-12 flex items-center justify-center text-gray-200 hover:text-white transition duration-300"
           >
-            <i class="pi pi-linkedin mr-2 text-6xl" style="font-size: 2rem"></i>
+            <i class="pi pi-linkedin" style="font-size: 1.5rem"></i>
           </a>
           <a
             href="#"
-            class="text-gray-200 hover:text-white transition duration-300"
+            class="glass-social-icon w-12 h-12 flex items-center justify-center text-gray-200 hover:text-white transition duration-300"
           >
-            <i class="pi pi-twitter mr-2 text-6xl" style="font-size: 2rem"></i>
+            <i class="pi pi-twitter" style="font-size: 1.5rem"></i>
           </a>
         </div>
       </div>
 
       <!-- Section 4: Newsletter -->
-      <div>
-        <h3 class="text-lg font-semibold text-white mb-4">Newsletter</h3>
+      <div class="md:col-span-7 md:mt-8 glass-footer-card">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <span class="w-1.5 h-1.5 bg-white rounded-full mr-2 opacity-70"></span>
+          Newsletter
+        </h3>
+        <div class="glass-diagonal my-3"></div>
         <p class="text-gray-200 mb-4">
-          Subscribe to receive the latest updates.
+          Subscribe to receive the latest updates on our AI technology innovations.
         </p>
-        <form class="flex">
+        <form class="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
             placeholder="Your email"
-            class="w-full border-gray-400 border-1 p-2 rounded-l-md text-gray-900 focus:outline-none"
+            class="w-full p-3 rounded-lg focus:outline-none glass-input"
           />
           <button
             type="submit"
-            class="bg-primary border-gray-400 border-1 text-white px-4 py-2 rounded-r-md hover:bg-opacity-90 transition duration-300"
+            class="glass-submit-btn text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition duration-300 sm:flex-shrink-0"
           >
             Subscribe
           </button>
@@ -95,7 +114,8 @@
     </div>
 
     <!-- Copyright Section -->
-    <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+    <div class="mt-12 pt-8 text-center relative">
+      <div class="glass-diagonal my-6"></div>
       <p class="text-gray-200">&copy; 2025 Idem. All rights reserved.</p>
     </div>
   </div>

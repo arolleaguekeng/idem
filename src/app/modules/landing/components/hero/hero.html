@@ -1,107 +1,160 @@
-<div
-  class="md:h-[95vh] flex flex-col md:flex-row justify-between bg-no-repeat bg-cover bg-center"
->
+<div class="hero-section relative min-h-screen parallax overflow-hidden">
+  <!-- Background layers with parallax effect -->
+  <div class="absolute inset-0 bg-grid z-0"></div>
+
+  <!-- Parallax background elements -->
   <div
-    class="w-full md:w-[100%] md:h-[95vh] flex flex-col items-center justify-center p-4 md:p-[2%] bg-gradient-to-r text-white overflow-hidden"
+    class="absolute top-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-primary to-secondary opacity-20 blur-[120px] parallax-layer"
+    data-depth="0.1"
+  ></div>
+  <div
+    class="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-secondary to-accent opacity-20 blur-[100px] parallax-layer"
+    data-depth="0.15"
+  ></div>
+
+  <!-- Glass elements with parallax -->
+  <div
+    class="absolute top-[15%] left-[5%] w-32 h-32 glass rounded-full opacity-30 parallax-layer"
+    data-depth="0.25"
+  ></div>
+  <div
+    class="absolute top-[60%] right-[8%] w-40 h-40 glass-dark rounded-3xl opacity-20 rotate-12 parallax-layer"
+    data-depth="0.2"
+  ></div>
+  <div
+    class="absolute bottom-[20%] left-[15%] w-24 h-24 glass opacity-30 rounded-xl rotate-45 parallax-layer"
+    data-depth="0.3"
+  ></div>
+
+  <!-- Main content container -->
+  <div
+    class="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-0"
   >
-    <section
-      class="text-center md:px-6 py-16 rounded-4xl flex flex-col justify-center items-center"
-    >
-      <h1
-        class="text-3xl md:text-6xl font-extrabold mb-6 leading-tight text-glow-primary"
-      >
-        <span class="block">Describe Your Project,</span>
-        <span class="block">
-          Our AI
-          <span class="underline decoration-8 decoration-primary"
-            >Generates Everything</span
+    <div class="w-full max-w-7xl mx-auto">
+      <!-- Hero content with glass effect -->
+      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+        <!-- Left content (text) -->
+        <div class="w-full md:w-1/2 text-center md:text-left">
+          <!-- Animated headline -->
+          <h1
+            class="text-4xl md:text-6xl xl:text-7xl font-extrabold mb-6 leading-tight reveal-left"
           >
-          😎
-        </span>
-      </h1>
+            <span class="block text-gradient">Describe Your Project,</span>
+            <span class="block mt-2">
+              Our AI
+              <span class="relative inline-block">
+                <span class="relative z-10">Generates Everything</span>
+                <span
+                  class="absolute bottom-0 left-0 w-full h-3 bg-primary opacity-50 rounded-xl"
+                ></span>
+              </span>
+              <span class="animate-bounce inline-block ml-1">✨</span>
+            </span>
+          </h1>
 
-      <p
-        class="text-xl md:text-2xl text-gray-100 mb-8 font-medium max-w-3xl mx-auto"
-      >
-        "I describe → AI creates" : Your
-        <span class="font-bold">turnkey</span> solution in one click
-      </p>
+          <p
+            class="text-xl md:text-2xl text-gray-100 mb-8 font-medium max-w-2xl mx-auto md:mx-0 reveal-left"
+          >
+            "I describe → AI creates" : Your
+            <span class="font-bold text-gradient">turnkey</span> solution in one
+            click
+          </p>
 
-      <div
-        class="glass-card shadow-lg rounded-2xl p-8 border max-w-4xl mx-auto mb-10"
-      >
-        <ul class="grid md:grid-cols-2 gap-6 text-left">
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >1</span
-            >
-            Personalized & responsive landing page
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >2</span
-            >
-            Unique visual identity & branding
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >3</span
-            >
-            Detailed & interactive UML diagrams
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >4</span
-            >
-            In-depth feasibility study
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >5</span
-            >
-            AI-optimized software architecture
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >6</span
-            >
-            Recommended tech stack for your project
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >7</span
-            >
-            Automatic documentation generation
-          </li>
-          <li class="flex items-start stagger-item">
-            <span
-              class="inline-flex items-center justify-center w-8 h-8 bg-gray-600 text-white text-lg font-bold rounded-full mr-3"
-              >8</span
-            >
-            Scripts & commands for quick setup
-          </li>
-        </ul>
+          <!-- CTA Button with glow effect -->
+          <div class="mt-8 mb-12 reveal-left">
+            <a routerLink="/project/create" class="relative group">
+              <span
+                class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary via-secondary to-accent blur-lg opacity-70 group-hover:opacity-100 transition-opacity duration-300 -z-10 group-hover:animate-pulse"
+              ></span>
+              <button
+                class="glass-card-hover text-xl md:text-2xl font-semibold py-4 px-8 md:py-5 md:px-10 rounded-xl bg-gradient-to-r from-primary/20 to-secondary/20 text-white border border-white/20 relative overflow-hidden group"
+              >
+                <span class="relative z-10">Try for Free</span>
+                <span
+                  class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+                ></span>
+              </button>
+            </a>
+            <p class="text-sm text-gray-400 mt-3">
+              Already used by
+              <span class="font-semibold text-white">1,200+</span> startups and
+              freelancers
+            </p>
+          </div>
+        </div>
+
+        <!-- Right content (features card) -->
+        <div class="w-full md:w-1/2 reveal-right">
+          <!-- Glass card with hover effect -->
+          <div
+            class="glass-card-hover rounded-3xl p-8 border border-white/10 backdrop-blur-xl"
+          >
+            <h3 class="text-xl md:text-2xl font-bold mb-6 text-gradient">
+              AI-Powered Solution
+            </h3>
+
+            <!-- Feature grid -->
+            <ul class="grid sm:grid-cols-2 gap-6 text-left">
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >1</span
+                >
+                <span>Personalized & responsive landing page</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >2</span
+                >
+                <span>Unique visual identity & branding</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >3</span
+                >
+                <span>Detailed & interactive UML diagrams</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >4</span
+                >
+                <span>In-depth feasibility study</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >5</span
+                >
+                <span>AI-optimized software architecture</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >6</span
+                >
+                <span>Recommended tech stack for your project</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >7</span
+                >
+                <span>Automatic documentation generation</span>
+              </li>
+              <li class="flex items-start stagger-item">
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 backdrop-blur-sm text-white text-lg font-bold mr-3 border border-white/10"
+                  >8</span
+                >
+                <span>Scripts & commands for quick setup</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-
-      <div class="">
-        <a
-          class="outer-button text-2xl bg-blue-700 border-none glow-primary"
-          routerLink="/project/create"
-        >
-          Try for Free ✨
-        </a>
-        <p class="text-sm text-gray-400 mt-3">
-          Already used by <span class="font-semibold">1,200+</span> startups and
-          freelancers
-        </p>
-      </div>
-    </section>
+    </div>
   </div>
 </div>
