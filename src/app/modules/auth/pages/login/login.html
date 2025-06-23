@@ -1,4 +1,6 @@
 <section class="w-full h-[90vh] md:h-[94vh] flex items-center justify-center">
+  <!-- Standard Login View (shown if isBeta is true) -->
+  @if (!isBeta()) {
   <div
     class="flex flex-col bg-gray-900 border-2 shadow-xl shadow-primary/80 rounded-2xl p-6 items-center"
   >
@@ -43,4 +45,72 @@
       </button>
     </div>
   </div>
+  }
+  <!-- Waitlist View (shown if isBeta is false) -->
+  @else {
+  <div
+    class="flex flex-col items-center max-w-3xl p-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl shadow-2xl border border-primary/30"
+  >
+    <!-- Logo/Header -->
+    <div class="mb-8 flex flex-col items-center">
+      <div
+        class="h-20 w-20 bg-gradient-to-r from-primary to-purple-500 rounded-full flex items-center justify-center mb-4"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12 text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+      </div>
+      <h1
+        class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 mb-2"
+      >
+        IDEM
+      </h1>
+      <p class="text-xl text-gray-300 mb-1">Free and open-source</p>
+      <div class="w-20 h-1 bg-primary rounded-full mb-4"></div>
+      <p class="text-center text-gray-300 max-w-lg">
+        Create your professional brand in 1 click! <br />
+        IDEM provides you with a unique logo, a complete visual identity, a
+        business plan, a web application and helps you deploy everything easily
+        online, all powered by AI.
+      </p>
+    </div>
+
+    <!-- Waitlist CTA -->
+    <div class="w-full">
+      <button
+        (click)="openWaitlistForm()"
+        class="w-full py-4 px-8 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary transition-all duration-300 text-white font-bold rounded-xl shadow-lg hover:shadow-primary/40 transform hover:-translate-y-1"
+      >
+        <span class="flex items-center justify-center gap-2">
+          Join the waitlist
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  }
 </section>

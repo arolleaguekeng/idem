@@ -1,0 +1,24 @@
+/* Pricing card specific effects */
+.pricing-card {
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+}
+
+.pricing-popular {
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-popular::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}

@@ -1,32 +1,17 @@
 import { Component } from '@angular/core';
-import { ViewportScroller } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+// No longer need RouterLink as we're using child components
+
+// Import standalone components
+import { Hero } from '../../components/hero/hero';
+import { Features } from '../../components/features/features';
+import { Cta } from '../../components/cta/cta';
+import { Pricing } from '../../components/pricing/pricing';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, FormsModule],
+  standalone: true,
+  imports: [Hero, Features, Cta, Pricing],
   templateUrl: './home.html',
   styleUrl: './home.css',
-  animations: [
-    trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate(
-          '1000ms ease-in-out',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        ),
-      ]),
-    ]),
-  ],
 })
-export class Home {
-  constructor(private viewportScroller: ViewportScroller) {}
-
-  scrollToSection(sectionId: string) {
-    setTimeout(() => {
-      this.viewportScroller.scrollToAnchor(sectionId);
-    }, 300);
-  }
-}
+export class Home {}

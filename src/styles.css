@@ -8,18 +8,26 @@
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
-}
-body {
-  background: linear-gradient(to right, #06080d, #0f141b);
+  scroll-behavior: smooth;
 }
 
+body {
+  background: linear-gradient(135deg, #06080d 0%, #0f141b 50%, #121a25 100%);
+  overflow-x: hidden;
+}
+
+/* Modern Theme Configuration */
 @theme {
   --color-primary: #1447e6;
   --color-secondary: #d11ec0;
-  --color-variant1: #1447e6;
-  --color-variant2: #1447e6;
-  --color-variant3: #1447e6;
-
+  --color-primary-glow: #1449e6a8;
+  --color-secondary-glow: #d11ec0a8;
+  --color-accent: #22d3ee;
+  --color-accent-glow: rgba(34, 211, 238, 0.6);
+  
+  --color-bg-dark: #06080d;
+  --color-bg-light: #0f141b;
+  
   --color-light-text: #f5f5f5;
   --color-success: #219653;
   --color-danger: #d34053;
@@ -29,54 +37,177 @@ body {
   --font-size-title-mobile: 1.4rem;
   --font-size-subtitle: 1.7rem;
   --font-size-light-text: 1rem;
+  
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-darker: rgba(20, 20, 30, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-blur: 12px;
 }
 
-@utility outer-button {
-  border: 1px solid white;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  color: white;
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  text-transform: uppercase;
+/* Glass Effect Utilities */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
 }
 
-@utility inner-button {
-  background-color: var(--color-primary);
-  color: white;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 10px;
-  text-transform: uppercase;
+.glass-dark {
+  background: var(--glass-bg-darker);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
 }
 
-.outer-button,
-.inner-button {
-  &:hover {
-    background-color: #1449e6d4;
-    transition: all ease-in-out 0.3s;
-    color: white;
-    box-shadow: 0 4px 6px rgba(60, 164, 250, 0.718),
-      0 1px 3px rgba(0, 0, 0, 0.08);
-  }
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
 }
 
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* Glow Effects */
+.glow-primary {
+  box-shadow: 0 0 15px var(--color-primary-glow);
+}
+
+.glow-secondary {
+  box-shadow: 0 0 15px var(--color-secondary-glow);
+}
+
+.glow-accent {
+  box-shadow: 0 0 15px var(--color-accent-glow);
+}
+
+.text-glow-primary {
+  text-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+.text-glow-secondary {
+  text-shadow: 0 0 10px var(--color-secondary-glow);
+}
+
+/* Enhanced Buttons */
 .outer-button {
-  &:hover {
-    background-color: var(--color-primary);
-  }
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
 
-@utility input {
-  border: 2px solid var(--color-primary);
+.inner-button {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.outer-button:hover,
+.inner-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(60, 164, 250, 0.4);
+}
+
+.outer-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+
+.inner-button:hover {
+  background: linear-gradient(135deg, var(--color-primary) 20%, var(--color-secondary) 80%);
+}
+
+/* Form Elements */
+.input {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  color: var(--color-light-text);
   font-size: 1rem;
   width: 100%;
   margin-top: 0.25rem;
   display: block;
-  padding: 0.3rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-glow);
+}
+
+/* Scroll Animation Classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 {
+  transition-delay: 0.2s;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.4s;
+}
+
+.reveal-delay-3 {
+  transition-delay: 0.6s;
+}
+
+/* Background Elements */
+.bg-grid {
+  background-size: 50px 50px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-gradient-glow {
+  position: relative;
+}
+
+.bg-gradient-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--color-primary-glow) 0%, transparent 70%);
+  opacity: 0.3;
+  z-index: -1;
 }
