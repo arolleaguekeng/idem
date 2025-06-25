@@ -1,3 +1,17 @@
+@if(isLoading()){ 
+  <div class="flex justify-center items-center h-[90vh] flex-col ">
+    <app-loader />
+    <p class="text-gray-400 text-xl">Loading project dashboard...</p>
+  </div>
+} @else if(error()){ 
+  <div
+    class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
+    role="alert"
+  >
+    <p class="font-bold">Error</p>
+    <p>{{ error() }}</p>
+  </div>
+} @else {
 <div class="p-4 md:p-8 text-gray-300 min-h-screen">
   @if (project(); as currentProject) {
   <div class="space-y-8">
@@ -18,7 +32,7 @@
         </div>
         <div class="mt-4 md:mt-0">
           <button
-            class="bg-primary hover:bg-primary/80 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out"
+            class="inner-button text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out"
           >
             Project Settings (Soon)
           </button>
@@ -246,36 +260,6 @@
         <li>Set up testing environments and strategy.</li>
       </ul>
     </section>
-
-    <!-- Quick Links -->
-    <section class="bg-gray-900 shadow-md rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-300 mb-4">Quick Links</h2>
-      <div class="flex flex-wrap gap-3">
-        <a
-          [routerLink]="['/console/branding', currentProject.id]"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
-        >
-          Full Branding
-        </a>
-        <a
-          [routerLink]="['/console/planing', currentProject.id]"
-          class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
-        >
-          Project Plan
-        </a>
-        <a
-          [routerLink]="['/projects']"
-          class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm"
-        >
-          All Projects
-        </a>
-      </div>
-    </section>
-  </div>
-  } @else if (isLoading()) {
-  <div class="flex justify-center items-center h-64">
-    <p class="text-gray-400 text-xl">Loading project dashboard...</p>
-    <!-- Placeholder for a proper loader component -->
   </div>
   } @else if (error()) {
   <div
@@ -292,3 +276,4 @@
   </div>
   }
 </div>
+}

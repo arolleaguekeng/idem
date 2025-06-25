@@ -371,7 +371,7 @@ export class CreateProjectComponent implements OnInit {
       this.projectService.createProject(this.project()).subscribe({
         next: (projectId: string) => {
           this.cookieService.set('projectId', projectId);
-          this.router.navigate([`/console/planing/${projectId}`]);
+          this.router.navigate([`/console/dashboard`]);
         },
         error: (err) => {
           console.error('Error creating project:', err);

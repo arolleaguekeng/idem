@@ -64,13 +64,13 @@
       <button
         type="button"
         (click)="selectedTemplate.set(null)"
-        class="px-6 py-2 rounded-lg border border-gray-600 hover:bg-gray-700/50 text-gray-300 transition-colors"
+        class="px-6 py-2 outline-button outer-button rounded-lg text-gray-300 transition-colors"
       >
         Change template
       </button>
       <button
         (click)="createDeployment()"
-        class="px-6 py-2 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-700 hover:to-green-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
+        class="px-6 py-2 inner-button rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50"
         [disabled]="deploymentConfigForm.invalid || loadingDeployment()"
       >
         <i class="pi pi-rocket"></i> {{ loadingDeployment() ? 'Deployment...' :

@@ -6,6 +6,7 @@ import {
   ActivatedRoute,
   NavigationEnd,
 } from '@angular/router';
+import { SplashScreenComponent } from './components/splash-screen/splash-screen';
 import { filter, map, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout';
@@ -20,7 +21,8 @@ import { EmptyLayout } from "./layouts/empty-layout/empty-layout";
     PublicLayoutComponent,
     DashboardLayoutComponent,
     CommonModule,
-    EmptyLayout
+    EmptyLayout,
+    SplashScreenComponent
 ],
   templateUrl: './app.html',
   styleUrl: './app.css',

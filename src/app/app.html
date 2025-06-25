@@ -1,3 +1,5 @@
+<app-splash-screen></app-splash-screen>
+
 @if (currentLayout$ | async; as layout) { @if (layout === 'public') {
 <app-public-layout>
   <router-outlet (activate)="resetPosition()"></router-outlet>

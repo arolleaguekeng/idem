@@ -1,4 +1,4 @@
-<div class="min-h-full mt-[100px] w-full relative overflow-x-hidden">
+<div class="w-full relative overflow-x-hidden">
   <!-- Progress indicator with animated glow effect-->
   <div class="fixed mt-[60px] top-0 left-0 w-full h-1 bg-gray-200 z-50">
     <div
@@ -52,7 +52,7 @@
     @if (currentStepIndex() < steps.length - 1) {
     <button
       (click)="goToNextStep()"
-      class="group flex items-center bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white py-2 md:py-3 px-5 md:px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+      class="group flex items-center inner-button cta-primary-button px-6 py-3  text-white font-semibold"
     >
       <span class="text-sm md:text-base">Next</span>
       <svg
@@ -75,7 +75,7 @@
     @if (currentStepIndex() === steps.length - 1) {
     <button
       (click)="finalizeProjectCreation()"
-      class="group flex items-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-2 md:py-3 px-5 md:px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+      class="group flex items-center inner-button cta-primary-button px-6 py-3  text-white font-semibold"
     >
       <span class="text-sm md:text-base">Finish</span>
       <svg

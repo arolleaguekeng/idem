@@ -1,15 +1,23 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CookieService } from '../../../../shared/services/cookie.service';
 import { ProjectService } from '../../services/project.service';
 import { ProjectModel } from '../../models/project.model';
 import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html.pipe';
 import { RouterLink } from '@angular/router';
+import { Loader } from '../../../../components/loader/loader';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe, SafeHtmlPipe],
+  imports: [CommonModule, RouterLink, DatePipe, SafeHtmlPipe, Loader],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,20 +29,26 @@ export class DashboardComponent implements OnInit {
   readonly project = signal<ProjectModel | null>(null);
   readonly isLoading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
-
   readonly architectureNamesList = computed(() => {
     const projectData = this.project();
-    if (projectData?.analysisResultModel?.architectures && projectData.analysisResultModel.architectures.length > 0) {
-      return projectData.analysisResultModel.architectures.map(a => a.name).join(', ');
+    if (
+      projectData?.analysisResultModel?.architectures &&
+      projectData.analysisResultModel.architectures.length > 0
+    ) {
+      return projectData.analysisResultModel.architectures
+        .map((a) => a.name)
+        .join(', ');
     }
     return null; // Or 'Details not available', or an empty string, depending on desired template display
   });
 
   ngOnInit(): void {
     const projectId = this.cookieService.get('projectId');
-
+    this.isLoading.set(true);
     if (!projectId) {
-      this.error.set('No project selected. Please select a project to view the dashboard.');
+      this.error.set(
+        'No project selected. Please select a project to view the dashboard.'
+      );
       this.isLoading.set(false);
       return;
     }

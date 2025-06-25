@@ -1,0 +1,41 @@
+<div
+  class="splash-container"
+  [class.fade-out]="animationComplete()"
+  *ngIf="loading()"
+>
+  <div class="splash-content">
+    <!-- Logo element -->
+    <div class="logo-container">
+      <div class="logo-inner">
+        <div class="logo-hexagon"></div>
+        <div class="logo-circle"></div>
+        <div class="logo-glow"></div>
+      </div>
+    </div>
+
+    <!-- Progress tracker -->
+    <div class="progress-container">
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="progress()"></div>
+      </div>
+      <div class="progress-percentage text-glow-primary">{{ progress() }}%</div>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="particles">
+      <div class="particle p1"></div>
+      <div class="particle p2"></div>
+      <div class="particle p3"></div>
+      <div class="particle p4"></div>
+      <div class="particle p5"></div>
+      <div class="particle p6"></div>
+    </div>
+
+    <!-- Pulsating rings -->
+    <div class="rings-container">
+      <div class="ring ring1"></div>
+      <div class="ring ring2"></div>
+      <div class="ring ring3"></div>
+    </div>
+  </div>
+</div>

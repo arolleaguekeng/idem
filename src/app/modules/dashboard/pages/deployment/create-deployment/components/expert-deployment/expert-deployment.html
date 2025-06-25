@@ -78,7 +78,7 @@
     <div class="p-4 border-b border-gray-700 flex justify-between items-center">
       <h3 class="text-lg font-semibold">Your Architecture</h3>
       <button
-        class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-indigo-600/50"
+        class="px-4 py-2 inner-button rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-indigo-600/50"
         [disabled]="expertArchitecture().length === 0 || loadingDeployment()"
         (click)="createDeployment()"
       >

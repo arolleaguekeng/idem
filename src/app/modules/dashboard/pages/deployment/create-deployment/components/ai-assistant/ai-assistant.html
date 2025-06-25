@@ -52,7 +52,7 @@
       />
       <button
         (click)="sendAiPrompt()"
-        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-6 py-3 inner-button rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="!aiPrompt() || aiIsThinking()"
       >
         <i class="pi pi-send"></i>

@@ -17,7 +17,7 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1),
-              box-shadow 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+    box-shadow 0.4s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
 .cta-glass-card:hover {
@@ -27,11 +27,11 @@
 
 /* Animated gradient border */
 .cta-glass-card::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  border-radius: 20px; 
-  padding: 2px; 
+  border-radius: 20px;
+  padding: 2px;
   background: linear-gradient(
     45deg,
     var(--color-primary),
@@ -54,9 +54,15 @@
 }
 
 @keyframes gradient-border {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Reveal animations for content */
@@ -87,57 +93,36 @@
 
 /* Enhanced floating animation */
 @keyframes float-enhanced {
-  0% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-10px) rotate(1deg); }
-  50% { transform: translateY(0px) rotate(0deg); }
-  75% { transform: translateY(10px) rotate(-1deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
 }
 
 .floating-enhanced {
   animation: float-enhanced 7s ease-in-out infinite;
 }
 
-/* Button hover effects */
-.cta-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  z-index: 1;
-}
-
-.cta-primary-button {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-glow));
-  background-size: 200% 100%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-.cta-secondary-button {
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.cta-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.7s;
-  z-index: -1;
-}
-
-.cta-button:hover::before {
-  left: 100%;
-}
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
