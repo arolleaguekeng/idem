@@ -1,7 +1,7 @@
 export const environment = {
   environment: 'prod',
-  isBeta: false, // Set to false to show waitlist page in production
-  waitlistUrl: 'https://forms.gle/RealProductionGoogleFormUrlHere', // Production waitlist form URL
+  isBeta: false, 
+  waitlistUrl: 'https://forms.gle/gP7fr8te9qMUovad6',
   firebase: {
     apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',
     authDomain: 'lexis-ia.firebaseapp.com',

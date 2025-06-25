@@ -1,4 +1,4 @@
-<section class="w-full h-[90vh] md:h-[94vh] flex items-center justify-center">
+<section class="w-full md:h-[94vh] flex items-center justify-center">
   <!-- Standard Login View (shown if isBeta is true) -->
   @if (!isBeta()) {
   <div
@@ -50,109 +50,209 @@
   @else {
   <div class="w-full max-w-5xl mx-auto">
     <!-- Dark futuristic card with neon accents -->
-    <div class="relative bg-black border border-primary/30 rounded-2xl overflow-hidden shadow-2xl">
+    <div
+      class="relative bg-black border border-primary/30 rounded-2xl overflow-hidden shadow-2xl"
+    >
       <!-- Background pattern -->
-      <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iLjA1Ij48cGF0aCBkPSJNMzYgMzRjMC0yLjItMS44LTQtNC00cy00IDEuOC00IDQgMS44IDQgNCA0IDQtMS44IDQtNHptMC0zMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em0wIDYwYzAtMi4yLTEuOC00LTQtNHMtNCAxLjgtNCA0IDEuOCA0IDQgNCA0LTEuOCA0LTR6bS0zMC0zMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em02MCAwYzAtMi4yLTEuOC00LTQtNHMtNCAxLjgtNCA0IDEuOCA0IDQgNCA0LTEuOCA0LTR6bS0zMCAzMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em0zMCAwYzAtMi4yLTEuOC00LTQtNHMtNCAxLjgtNCA0IDEuOCA0IDQgNCA0LTEuOCA0LTR6bS0zMC0zMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em0zMC0zMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em0zMCAzMGMwLTIuMi0xLjgtNC00LTRzLTQgMS44LTQgNCAxLjggNCA0IDQgNC0xLjggNC00em0tMzAgMzBjMC0yLjItMS44LTQtNC00cy00IDEuOC00IDQgMS44IDQgNCA0IDQtMS44IDQtNHptMzAtMzBjMC0yLjItMS44LTQtNC00cy00IDEuOC00IDQgMS44IDQgNCA0IDQtMS44IDQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
-      
+      <div class="md:absolute inset-0 opacity-40"></div>
+
       <div class="flex flex-col lg:flex-row">
         <!-- Left content column with logo and headline -->
         <div class="lg:w-1/2 p-8 md:p-12">
-          <!-- Neon logo with shine effect -->
-          <div class="relative inline-block mb-6">
-            <div class="h-16 bg-gradient-to-r rounded-lg flex items-center justify-center shadow-[0_0_15px] shadow-primary/50 mb-4">
-             <img src="assets/icons/logo_white.png" class="w-auto h-16" alt="">
-            </div>
-            <!-- Horizontal neon line -->
-            <div class="w-full h-0.5 bg-primary shadow-[0_0_5px] shadow-primary/70"></div>
-          </div>
-          
           <!-- Main headline with gradient text -->
-          <h1 class="text-5xl sm:text-6xl font-black text-white mb-4 leading-tight">
+          <h1
+            class="text-5xl sm:text-6xl font-black text-white mb-4 leading-tight"
+          >
             <span class="block">Be The First To</span>
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-blue-400">Experience IDEM</span>
+            <span
+              class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-blue-400"
+              >Experience IDEM</span
+            >
           </h1>
-          
+
           <!-- Compelling marketing pitch -->
           <p class="text-xl text-gray-300 mb-8">
-            <span class="text-green-400 font-black">Early access spots are limited.</span> Join our exclusive waitlist today and transform your brand with AI superpowers before everyone else.
+            <span class="text-green-400 font-black"
+              >Early access spots are limited.</span
+            >
+            Join our exclusive waitlist today and transform your brand with AI
+            superpowers before everyone else.
           </p>
-          
+
           <!-- Limited slots counter -->
-          <div class="inline-flex items-center gap-3 bg-white/5 border border-red-400/30 rounded-full px-5 py-2 mb-8">
-            <div class="h-2.5 w-2.5 bg-red-400 rounded-full animate-pulse"></div>
-            <p class="font-medium text-red-400">Only <span class="text-red-400 font-bold">100 spots</span> remaining</p>
+          <div
+            class="inline-flex items-center gap-3 bg-white/5 border border-red-400/30 rounded-full px-5 py-2 mb-8"
+          >
+            <div
+              class="h-2.5 w-2.5 bg-red-400 rounded-full animate-pulse"
+            ></div>
+            <p class="font-medium text-red-400">
+              Only
+              <span class="text-red-400 font-bold">100 spots</span> remaining
+            </p>
           </div>
-          
+
           <!-- CTA Button -->
           <button
             (click)="openWaitlistForm()"
-            class="group inline-flex items-center gap-3 inner-button cta-primary-button px-6 py-3 rounded-xl text-white font-semibold">
-            <span class="text-lg">Secure Your Spot Now</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            class="group inline-flex items-center gap-3 inner-button cta-primary-button px-6 py-3 rounded-xl text-white font-semibold"
+          >
+            <span class="md:text-lg text-base">Secure Your Spot Now</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 group-hover:translate-x-1 transition-transform duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
             </svg>
           </button>
         </div>
-        
+
         <!-- Right column with feature highlights -->
-        <div class="lg:w-1/2 bg-black/50 border-t lg:border-t-0 lg:border-l border-primary/20 p-8 md:p-12">
-          <div class="text-lg font-medium text-white mb-6">Be among the first to unlock:</div>
-          
+        <div
+          class="lg:w-1/2 bg-black/50 border-t lg:border-t-0 lg:border-l border-primary/20 p-8 md:p-12"
+        >
+          <div class="text-lg font-medium text-white mb-6">
+            Be among the first to unlock:
+          </div>
+
           <!-- Feature list -->
           <ul class="space-y-5">
             <!-- Feature 1 -->
             <li class="flex items-start gap-4">
-              <div class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <div
+                class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div>
-                <span class="block text-white font-medium">AI-Generated Brand Identity</span>
-                <span class="text-gray-400">Professional logo & visual elements in seconds</span>
+                <span class="block text-white font-medium"
+                  >AI-Generated Brand Identity</span
+                >
+                <span class="text-gray-400"
+                  >Professional logo & visual elements in seconds</span
+                >
               </div>
             </li>
-            
+
             <!-- Feature 2 -->
             <li class="flex items-start gap-4">
-              <div class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <div
+                class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div>
-                <span class="block text-white font-medium">1-Click Web Deployment</span>
-                <span class="text-gray-400">Skip technical setup with our streamlined process</span>
+                <span class="block text-white font-medium"
+                  >1-Click Web Deployment</span
+                >
+                <span class="text-gray-400"
+                  >Skip technical setup with our streamlined process</span
+                >
               </div>
             </li>
-            
+
             <!-- Feature 3 -->
             <li class="flex items-start gap-4">
-              <div class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <div
+                class="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div>
-                <span class="block text-white font-medium">Beta Tester Benefits</span>
-                <span class="text-gray-400">Lifetime discount & priority support</span>
+                <span class="block text-white font-medium"
+                  >Beta Tester Benefits</span
+                >
+                <span class="text-gray-400"
+                  >Lifetime discount & priority support</span
+                >
               </div>
             </li>
           </ul>
-          
+
           <!-- Social proof -->
           <div class="mt-8 pt-6 border-t border-white/10">
             <div class="flex items-center gap-2 mb-2">
               <div class="flex -space-x-2">
                 <!-- User avatars (placeholders) -->
-                <div class="h-8 w-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 border-2 border-black"></div>
-                <div class="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-green-600 border-2 border-black"></div>
-                <div class="h-8 w-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 border-2 border-black"></div>
-                <div class="h-8 w-8 rounded-full bg-black border-2 border-primary flex items-center justify-center text-xs text-white">+45</div>
+                <div
+                  class="h-8 w-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 border-2 border-black flex items-center justify-center"
+                >
+                  <i class="pi pi-user text-white text-2xl"></i>
+                </div>
+                <div
+                  class="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-green-600 border-2 border-black flex items-center justify-center"
+                >
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4E03AQEbWgowfM_clg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1731445317863?e=1756339200&v=beta&t=ywEeBFy5PI14jdHLb6oB6lpO4EYmVJcF3z2f7GNfwkg"
+                    class="w-full h-full object-cover rounded-full"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 border-2 border-black flex items-center justify-center"
+                >
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4E03AQEYIfEYsf65fw/profile-displayphoto-shrink_100_100/B4EZXcWQ9xH0AU-/0/1743158581230?e=1756339200&v=beta&t=hAl4LyUIsrAtEKLaqSwVnt_WejQ_U5q3cixbQkd8S7Q"
+                    class="w-full h-full object-cover rounded-full"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 rounded-full bg-black border-2 border-primary flex items-center justify-center text-xs text-white"
+                >
+                  +45
+                </div>
               </div>
               <p class="text-gray-400">Joined the waitlist this week</p>
             </div>
-            <p class="text-sm text-gray-500">Don't miss your chance to be part of the AI revolution</p>
+            <p class="text-sm text-gray-500">
+              Don't miss your chance to be part of the AI revolution
+            </p>
           </div>
         </div>
       </div>
