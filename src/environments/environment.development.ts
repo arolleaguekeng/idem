@@ -11,6 +11,7 @@ export const environment = {
     appId: '1:78825247320:web:2a69ba8ceabad513f3f02d',
   },
   services: {
+    domain: 'https://idem.africa',
     api: {
       url: 'http://localhost:3000/api',
       version: 'v1',
