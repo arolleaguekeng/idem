@@ -1,6 +1,6 @@
 export const environment = {
   environment: 'prod',
-  isBeta: false, 
+  isBeta: true, 
   waitlistUrl: 'https://forms.gle/gP7fr8te9qMUovad6',
   firebase: {
     apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',
