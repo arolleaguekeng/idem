@@ -2,8 +2,6 @@ import {
   Component,
   computed,
   inject,
-  input,
-  output,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,6 +12,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import {
   CloudComponentDetailed,
   ArchitectureComponent,
@@ -149,7 +151,7 @@ const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
 @Component({
   selector: 'app-expert-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, InputTextModule, ButtonModule, DropdownModule],
   templateUrl: './expert-deployment.html',
   styleUrl: './expert-deployment.css',
 })
@@ -171,6 +173,40 @@ export class ExpertDeployment {
   // Git repository state
   protected readonly gitBranches = signal<string[]>([]);
   protected readonly loadingGitInfo = signal<boolean>(false);
+  
+  /**
+   * Fetches Git branches for the repository URL in the form
+   */
+  protected fetchGitBranches(): void {
+    const repoUrl = this.deploymentConfigForm.get('repoUrl')?.value;
+    
+    if (!repoUrl || repoUrl.trim() === '') {
+      this.gitBranches.set([]);
+      return;
+    }
+    
+    this.loadingGitInfo.set(true);
+    
+    this.deploymentService.validateGitRepository(repoUrl).subscribe({
+      next: (branches) => {
+        this.gitBranches.set(branches);
+        
+        // If branches are available and current branch is not in the list, select the first branch
+        const currentBranch = this.deploymentConfigForm.get('branch')?.value;
+        if (branches.length > 0 && !branches.includes(currentBranch)) {
+          this.deploymentConfigForm.get('branch')?.setValue(branches[0]);
+        }
+        
+        this.loadingGitInfo.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching Git branches:', error);
+        this.gitBranches.set([]);
+        this.loadingGitInfo.set(false);
+        // Don't show error message to user as this is optional
+      }
+    });
+  }
 
   // Computed properties
   protected readonly filteredCatalogue = computed(() =>
@@ -184,6 +220,7 @@ export class ExpertDeployment {
   protected readonly router = inject(Router);
   protected readonly errorMessages = signal<string[]>([]);
   protected readonly deploymentModel = signal<DeploymentModel | null>(null);
+  protected readonly deploymentNameDialogVisible = signal<boolean>(false);
 
   protected getFormData(): DeploymentFormData {
     return {
@@ -195,14 +232,27 @@ export class ExpertDeployment {
     };
   }
 
-  protected createDeployment(): void {
+  protected openDeploymentNameDialog(): void {
+    this.deploymentNameDialogVisible.set(true);
+  }
+
+  protected submitDeployment(): void {
+    if (this.deploymentConfigForm.invalid) {
+      // Mark form controls as touched to show validation errors
+      Object.keys(this.deploymentConfigForm.controls).forEach(key => {
+        this.deploymentConfigForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
     console.log('Creating deployment...');
     this.loadingDeployment.set(true);
+    this.deploymentNameDialogVisible.set(false);
 
-    // Récupérer les données du formulaire
+    // Get form data
     const formData = this.getFormData();
 
-    // Ajouter les composants d'architecture avec leurs configurations
+    // Add architecture components with their configurations
     formData.customComponents = this.expertArchitecture().map((comp) => {
       const config = this.expertForm.get(comp.instanceId)?.value || {};
       return {
@@ -211,16 +261,16 @@ export class ExpertDeployment {
       };
     });
 
-    // Utiliser DeploymentMapper pour créer l'objet de déploiement
+    // Use DeploymentMapper to create deployment object
     const deploymentData = DeploymentMapper.formDataToDeploymentModel(
       formData,
       this.projectId!
     );
 
-    // Log du payload pour debugging
+    // Log payload for debugging
     console.log('🚀 Creating deployment with payload:', deploymentData);
 
-    // Soumettre au service
+    // Submit to service
     this.deploymentService.createDeployment(deploymentData).subscribe({
       next: (deployment) => {
         console.log('✅ Deployment created successfully:', deployment);
@@ -247,6 +297,8 @@ export class ExpertDeployment {
 
     this.expertForm = this.formBuilder.group({});
   }
+  
+
 
   // --- EXPERT MODE ---
   protected addComponentToArchitecture(componentId: string): void {

@@ -80,7 +80,7 @@
       <button
         class="px-4 py-2 inner-button rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-indigo-600/50"
         [disabled]="expertArchitecture().length === 0 || loadingDeployment()"
-        (click)="createDeployment()"
+        (click)="openDeploymentNameDialog()"
       >
         <i class="pi pi-rocket"></i>{{ loadingDeployment() ? 'Deployment...' :
         'Deploy' }}
@@ -203,3 +203,111 @@
     }
   </div>
 </div>
+
+<!-- Deployment Name Dialog -->
+<p-dialog 
+  [visible]="deploymentNameDialogVisible()"
+  (onHide)="deploymentNameDialogVisible.set(false)"
+  [style]="{ width: '450px' }"
+  header="Enter Deployment Name"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="p-fluid"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+>
+  <div class="p-4">
+    <div [formGroup]="deploymentConfigForm" class="space-y-4">
+      <!-- Deployment Name Field -->
+      <div>
+        <label for="name" class="text-sm font-medium mb-2 flex items-center gap-1">
+          Deployment Name <span class="text-red-400">*</span>
+        </label>
+        <div class="relative">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-tag"></i>
+            <input 
+              pInputText 
+              id="name" 
+              type="text" 
+              formControlName="name" 
+              class="w-full p-inputtext"
+              placeholder="Enter a name for your deployment"
+            />
+          </span>
+        </div>
+        <small *ngIf="deploymentConfigForm.get('name')?.invalid && deploymentConfigForm.get('name')?.touched" class="text-red-400 mt-1 flex items-center gap-1">
+          <i class="pi pi-exclamation-circle"></i>
+          Deployment name is required (minimum 3 characters)
+        </small>
+      </div>
+      
+      <!-- Git Repository URL Field -->
+      <div>
+        <label for="repoUrl" class="text-sm font-medium mb-2 flex items-center gap-1">
+          Git Repository URL
+          <i class="pi pi-info-circle text-gray-500 text-xs" title="Enter a valid Git repository URL to fetch available branches"></i>
+        </label>
+        <div class="relative">
+          <span class="p-input-icon-left p-input-icon-right w-full">
+            <i class="pi pi-github"></i>
+            <input 
+              pInputText 
+              id="repoUrl" 
+              type="text" 
+              formControlName="repoUrl" 
+              class="w-full p-inputtext"
+              placeholder="https://github.com/username/repository.git"
+              (blur)="fetchGitBranches()"
+            />
+            <i *ngIf="loadingGitInfo()" class="pi pi-spin pi-spinner text-blue-500"></i>
+          </span>
+        </div>
+        <div class="mt-1 flex items-center gap-1" *ngIf="gitBranches().length > 0">
+          <i class="pi pi-check-circle text-green-500 text-xs"></i>
+          <small class="text-green-500">Repository validated successfully</small>
+        </div>
+      </div>
+      
+      <!-- Branch Selection Field -->
+      <div>
+        <label for="branch" class="block text-sm font-medium mb-2">
+          Branch
+        </label>
+        <p-dropdown
+          id="branch"
+          formControlName="branch"
+          [options]="gitBranches()"
+          [disabled]="gitBranches().length === 0"
+          placeholder="Select a branch"
+          [showClear]="false"
+          styleClass="w-full"
+          [style]="{'width':'100%'}"
+          optionLabel=""
+          optionValue=""
+          appendTo="body"
+        ></p-dropdown>
+        <small *ngIf="gitBranches().length === 0 && deploymentConfigForm.get('repoUrl')?.value" class="text-gray-400">
+          No branches found or repository not accessible
+        </small>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <p-button 
+        label="Cancel" 
+        icon="pi pi-times" 
+        styleClass="p-button-text" 
+        (click)="deploymentNameDialogVisible.set(false)"
+      ></p-button>
+      <p-button 
+        label="Deploy" 
+        icon="pi pi-rocket" 
+        [disabled]="deploymentConfigForm.get('name')?.invalid"
+        (click)="submitDeployment()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
