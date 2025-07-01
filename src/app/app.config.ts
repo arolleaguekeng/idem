@@ -4,12 +4,11 @@ import {
   REQUEST,
   SecurityContext,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+// Router imports moved to app.routes.ts
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { routes } from './app.routes';
 import {
   provideClientHydration,
   withEventReplay,
@@ -37,6 +36,8 @@ import { PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { initializeServerApp } from '@angular/fire/app';
 import { ProjectService } from './modules/dashboard/services/project.service';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { routes } from './app.routes';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -49,9 +50,8 @@ const firebaseConfig = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
     provideClientHydration(withEventReplay()),
-
+    provideRouter(routes, withComponentInputBinding()),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(firebaseConfig);

@@ -102,8 +102,7 @@ export const routes: Routes = [
     data: { layout: 'empty' },
   },
 
-  // Redirection par défaut
-
+  // Project creation route
   {
     path: 'project/create',
     loadComponent: () =>
@@ -113,5 +112,16 @@ export const routes: Routes = [
     data: { layout: 'empty' },
   },
 
-  { path: '**', redirectTo: 'home' },
+  // 404 Not Found route
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('./shared/components/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+    data: { layout: 'public' },
+  },
+
+  // Catch all unknown routes and redirect to 404
+  { path: '**', redirectTo: 'not-found' },
 ];

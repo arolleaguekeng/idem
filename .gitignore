@@ -40,9 +40,12 @@ testem.log
 .env
 # System files
 .DS_Store
-Thumbs.db
+Thumbs.db 
 
 # Firebase
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+.windsurf/*
+.windsurf
