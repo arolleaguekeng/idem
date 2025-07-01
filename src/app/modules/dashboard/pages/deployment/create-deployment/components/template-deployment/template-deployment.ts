@@ -15,7 +15,6 @@ import {
 import {
   DeploymentFormData,
   DeploymentValidators,
-  DeploymentMapper,
 } from '../../../../../models/api/deployments/deployments.api.model';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
