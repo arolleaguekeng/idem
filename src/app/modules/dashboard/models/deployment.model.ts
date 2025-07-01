@@ -1,5 +1,8 @@
+/**
+ * Common interfaces used across all deployment types
+ */
 export interface GitRepository {
-  provider: "github" | "gitlab" | "bitbucket" | "azure-repos";
+  provider: 'github' | 'gitlab' | 'bitbucket' | 'azure-repos';
   url: string;
   branch: string;
   accessToken?: string; // PAT or OAuth token (stored encrypted)
@@ -15,7 +18,7 @@ export interface EnvironmentVariable {
 
 export interface PipelineStep {
   name: string;
-  status: "pending" | "in-progress" | "succeeded" | "failed" | "skipped";
+  status: 'pending' | 'in-progress' | 'succeeded' | 'failed' | 'skipped';
   startedAt?: Date;
   finishedAt?: Date;
   logs?: string; // URL of the logs or snippet
@@ -37,21 +40,81 @@ export interface CostEstimation {
   }[];
 }
 
-export interface DeploymentModel {
+export interface ChatMessage {
+  sender: 'user' | 'ai';
+  text: string;
+  timestamp?: Date;
+}
+
+export interface ArchitectureTemplate {
+  id: string;
+  provider: 'aws' | 'gcp' | 'azure';
+  category: string;
+  name: string;
+  description: string;
+  tags: string[];
+  icon: string;
+}
+
+// Form configuration interfaces
+export interface FormOption {
+  name: string;
+  label: string;
+  type: 'text' | 'number' | 'select' | 'toggle';
+  required?: boolean;
+  defaultValue?: any;
+  placeholder?: string;
+  description?: string;
+  options?: { label: string; value: string }[];
+}
+
+export interface CloudComponentDetailed {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  provider: 'aws' | 'gcp' | 'azure';
+  icon: string;
+  pricing?: string;
+  options?: FormOption[];
+}
+
+export interface ArchitectureComponent extends CloudComponentDetailed {
+  instanceId: string;
+  type: string; // Component type identifier (e.g., 'database', 'compute', 'storage')
+  configuration?: { [key: string]: any };
+  dependencies?: string[];
+}
+
+/**
+ * Deployment mode type for distinguishing between deployment types
+ */
+export type DeploymentMode =
+  | 'beginner'
+  | 'template'
+  | 'ai-assistant'
+  | 'expert';
+
+/**
+ * Base deployment model with common properties shared across all deployment types
+ */
+export interface BaseDeploymentModel {
+  // Core identification
   id: string;
   projectId: string;
   name: string; // Friendly name for the deployment
-  environment: "development" | "staging" | "production";
+  mode: DeploymentMode; // Type of deployment
+  environment: 'development' | 'staging' | 'production';
   status:
-    | "configuring"
-    | "pending"
-    | "building"
-    | "infrastructure-provisioning"
-    | "deploying"
-    | "deployed"
-    | "rollback"
-    | "failed"
-    | "cancelled";
+    | 'configuring'
+    | 'pending'
+    | 'building'
+    | 'infrastructure-provisioning'
+    | 'deploying'
+    | 'deployed'
+    | 'rollback'
+    | 'failed'
+    | 'cancelled';
 
   // Configuration
   gitRepository?: GitRepository;
@@ -86,55 +149,60 @@ export interface DeploymentModel {
   // Standard timestamps
   createdAt: Date;
   updatedAt: Date;
-
-  // New fields using simplified interfaces
-  chatMessages?: ChatMessage[];
-  architectureTemplates?: ArchitectureTemplate[];
-  cloudComponents?: CloudComponentDetailed[];
-  architectureComponents?: ArchitectureComponent[];
 }
 
-export interface ChatMessage {
-  sender: "user" | "ai";
-  text: string;
+/**
+ * beginner deployment model - simplest form with minimal configuration
+ */
+export interface QuickDeploymentModel extends BaseDeploymentModel {
+  readonly mode: 'beginner';
+  // beginner deployment specific fields
+  frameworkType?: string;
+  buildCommand?: string;
+  startCommand?: string;
 }
 
-export interface ArchitectureTemplate {
-  id: string;
-  provider: "aws" | "gcp" | "azure";
-  category: string;
-  name: string;
-  description: string;
-  tags: string[];
-  icon: string;
+/**
+ * Template deployment model - based on predefined architecture templates
+ */
+export interface TemplateDeploymentModel extends BaseDeploymentModel {
+  readonly mode: 'template';
+  // Template specific fields
+  templateId: string;
+  templateName: string;
+  templateVersion?: string;
+  customizations?: { [key: string]: any };
 }
 
-// Form configuration interfaces
-export interface FormOption {
-  name: string;
-  label: string;
-  type: "text" | "number" | "select" | "toggle";
-  required?: boolean;
-  defaultValue?: any;
-  placeholder?: string;
-  description?: string;
-  options?: { label: string; value: string }[];
+/**
+ * AI Assistant deployment model - created through conversation with AI
+ */
+export interface AiAssistantDeploymentModel extends BaseDeploymentModel {
+  readonly mode: 'ai-assistant';
+  // AI Assistant specific fields
+  chatMessages: ChatMessage[];
+  aiGeneratedArchitecture?: boolean;
+  aiRecommendations?: string[];
+  generatedComponents?: ArchitectureComponent[];
 }
 
-export interface CloudComponentDetailed {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  provider: "aws" | "gcp" | "azure";
-  icon: string;
-  pricing?: string;
-  options?: FormOption[];
+/**
+ * Expert deployment model - custom architecture with full configuration
+ */
+export interface ExpertDeploymentModel extends BaseDeploymentModel {
+  readonly mode: 'expert';
+  // Expert specific fields
+  cloudComponents: CloudComponentDetailed[];
+  architectureComponents: ArchitectureComponent[];
+  customInfrastructureCode?: boolean;
+  infrastructureAsCodeFiles?: { name: string; content: string }[];
 }
 
-export interface ArchitectureComponent extends CloudComponentDetailed {
-  instanceId: string;
-  type: string; // Component type identifier (e.g., 'database', 'compute', 'storage')
-  configuration?: { [key: string]: any };
-  dependencies?: string[];
-}
+/**
+ * Union type representing all possible deployment models
+ */
+export type DeploymentModel =
+  | QuickDeploymentModel
+  | TemplateDeploymentModel
+  | AiAssistantDeploymentModel
+  | ExpertDeploymentModel;

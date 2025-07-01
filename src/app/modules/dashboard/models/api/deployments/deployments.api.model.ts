@@ -1,31 +1,39 @@
 import {
   DeploymentModel,
+  QuickDeploymentModel,
+  TemplateDeploymentModel,
+  AiAssistantDeploymentModel,
+  ExpertDeploymentModel,
+  DeploymentMode,
+  BaseDeploymentModel,
   ArchitectureComponent,
   GitRepository,
   EnvironmentVariable,
-  ArchitectureTemplate,
+  ChatMessage,
 } from '../../deployment.model';
 
 /**
  * Interface représentant les données du formulaire de déploiement
  */
 export interface DeploymentFormData {
-  mode: 'beginner' | 'assistant' | 'template' | 'expert';
+  mode: DeploymentMode;
   name: string;
   environment: 'development' | 'staging' | 'production';
   repoUrl?: string;
   branch?: string;
+  frameworkType?: string;
+  buildCommand?: string;
+  startCommand?: string;
   templateId?: string;
+  templateName?: string;
+  templateVersion?: string;
+  customizations?: { [key: string]: any };
   aiPrompt?: string;
+  chatMessages?: ChatMessage[];
+  aiGeneratedArchitecture?: boolean;
   customComponents?: ArchitectureComponent[];
   gitRepository?: GitRepository;
-  customArchitecture?: {
-    components: Array<{
-      instanceId: string;
-      type: string;
-      config: Record<string, any>;
-    }>;
-  };
+  customInfrastructureCode?: boolean;
   environmentVariables?: EnvironmentVariable[];
 }
 
@@ -72,7 +80,7 @@ export class DeploymentValidators {
       case 'template':
         if (!formData.templateId) errors.push('Template selection is required');
         break;
-      case 'assistant':
+      case 'ai-assistant':
         if (!formData.aiPrompt) errors.push('AI prompt is required');
         break;
     }
@@ -122,17 +130,19 @@ export class DeploymentValidators {
  */
 export class DeploymentMapper {
   /**
-   * Convertit les données du formulaire en modèle de déploiement
+   * Convertit les données du formulaire en modèle de déploiement spécifique selon le mode
    * @param formData Les données du formulaire
    * @param projectId L'identifiant du projet
-   * @returns Un objet de déploiement partiel
+   * @returns Un objet de déploiement partiel du type approprié
    */
   static formDataToDeploymentModel(
     formData: DeploymentFormData,
     projectId: string
   ): Partial<DeploymentModel> {
-    const deployment: Partial<DeploymentModel> = {
+    // Propriétés communes à tous les types de déploiement
+    const baseDeployment: Partial<BaseDeploymentModel> = {
       projectId,
+      mode: formData.mode,
       name: formData.name,
       environment: formData.environment,
       status: 'configuring',
@@ -142,40 +152,69 @@ export class DeploymentMapper {
 
     // Add Git repository if present
     if (formData.repoUrl) {
-      deployment.gitRepository = {
+      baseDeployment.gitRepository = {
         provider: 'github',
         url: formData.repoUrl,
         branch: formData.branch || 'main',
       };
     } else if (formData.gitRepository) {
-      deployment.gitRepository = formData.gitRepository;
+      baseDeployment.gitRepository = formData.gitRepository;
     }
 
     // Add environment variables if present
     if (formData.environmentVariables?.length) {
-      deployment.environmentVariables = formData.environmentVariables;
+      baseDeployment.environmentVariables = formData.environmentVariables;
     }
 
-    // Add architecture components for expert mode
-    if (formData.customComponents?.length) {
-      deployment.architectureComponents = formData.customComponents;
-    }
+    // Selon le mode, retourner le type spécifique de déploiement
+    switch (formData.mode) {
+      case 'beginner': {
+        const beginnerDeployment: Partial<QuickDeploymentModel> = {
+          ...baseDeployment,
+          mode: 'beginner',
+          frameworkType: formData.frameworkType,
+          buildCommand: formData.buildCommand,
+          startCommand: formData.startCommand,
+        };
+        return beginnerDeployment;
+      }
 
-    // Add template details for template mode
-    if (formData.templateId) {
-      deployment.architectureTemplates = [
-        {
-          id: formData.templateId,
-          provider: 'aws',
-          category: 'general',
-          name: 'Selected Template',
-          description: 'Template selected for deployment',
-          tags: [],
-          icon: '🏗️',
-        },
-      ];
-    }
+      case 'template': {
+        const templateDeployment: Partial<TemplateDeploymentModel> = {
+          ...baseDeployment,
+          mode: 'template',
+          templateId: formData.templateId!,
+          templateName: formData.templateName || 'Selected Template',
+          templateVersion: formData.templateVersion,
+          customizations: formData.customizations,
+        };
+        return templateDeployment;
+      }
 
-    return deployment;
+      case 'ai-assistant': {
+        const aiAssistantDeployment: Partial<AiAssistantDeploymentModel> = {
+          ...baseDeployment,
+          mode: 'ai-assistant',
+          chatMessages: formData.chatMessages || [],
+          aiGeneratedArchitecture: formData.aiGeneratedArchitecture || false,
+          generatedComponents: formData.customComponents || [],
+        };
+        return aiAssistantDeployment;
+      }
+
+      case 'expert': {
+        const expertDeployment: Partial<ExpertDeploymentModel> = {
+          ...baseDeployment,
+          mode: 'expert',
+          cloudComponents: [], // À compléter avec les données de formulaire
+          architectureComponents: formData.customComponents || [],
+          customInfrastructureCode: formData.customInfrastructureCode || false,
+        };
+        return expertDeployment;
+      }
+
+      default:
+        return baseDeployment;
+    }
   }
 }

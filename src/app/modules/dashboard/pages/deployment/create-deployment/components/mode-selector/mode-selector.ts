@@ -1,6 +1,6 @@
 import { Component, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeploymentFormData } from '../../../../../models/api/deployments/deployments.api.model';
+import { DeploymentMode } from '../../../../../models/deployment.model';
 
 @Component({
   selector: 'app-mode-selector',
@@ -10,9 +10,11 @@ import { DeploymentFormData } from '../../../../../models/api/deployments/deploy
   styleUrl: './mode-selector.css',
 })
 export class ModeSelector {
-  readonly onModeSelect = output<DeploymentFormData['mode']>();
+  // Define output event emitter with DeploymentMode type
+  protected readonly onModeSelect = output<DeploymentMode>();
 
-  protected selectMode(mode: DeploymentFormData['mode']): void {
+  protected selectMode(mode: DeploymentMode): void {
+    // Emit the selected mode
     this.onModeSelect.emit(mode);
   }
 }

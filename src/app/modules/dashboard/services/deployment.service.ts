@@ -3,7 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { DeploymentModel } from '../models/deployment.model';
+import { 
+  DeploymentModel,
+  QuickDeploymentModel,
+  TemplateDeploymentModel,
+  AiAssistantDeploymentModel,
+  ExpertDeploymentModel,
+  DeploymentMode,
+  BaseDeploymentModel
+} from '../models/deployment.model';
 import { Auth, authState } from '@angular/fire/auth';
 
 // Interfaces nécessaires après la suppression de deployment.api.model.ts
@@ -66,16 +74,60 @@ export class DeploymentService {
   }
 
   /**
+   * Create a new quick deployment
+   * @param deployment The quick deployment configuration
+   */
+  createQuickDeployment(
+    deployment: Partial<QuickDeploymentModel>
+  ): Observable<QuickDeploymentModel> {
+    console.log('Creating quick deployment:', deployment);
+    return this.createDeployment<QuickDeploymentModel>(deployment);
+  }
+
+  /**
+   * Create a new template-based deployment
+   * @param deployment The template deployment configuration
+   */
+  createTemplateDeployment(
+    deployment: Partial<TemplateDeploymentModel>
+  ): Observable<TemplateDeploymentModel> {
+    console.log('Creating template deployment:', deployment);
+    return this.createDeployment<TemplateDeploymentModel>(deployment);
+  }
+
+  /**
+   * Create a new AI assistant deployment
+   * @param deployment The AI assistant deployment configuration
+   */
+  createAiAssistantDeployment(
+    deployment: Partial<AiAssistantDeploymentModel>
+  ): Observable<AiAssistantDeploymentModel> {
+    console.log('Creating AI assistant deployment:', deployment);
+    return this.createDeployment<AiAssistantDeploymentModel>(deployment);
+  }
+
+  /**
+   * Create a new expert deploymentƒ√
+   * @param deployment The expert deployment configuration
+   */
+  createExpertDeployment(
+    deployment: Partial<ExpertDeploymentModel>
+  ): Observable<ExpertDeploymentModel> {
+    console.log('Creating expert deployment:', deployment);
+    return this.createDeployment<ExpertDeploymentModel>(deployment);
+  }
+  
+  /**
    * Create a new deployment
    * @param deployment The deployment configuration
    */
-  createDeployment(
-    deployment: Partial<DeploymentModel>
-  ): Observable<DeploymentModel> {
+  private createDeployment<T extends DeploymentModel>(
+    deployment: Partial<T>
+  ): Observable<T> {
     console.log('Creating deployment:', deployment);
     return this.getAuthHeaders().pipe(
       switchMap((headers) =>
-        this.http.post<DeploymentModel>(
+        this.http.post<T>(
           `${this.apiUrl}/deployments/create`,
           deployment,
           {

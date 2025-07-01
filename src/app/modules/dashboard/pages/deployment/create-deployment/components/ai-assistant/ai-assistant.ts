@@ -11,29 +11,18 @@ import { ChatMessage } from '../../../../../models/deployment.model';
   styleUrl: './ai-assistant.css',
 })
 export class AiAssistant {
-  readonly deploymentForm = input.required<FormGroup>();
-  readonly chatMessages = input<ChatMessage[]>([]);
-  readonly aiPrompt = input<string>('');
-  readonly aiIsThinking = input<boolean>(false);
-  readonly isFormValid = input<boolean>(false);
-
-  readonly onPromptChange = output<string>();
-  readonly onSendAiPrompt = output<void>();
-  readonly onCreateDeployment = output<void>();
-  readonly onResetView = output<void>();
+  readonly deploymentForm = signal<FormGroup>(new FormGroup({}));
+  readonly chatMessages = signal<ChatMessage[]>([]);
+  readonly aiPrompt = signal<string>('');
+  readonly aiIsThinking = signal<boolean>(false);
+  readonly isFormValid = signal<boolean>(false);
 
   protected readonly currentPrompt = signal<string>('');
 
+  protected sendAiPrompt(): void {}
+
+  protected createDeployment(): void {}
   protected updatePrompt(prompt: string): void {
     this.currentPrompt.set(prompt);
-    this.onPromptChange.emit(prompt);
-  }
-
-  protected sendAiPrompt(): void {
-    this.onSendAiPrompt.emit();
-  }
-
-  protected createDeployment(): void {
-    this.onCreateDeployment.emit();
   }
 }

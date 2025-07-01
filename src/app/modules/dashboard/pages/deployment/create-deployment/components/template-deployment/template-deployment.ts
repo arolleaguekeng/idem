@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -8,7 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ArchitectureTemplate } from '../../../../../models/deployment.model';
+import {
+  ArchitectureTemplate,
+  TemplateDeploymentModel,
+} from '../../../../../models/deployment.model';
 import {
   DeploymentFormData,
   DeploymentValidators,
@@ -53,8 +56,10 @@ const MOCK_TEMPLATES: ArchitectureTemplate[] = [
   templateUrl: './template-deployment.html',
   styleUrl: './template-deployment.css',
 })
-export class TemplateDeployment {
-  // Template mode state
+export class TemplateDeployment implements OnInit {
+  // Angular properties (inputs, outputs, queries)
+
+  // Template mode state signals
   protected readonly availableTemplates = signal<ArchitectureTemplate[]>([]);
   protected readonly selectedTemplate = signal<ArchitectureTemplate | null>(
     null
@@ -63,11 +68,16 @@ export class TemplateDeployment {
   protected readonly projectId = signal<string | null>(null);
   protected readonly errorMessages = signal<string[]>([]);
   protected readonly validationErrors = signal<string[]>([]);
+  protected readonly templateVersion = signal<string>('1.0');
+
+  // Form controls
   protected deploymentConfigForm: FormGroup;
+
+  // Services
   private readonly formBuilder = inject(FormBuilder);
   private readonly cookieService = inject(CookieService);
   private readonly deploymentService = inject(DeploymentService);
-  private readonly router = inject(Router); // Injection de Router
+  private readonly router = inject(Router);
 
   constructor() {
     this.deploymentConfigForm = this.formBuilder.group({
@@ -76,6 +86,25 @@ export class TemplateDeployment {
       repoUrl: [''],
       branch: ['main'],
     });
+  }
+
+  ngOnInit(): void {
+    // Initialize project ID from cookie
+    const projectId = this.cookieService.get('projectId');
+    if (!projectId) {
+      console.error('No project ID found in cookies');
+      this.errorMessages.set([
+        'No project selected. Please select a project first.',
+      ]);
+    } else {
+      this.projectId.set(projectId);
+      console.log(
+        'Template deployment initialized with project ID:',
+        projectId
+      );
+    }
+
+    // Load available templates
     this.loadAvailableTemplates();
 
     // Set up form validation
@@ -90,6 +119,7 @@ export class TemplateDeployment {
     this.errorMessages.set([]);
     this.validationErrors.set([]);
   }
+
   // --- SETUP METHODS ---
   private setupFormValidation(): void {
     this.deploymentConfigForm.valueChanges.subscribe(() => {
@@ -103,16 +133,18 @@ export class TemplateDeployment {
   }
 
   private getFormData(): DeploymentFormData {
-    const mode = 'template';
     const formValue = this.deploymentConfigForm.value;
+    const selectedTemplate = this.selectedTemplate();
 
     return {
-      mode: mode!,
+      mode: 'template',
       name: formValue.name,
       environment: formValue.environment,
       repoUrl: formValue.repoUrl,
       branch: formValue.branch,
-      templateId: this.selectedTemplate()?.id,
+      templateId: selectedTemplate?.id,
+      templateName: selectedTemplate?.name,
+      templateVersion: this.templateVersion(),
     };
   }
 
@@ -120,19 +152,20 @@ export class TemplateDeployment {
     const formData = this.getFormData();
     const errors: string[] = [];
 
-    // Validation complète du formulaire
+    // Complete form validation
     errors.push(...DeploymentValidators.validateFormData(formData));
 
-    // Validation spécifique du repository Git (si fourni)
+    // Git repository validation (if provided)
     if (formData.repoUrl) {
       const gitRepo = {
         url: formData.repoUrl,
         branch: formData.branch || 'main',
-        provider: 'github' as 'github' | 'gitlab' | 'bitbucket' | 'azure-repos', // Cast vers le type correct
+        provider: 'github' as 'github' | 'gitlab' | 'bitbucket' | 'azure-repos',
       };
       errors.push(...DeploymentValidators.validateGitRepository(gitRepo));
     }
 
+    // Template validation
     if (!this.selectedTemplate()) {
       errors.push('Please select an architecture template');
     }
@@ -141,45 +174,75 @@ export class TemplateDeployment {
   }
 
   protected createDeployment(): void {
-    if (!this.deploymentConfigForm.valid || !this.projectId()) {
+    // Validate project ID
+    if (!this.projectId()) {
       this.errorMessages.set([
-        'Please fill in all required fields and select a project.',
+        'No project selected. Please select a project first.',
       ]);
       return;
     }
 
-    this.loadingDeployment.set(true);
-
-    // Récupérer les données du formulaire
-    const formData = this.getFormData();
-
-    // Utiliser le template sélectionné pour les composants d'architecture
-    if (this.selectedTemplate()) {
-      // TODO: Générer les composants d'architecture correspondant au template sélectionné
-      formData.customComponents = [];
+    // Validate form
+    if (!this.deploymentConfigForm.valid) {
+      this.errorMessages.set(['Please fill in all required fields.']);
+      return;
     }
 
-    // Utiliser DeploymentMapper pour créer l'objet de déploiement
-    const deploymentData = DeploymentMapper.formDataToDeploymentModel(
-      formData,
-      this.projectId()!
-    );
+    // Validate template selection
+    if (!this.selectedTemplate()) {
+      this.errorMessages.set(['Please select a template.']);
+      return;
+    }
 
-    // Log du payload pour debugging
-    console.log('🚀 Creating deployment with payload:', deploymentData);
+    this.loadingDeployment.set(true);
+    this.clearErrors();
 
-    // Soumettre au service
-    this.deploymentService.createDeployment(deploymentData).subscribe({
+    // Get form data
+    const formData = this.getFormData();
+
+    // Generate architecture components from the selected template
+    if (this.selectedTemplate()) {
+      // In a real implementation, we would generate components based on the template
+      // For now, we're using an empty array as a placeholder
+      formData.customComponents = [];
+
+      // Add customizations if needed
+      formData.customizations = {
+        provider: this.selectedTemplate()?.provider,
+        category: this.selectedTemplate()?.category,
+      };
+    }
+
+    // Use DeploymentMapper to create the deployment object
+    const deploymentData: TemplateDeploymentModel = {
+      mode: 'template',
+      templateId: this.selectedTemplate()?.id!,
+      templateName: this.selectedTemplate()?.name!,
+      templateVersion: this.templateVersion(),
+      name: formData.name,
+      environment: formData.environment,
+      id: '',
+      projectId: this.projectId()!,
+      status: 'configuring',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    // Log the payload for debugging
+    console.log('Creating template deployment with payload:', deploymentData);
+
+    // Submit to service
+    this.deploymentService.createTemplateDeployment(deploymentData).subscribe({
       next: (deployment) => {
-        console.log('✅ Deployment created successfully:', deployment);
+        console.log('Template deployment created successfully:', deployment);
         this.loadingDeployment.set(false);
         this.router.navigate(['/console/dashboard/deployments']);
       },
       error: (error) => {
-        console.error('❌ Error creating deployment:', error);
+        console.error('Error creating template deployment:', error);
         this.loadingDeployment.set(false);
         this.errorMessages.set([
-          error.message || 'Failed to create deployment',
+          error.message || 'Failed to create template deployment',
         ]);
       },
     });

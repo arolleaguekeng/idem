@@ -14,6 +14,7 @@ import {
   ChatMessage,
   ArchitectureTemplate,
   ArchitectureComponent,
+  DeploymentMode,
 } from '../../../models/deployment.model';
 import {
   DeploymentFormData,
@@ -50,9 +51,7 @@ export class CreateDeployment implements OnInit {
   }
 
   // Core state signals
-  protected readonly deploymentMode = signal<DeploymentFormData['mode'] | null>(
-    null
-  );
+  protected readonly deploymentMode = signal<DeploymentMode | null>(null);
   protected readonly loadingDeployment = signal<boolean>(false);
   protected readonly projectId = signal<string | null>(null);
   protected readonly errorMessages = signal<string[]>([]);
@@ -95,14 +94,12 @@ export class CreateDeployment implements OnInit {
     const mode = this.deploymentMode();
     if (!mode) return false;
 
-    const formData = this.getFormData();
-
     switch (mode) {
       case 'beginner':
       case 'template':
         return this.deploymentConfigForm.valid;
 
-      case 'assistant':
+      case 'ai-assistant':
         return (
           this.deploymentConfigForm.valid && this.aiPrompt().trim().length > 0
         );
@@ -119,7 +116,6 @@ export class CreateDeployment implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly cookieService = inject(CookieService);
-  private readonly deploymentService = inject(DeploymentService);
 
   constructor() {
     this.deploymentConfigForm = this.formBuilder.group({
@@ -130,9 +126,6 @@ export class CreateDeployment implements OnInit {
     });
 
     this.expertForm = this.formBuilder.group({});
-
-    // Set up form validation
-    this.setupFormValidation();
   }
 
   ngOnInit(): void {
@@ -150,7 +143,7 @@ export class CreateDeployment implements OnInit {
   }
 
   // --- MODE SELECTION ---
-  selectMode(mode: 'beginner' | 'assistant' | 'template' | 'expert'): void {
+  selectMode(mode: 'beginner' | 'ai-assistant' | 'template' | 'expert'): void {
     console.log('Selected deployment mode:', mode);
     this.deploymentMode.set(mode);
     this.clearErrors();
@@ -168,113 +161,6 @@ export class CreateDeployment implements OnInit {
   }
 
   // --- CHILD COMPONENT EVENT HANDLERS ---
-
-  // Quick Deployment handlers
-  protected handleQuickFetchGitBranches(): void {
-    this.fetchGitBranches();
-  }
-
-  protected handleQuickCreateDeployment(): void {
-    this.createDeployment();
-  }
-
-  protected handleQuickResetView(): void {
-    this.resetView();
-  }
-
-  // AI Assistant handlers
-  protected handleAiPromptChange(prompt: string): void {
-    this.aiPrompt.set(prompt);
-  }
-
-  protected handleAiSendPrompt(): void {
-    this.sendAiPrompt();
-  }
-
-  protected handleAiCreateDeployment(): void {
-    this.createDeployment();
-  }
-
-  protected handleAiResetView(): void {
-    this.resetView();
-  }
-
-  // Template handlers
-  protected handleTemplateSelect(template: ArchitectureTemplate): void {
-    this.selectTemplate(template);
-  }
-
-  protected handleTemplateCreateDeployment(): void {
-    this.createDeployment();
-  }
-
-  protected handleTemplateResetView(): void {
-    this.resetView();
-  }
-
-  protected handleTemplateBackToTemplates(): void {
-    this.selectedTemplate.set(null);
-  }
-
-  // Expert mode handlers
-  protected handleExpertProviderChange(
-    provider: 'aws' | 'gcp' | 'azure'
-  ): void {
-    this.expertSelectedProvider.set(provider);
-  }
-
-  protected handleExpertSearchTermChange(term: string): void {
-    this.expertSearchTerm.set(term);
-  }
-
-  protected handleExpertSelectComponent(
-    component: ArchitectureComponent
-  ): void {
-    this.selectComponentForConfiguration(component);
-  }
-
-  protected handleExpertCreateDeployment(): void {
-    this.createDeployment();
-  }
-
-  protected handleExpertResetView(): void {
-    this.resetView();
-  }
-
-  // --- SETUP METHODS ---
-  private setupFormValidation(): void {
-    this.deploymentConfigForm.valueChanges.subscribe(() => {
-      this.validateCurrentForm();
-    });
-  }
-
-  private validateCurrentForm(): void {
-    const mode = this.deploymentMode();
-    if (!mode) return;
-
-    const formData = this.getFormData();
-    const errors: string[] = [];
-
-    // Mode-specific validation
-    switch (mode) {
-      case 'assistant':
-        if (!this.aiPrompt().trim()) {
-          errors.push('AI prompt is required for assistant mode');
-        }
-        break;
-
-      case 'expert':
-        break;
-
-      case 'template':
-        if (!this.selectedTemplate()) {
-          errors.push('Please select an architecture template');
-        }
-        break;
-    }
-
-    this.validationErrors.set(errors);
-  }
 
   private loadAvailableTemplates(): void {
     // Mock data - replace with actual service call
@@ -339,98 +225,6 @@ export class CreateDeployment implements OnInit {
     this.activeExpertComponent.set(component);
   }
 
-  /**
-   * Récupère les données du formulaire à partir de l'état actuel du composant
-   * @returns Les données de formulaire formatées
-   */
-  private getFormData(): DeploymentFormData {
-    const mode = this.deploymentMode();
-    const formValue = this.deploymentConfigForm.value;
-
-    return {
-      mode: mode!,
-      name: formValue.name,
-      environment: formValue.environment,
-      repoUrl: formValue.repoUrl,
-      branch: formValue.branch,
-      templateId: this.selectedTemplate()?.id,
-      aiPrompt: this.aiPrompt(),
-      customComponents: this.expertArchitecture(),
-      gitRepository: formValue.gitRepository,
-      customArchitecture: formValue.customArchitecture,
-      environmentVariables: formValue.environmentVariables,
-    };
-  }
-
-  // --- DEPLOYMENT CREATION ---
-  protected async createDeployment(): Promise<void> {
-    if (!this.isFormValid() || !this.projectId()) {
-      this.validateCurrentForm();
-      return;
-    }
-
-    this.loadingDeployment.set(true);
-    this.clearErrors();
-
-    try {
-      // Récupérer les données du formulaire
-      const formData = this.getFormData();
-
-      // Add expert mode configuration
-      if (this.deploymentMode() === 'expert' && this.expertArchitecture()) {
-        // Mettre à jour les composants avec leurs configurations
-        formData.customComponents = this.expertArchitecture().map((comp) => {
-          const config = this.expertForm.get(comp.instanceId)?.value || {};
-          return {
-            ...comp,
-            configuration: config,
-          };
-        });
-      }
-
-      console.log('🚀 Form data:', formData);
-
-      // Utiliser DeploymentMapper pour créer un objet DeploymentModel
-      const deploymentData = DeploymentMapper.formDataToDeploymentModel(
-        formData,
-        this.projectId()!
-      );
-
-      // Ajouter les détails spécifiques au mode
-      if (this.deploymentMode() === 'assistant') {
-        deploymentData.chatMessages = this.chatMessages();
-      }
-
-      console.log('🚀 Creating deployment with payload:', deploymentData);
-
-      // Envoyer l'objet au service
-      const deployment = await this.deploymentService
-        .createDeployment(deploymentData)
-        .toPromise();
-
-      console.log('✅ Deployment created successfully:', deployment);
-      console.log('📊 Deployment details:');
-      console.table({
-        ID: deployment?.id,
-        Name: deployment?.name,
-        Environment: deployment?.environment,
-        Status: deployment?.status,
-        'Created At': deployment?.createdAt,
-        'Project ID': deployment?.projectId,
-      });
-
-      // Navigate to deployment list
-      this.router.navigate(['/console/dashboard/deployments']);
-    } catch (error) {
-      console.error('❌ Error creating deployment:', error);
-      this.errorMessages.set([
-        'Failed to create deployment. Please try again.',
-      ]);
-    } finally {
-      this.loadingDeployment.set(false);
-    }
-  }
-
   // --- UTILITY METHODS ---
   protected resetView(): void {
     this.deploymentMode.set(null);
@@ -452,9 +246,6 @@ export class CreateDeployment implements OnInit {
     this.expertSearchTerm.set('');
     this.expertArchitecture.set([]);
     this.activeExpertComponent.set(null);
-
-    // Reset form validation
-    this.validateCurrentForm();
   }
 
   private clearErrors(): void {

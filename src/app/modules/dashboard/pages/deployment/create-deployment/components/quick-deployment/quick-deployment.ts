@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -10,20 +10,12 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './quick-deployment.css',
 })
 export class QuickDeployment {
-  readonly deploymentForm = input.required<FormGroup>();
-  readonly gitBranches = input<string[]>([]);
-  readonly loadingGitInfo = input<boolean>(false);
-  readonly isFormValid = input<boolean>(false);
+  readonly deploymentForm = signal<FormGroup>(new FormGroup({}));
+  readonly gitBranches = signal<string[]>([]);
+  readonly loadingGitInfo = signal<boolean>(false);
+  readonly isFormValid = signal<boolean>(false);
 
-  readonly onFetchGitBranches = output<void>();
-  readonly onCreateDeployment = output<void>();
-  readonly onResetView = output<void>();
+  protected fetchGitBranches(): void {}
 
-  protected fetchGitBranches(): void {
-    this.onFetchGitBranches.emit();
-  }
-
-  protected createDeployment(): void {
-    this.onCreateDeployment.emit();
-  }
+  protected createDeployment(): void {}
 }

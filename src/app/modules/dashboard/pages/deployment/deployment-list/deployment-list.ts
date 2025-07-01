@@ -46,6 +46,8 @@ export class DeploymentList implements OnInit {
       createdAt: new Date('2023-01-01'),
       updatedAt: new Date('2023-01-01'),
       projectId: '1',
+      mode: 'beginner',
+      frameworkType: 'angular',
     },
     {
       id: '2',
@@ -55,6 +57,8 @@ export class DeploymentList implements OnInit {
       createdAt: new Date('2023-01-01'),
       updatedAt: new Date('2023-01-01'),
       projectId: '1',
+      mode: 'beginner',
+      frameworkType: 'angular',
     },
     {
       id: '3',
@@ -64,6 +68,8 @@ export class DeploymentList implements OnInit {
       createdAt: new Date('2023-01-01'),
       updatedAt: new Date('2023-01-01'),
       projectId: '1',
+      mode: 'beginner',
+      frameworkType: 'angular',
     },
   ];
 

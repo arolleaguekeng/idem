@@ -20,6 +20,7 @@ import {
   CloudComponentDetailed,
   ArchitectureComponent,
   DeploymentModel,
+  ExpertDeploymentModel,
 } from '../../../../../models/deployment.model';
 import {
   DeploymentFormData,
@@ -265,13 +266,13 @@ export class ExpertDeployment {
     const deploymentData = DeploymentMapper.formDataToDeploymentModel(
       formData,
       this.projectId!
-    );
+    ) as Partial<ExpertDeploymentModel>; // Utiliser type assertion pour garantir le bon type
 
     // Log payload for debugging
     console.log('🚀 Creating deployment with payload:', deploymentData);
 
     // Submit to service
-    this.deploymentService.createDeployment(deploymentData).subscribe({
+    this.deploymentService.createExpertDeployment(deploymentData).subscribe({
       next: (deployment) => {
         console.log('✅ Deployment created successfully:', deployment);
         this.loadingDeployment.set(false);
