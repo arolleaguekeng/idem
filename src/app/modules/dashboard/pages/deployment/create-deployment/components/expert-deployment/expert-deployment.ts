@@ -269,17 +269,17 @@ export class ExpertDeployment {
     ) as Partial<ExpertDeploymentModel>; // Utiliser type assertion pour garantir le bon type
 
     // Log payload for debugging
-    console.log('🚀 Creating deployment with payload:', deploymentData);
+    console.log('Creating deployment with payload:', deploymentData);
 
     // Submit to service
     this.deploymentService.createExpertDeployment(deploymentData).subscribe({
       next: (deployment) => {
-        console.log('✅ Deployment created successfully:', deployment);
+        console.log('Deployment created successfully:', deployment);
         this.loadingDeployment.set(false);
-        this.router.navigate(['/console/dashboard/deployments']);
+        this.router.navigate(['/console/deployments']);
       },
       error: (error) => {
-        console.error('❌ Error creating deployment:', error);
+        console.error('Error creating deployment:', error);
         this.loadingDeployment.set(false);
         this.errorMessages.set([
           error.message || 'Failed to create deployment',
