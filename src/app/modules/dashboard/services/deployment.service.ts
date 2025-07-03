@@ -3,14 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { 
+import {
   DeploymentModel,
   QuickDeploymentModel,
   TemplateDeploymentModel,
   AiAssistantDeploymentModel,
   ExpertDeploymentModel,
-  DeploymentMode,
-  BaseDeploymentModel
+  ChatMessage,
 } from '../models/deployment.model';
 import { Auth, authState } from '@angular/fire/auth';
 
@@ -116,7 +115,7 @@ export class DeploymentService {
     console.log('Creating expert deployment:', deployment);
     return this.createDeployment<ExpertDeploymentModel>(deployment);
   }
-  
+
   /**
    * Create a new deployment
    * @param deployment The deployment configuration
@@ -127,13 +126,9 @@ export class DeploymentService {
     console.log('Creating deployment:', deployment);
     return this.getAuthHeaders().pipe(
       switchMap((headers) =>
-        this.http.post<T>(
-          `${this.apiUrl}/deployments/create`,
-          deployment,
-          {
-            headers,
-          }
-        )
+        this.http.post<T>(`${this.apiUrl}/deployments/create`, deployment, {
+          headers,
+        })
       ),
       tap((createdDeployment) =>
         console.log('Created deployment', createdDeployment)
@@ -341,5 +336,31 @@ export class DeploymentService {
           return throwError(() => error);
         })
       );
+  }
+
+  sendChatMessage(
+    message: ChatMessage,
+    projectId: string
+  ): Observable<ChatMessage> {
+    return this.getAuthHeaders().pipe(
+      switchMap((headers) =>
+        this.http
+          .post<ChatMessage>(
+            `${this.apiUrl}/deployments/chat`,
+            {
+              message,
+              projectId,
+            },
+            { headers }
+          )
+          .pipe(
+            tap((message) => console.log('Fetched message', message)),
+            catchError((error) => {
+              console.error('Error fetching message', error);
+              return throwError(() => error);
+            })
+          )
+      )
+    );
   }
 }

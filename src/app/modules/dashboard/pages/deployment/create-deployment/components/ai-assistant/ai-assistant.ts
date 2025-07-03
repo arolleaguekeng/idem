@@ -105,67 +105,78 @@ export class AiAssistant implements OnInit {
 
     // Clear the input field
     this.aiPrompt.set('');
-    
+
+    // Create user message
+    const userMessage: ChatMessage = {
+      sender: 'user',
+      text: prompt,
+      timestamp: new Date(),
+    };
+
     // Add user message to chat
-    this.chatMessages.update((messages) => [
-      ...messages,
-      { sender: 'user', text: prompt, timestamp: new Date() },
-    ]);
+    this.chatMessages.update((messages) => [...messages, userMessage]);
 
     // Set thinking state
     this.aiIsThinking.set(true);
 
-    // Simulate AI response (in a real implementation, this would call an API)
-    setTimeout(() => {
-      // Generate a mock response based on the prompt
-      let response = this.generateMockAiResponse(prompt);
-      
-      // Add AI response to chat
-      this.chatMessages.update((messages) => [
-        ...messages,
-        { sender: 'ai', text: response, timestamp: new Date() },
-      ]);
-      
-      // Set architecture as generated if this is the first user message
-      if (!this.generatedArchitecture()) {
-        this.generatedArchitecture.set(true);
-      }
-      
-      // Stop thinking state
-      this.aiIsThinking.set(false);
-      
-      // Validate form after AI response
-      this.validateCurrentForm();
-    }, 2000);
+    // Send message to backend using DeploymentService
+    this.deploymentService
+      .sendChatMessage(userMessage, this.projectId()!)
+      .subscribe({
+        next: (response) => {
+          // Add AI response to chat
+          this.chatMessages.update((messages) => [...messages, response]);
+
+          // Set architecture as generated if this is the first user message
+          if (!this.generatedArchitecture()) {
+            this.generatedArchitecture.set(true);
+          }
+
+          // Stop thinking state
+          this.aiIsThinking.set(false);
+
+          // Validate form after AI response
+          this.validateCurrentForm();
+        },
+        error: (error) => {
+          console.error('Error getting AI response:', error);
+
+          // Add error message to chat
+          this.chatMessages.update((messages) => [
+            ...messages,
+            {
+              sender: 'ai',
+              text: 'Sorry, I encountered an error processing your request. Please try again.',
+              timestamp: new Date(),
+            },
+          ]);
+
+          // Stop thinking state
+          this.aiIsThinking.set(false);
+
+          // Add to error messages
+          this.errorMessages.update((msgs) => [
+            ...msgs,
+            error.message || 'Failed to get AI response',
+          ]);
+        },
+      });
   }
 
-  private generateMockAiResponse(prompt: string): string {
-    // This is a mock implementation - in a real app, this would call an AI service
-    const promptLower = prompt.toLowerCase();
-    
-    if (promptLower.includes('aws') || promptLower.includes('amazon')) {
-      return "Based on your requirements, I recommend an AWS architecture with EC2 instances for compute, RDS for database, and S3 for storage. This setup provides good scalability and reliability. Would you like me to add any specific components like load balancing or CDN?";
-    } else if (promptLower.includes('gcp') || promptLower.includes('google')) {
-      return "I've designed a Google Cloud Platform architecture with Cloud Run for serverless containers, Cloud SQL for database, and Cloud Storage for files. This is cost-effective and highly scalable. Do you need any specific regional deployment?";
-    } else if (promptLower.includes('azure') || promptLower.includes('microsoft')) {
-      return "For your Azure deployment, I recommend App Service for hosting, Azure SQL for database, and Azure Blob Storage. This provides a managed environment with good integration options. Would you like to add Azure Functions for serverless capabilities?";
-    } else if (promptLower.includes('database') || promptLower.includes('sql')) {
-      return "I've added a managed database service to your architecture. Would you prefer a SQL or NoSQL solution? For high availability, I've configured it with automated backups and failover capability.";
-    } else {
-      return "I've analyzed your requirements and designed a cloud architecture that includes compute resources, storage, and networking components. The architecture follows best practices for security and scalability. Would you like me to explain any specific part in more detail?";
-    }
-  }
+  // No longer needed as we're using the real API
 
   private getFormData(): DeploymentFormData {
     const formValue = this.deploymentConfigForm.value;
-    
+
     return {
       mode: 'ai-assistant',
       name: formValue.name,
       environment: formValue.environment,
       repoUrl: formValue.repoUrl,
       branch: formValue.branch,
-      aiPrompt: this.chatMessages().map(msg => msg.text).join('\n'),
+      aiPrompt: this.chatMessages()
+        .map((msg) => msg.text)
+        .join('\n'),
       chatMessages: this.chatMessages(),
       aiGeneratedArchitecture: this.generatedArchitecture(),
     };
@@ -189,8 +200,11 @@ export class AiAssistant implements OnInit {
     }
 
     // AI-specific validation
-    if (this.chatMessages().length <= 1) { // Only the welcome message
-      errors.push('Please interact with the AI assistant before creating a deployment');
+    if (this.chatMessages().length <= 1) {
+      // Only the welcome message
+      errors.push(
+        'Please interact with the AI assistant before creating a deployment'
+      );
     }
 
     this.validationErrors.set(errors);
@@ -212,8 +226,11 @@ export class AiAssistant implements OnInit {
     }
 
     // Validate AI interaction
-    if (this.chatMessages().length <= 1) { // Only the welcome message
-      this.errorMessages.set(['Please interact with the AI assistant before creating a deployment']);
+    if (this.chatMessages().length <= 1) {
+      // Only the welcome message
+      this.errorMessages.set([
+        'Please interact with the AI assistant before creating a deployment',
+      ]);
       return;
     }
 
@@ -238,22 +255,30 @@ export class AiAssistant implements OnInit {
     };
 
     // Log the payload for debugging
-    console.log('Creating AI assistant deployment with payload:', deploymentData);
+    console.log(
+      'Creating AI assistant deployment with payload:',
+      deploymentData
+    );
 
     // Submit to service
-    this.deploymentService.createAiAssistantDeployment(deploymentData).subscribe({
-      next: (deployment) => {
-        console.log('AI assistant deployment created successfully:', deployment);
-        this.loadingDeployment.set(false);
-        this.router.navigate(['/console/dashboard/deployments']);
-      },
-      error: (error) => {
-        console.error('Error creating AI assistant deployment:', error);
-        this.loadingDeployment.set(false);
-        this.errorMessages.set([
-          error.message || 'Failed to create AI assistant deployment',
-        ]);
-      },
-    });
+    this.deploymentService
+      .createAiAssistantDeployment(deploymentData)
+      .subscribe({
+        next: (deployment) => {
+          console.log(
+            'AI assistant deployment created successfully:',
+            deployment
+          );
+          this.loadingDeployment.set(false);
+          this.router.navigate(['/console/dashboard/deployments']);
+        },
+        error: (error) => {
+          console.error('Error creating AI assistant deployment:', error);
+          this.loadingDeployment.set(false);
+          this.errorMessages.set([
+            error.message || 'Failed to create AI assistant deployment',
+          ]);
+        },
+      });
   }
 }
