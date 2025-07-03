@@ -32,7 +32,17 @@
             class="max-w-xl p-4 rounded-xl shadow-md"
             [class]="message.sender === 'ai' ? 'bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-teal-500/20' : 'bg-gradient-to-r from-teal-500 to-teal-600 text-white'"
           >
-            <p class="whitespace-pre-wrap">{{ message.text }}</p>
+            @if (message.sender === 'ai') {
+              <markdown 
+                [data]="message.text" 
+                class="markdown-content backdrop-blur-md bg-gray-900/40 border border-gray-800/50 rounded-lg p-2 my-2 shadow-lg"
+                [lineNumbers]="true"
+                [lineHighlight]="true"
+                [clipboard]="true"
+              ></markdown>
+            } @else {
+              <p class="whitespace-pre-wrap">{{ message.text }}</p>
+            }
           </div>
         </div>
         } @if (aiIsThinking()) {

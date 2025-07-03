@@ -1,4 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -18,15 +24,19 @@ import {
 } from '../../../../../models/api/deployments/deployments.api.model';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
+import { MarkdownModule, MarkdownService } from 'ngx-markdown';
+
+// Import Prism core only - specific languages are already imported in app.config.ts
+import 'prismjs';
 
 @Component({
   selector: 'app-ai-assistant',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MarkdownModule],
   templateUrl: './ai-assistant.html',
   styleUrl: './ai-assistant.css',
 })
-export class AiAssistant implements OnInit {
+export class AiAssistant implements OnInit, AfterViewInit {
   // Angular properties (inputs, outputs, queries)
 
   // AI Assistant state signals
@@ -46,6 +56,7 @@ export class AiAssistant implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly cookieService = inject(CookieService);
   private readonly deploymentService = inject(DeploymentService);
+  private readonly markdownService = inject(MarkdownService);
   private readonly router = inject(Router);
 
   constructor() {
@@ -97,6 +108,16 @@ export class AiAssistant implements OnInit {
 
   protected updatePrompt(prompt: string): void {
     this.aiPrompt.set(prompt);
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize Prism for syntax highlighting after view is initialized
+    if (typeof window !== 'undefined') {
+      const Prism = (window as any).Prism;
+      if (Prism) {
+        console.log('Prism initialized for syntax highlighting');
+      }
+    }
   }
 
   protected sendAiPrompt(): void {

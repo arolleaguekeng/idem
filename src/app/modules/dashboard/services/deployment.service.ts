@@ -354,6 +354,33 @@ export class DeploymentService {
             { headers }
           )
           .pipe(
+            // Process the response to ensure code blocks are properly formatted as markdown
+            map((response) => {
+              // If the response contains code blocks, ensure they're properly formatted
+              if (response.sender === 'ai') {
+                console.log('Processing AI response for markdown formatting');
+                
+                // Ensure code blocks are properly formatted with language identifiers
+                // This regex finds code blocks that might not have language specifiers
+                response.text = response.text.replace(
+                  /```(\s*)(\w+)?\s*([\s\S]*?)```/g, 
+                  (match, space, lang, code) => {
+                    // If language is not specified, try to detect it or default to text
+                    const language = lang || 'text';
+                    return `\`\`\`${language}\n${code}\`\`\``;
+                  }
+                );
+                
+                // Ensure inline code is properly formatted
+                response.text = response.text.replace(
+                  /`([^`]+)`/g,
+                  (match, code) => {
+                    return `\`${code}\``;
+                  }
+                );
+              }
+              return response;
+            }),
             tap((message) => console.log('Fetched message', message)),
             catchError((error) => {
               console.error('Error fetching message', error);

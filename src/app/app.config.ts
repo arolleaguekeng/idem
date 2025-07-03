@@ -28,7 +28,18 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
-import { MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
+import { MERMAID_OPTIONS, provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
+// Import Prism for syntax highlighting
+import 'prismjs';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-yaml';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
+import 'prismjs/plugins/line-highlight/prism-line-highlight';
+import 'prismjs/themes/prism-tomorrow.css';
 import { AuthService } from './modules/auth/services/auth.service';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
@@ -89,11 +100,20 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideMarkdown({
       sanitize: SecurityContext.NONE,
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useValue: {
+          gfm: true,
+          breaks: true,
+          pedantic: false
+        }
+      },
       mermaidOptions: {
         provide: MERMAID_OPTIONS,
         useValue: {
-          darkMode: false,
+          darkMode: true,
           look: 'classic',
+          theme: 'dark',
         },
       },
     }),
