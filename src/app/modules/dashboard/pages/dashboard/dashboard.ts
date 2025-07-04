@@ -29,18 +29,6 @@ export class DashboardComponent implements OnInit {
   readonly project = signal<ProjectModel | null>(null);
   readonly isLoading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
-  readonly architectureNamesList = computed(() => {
-    const projectData = this.project();
-    if (
-      projectData?.analysisResultModel?.architectures &&
-      projectData.analysisResultModel.architectures.length > 0
-    ) {
-      return projectData.analysisResultModel.architectures
-        .map((a) => a.name)
-        .join(', ');
-    }
-    return null; // Or 'Details not available', or an empty string, depending on desired template display
-  });
 
   ngOnInit(): void {
     const projectId = this.cookieService.get('projectId');

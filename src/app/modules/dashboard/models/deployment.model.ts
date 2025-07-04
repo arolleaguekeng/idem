@@ -41,9 +41,12 @@ export interface CostEstimation {
 }
 
 export interface ChatMessage {
-  sender: 'user' | 'ai';
+  sender: "user" | "ai";
   text: string;
   timestamp?: Date;
+  isRequestingDetails?: boolean;
+  isProposingArchitecture?: boolean;
+  proposedComponents?: ArchitectureComponent[];
 }
 
 export interface ArchitectureTemplate {

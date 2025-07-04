@@ -9,19 +9,27 @@ import {
   signal,
   computed,
   effect,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MenuItem } from 'primeng/api';
 import { PanelMenu } from 'primeng/panelmenu';
 import { AuthService } from '../../../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  state,
+} from '@angular/animations';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { ProjectService } from '../../services/project.service';
 import { ProjectModel } from '../../models/project.model';
 import { SelectElement } from '../../pages/create-project/datas';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { first, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { CookieService } from '../../../../shared/services/cookie.service';
@@ -42,6 +50,26 @@ import { CookieService } from '../../../../shared/services/cookie.service';
         animate('300ms ease-out', style({ transform: 'translateY(-100%)' })),
       ]),
     ]),
+    trigger('sidebarExpand', [
+      state(
+        'expanded',
+        style({
+          width: '260px',
+        })
+      ),
+      state(
+        'collapsed',
+        style({
+          width: '80px',
+        })
+      ),
+      transition('expanded <=> collapsed', [animate('300ms ease-in-out')]),
+    ]),
+    trigger('fadeInOut', [
+      state('visible', style({ opacity: 1 })),
+      state('hidden', style({ opacity: 0, display: 'none' })),
+      transition('visible <=> hidden', [animate('200ms ease-in-out')]),
+    ]),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,6 +85,19 @@ export class SidebarDashboard implements OnInit {
   isLoading = signal(true);
   isMenuOpen = signal(false);
   isDropdownOpen = signal(false);
+  protected readonly isSidebarCollapsed = signal(false);
+
+  // Computed values for UI states
+  protected readonly sidebarState = computed(() =>
+    this.isSidebarCollapsed() ? 'collapsed' : 'expanded'
+  );
+
+  protected readonly textVisibility = computed(() =>
+    this.isSidebarCollapsed() ? 'hidden' : 'visible'
+  );
+
+  // Output event to notify parent components of sidebar state changes
+  @Output() sidebarCollapsedChange = new EventEmitter<boolean>();
 
   // User and Project Data Signals
   protected readonly user = toSignal(this.auth.user$);
@@ -65,6 +106,7 @@ export class SidebarDashboard implements OnInit {
     undefined
   );
   protected readonly projectIdFromCookie = signal<string | null>(null);
+  protected readonly currentRoute = signal<string>('');
 
   // Computed signal for dropdown project list
   dropDownProjects = computed(() => {
@@ -82,6 +124,21 @@ export class SidebarDashboard implements OnInit {
     if (savedProjectId) {
       this.projectIdFromCookie.set(savedProjectId);
     }
+
+    // Initialize sidebar collapsed state from localStorage
+    const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+    if (savedSidebarState) {
+      this.isSidebarCollapsed.set(savedSidebarState === 'true');
+    }
+
+    // Track current route for active menu highlighting
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute.set(event.urlAfterRedirects);
+        // Update menu items to reflect active state
+        this.updateSidebarRoutes();
+      }
+    });
 
     // Effect to update sidebar menu when selectedProject changes
     effect(() => {
@@ -229,41 +286,69 @@ export class SidebarDashboard implements OnInit {
     const selectedProjectId = this.selectedProject()?.code;
     if (!selectedProjectId) return;
 
+    const currentPath = this.currentRoute();
+
+    // Helper function to determine if a route is active
+    const isRouteActive = (path: string): boolean => {
+      // Handle special case for dashboard which might be just /console/dashboard
+      if (path === 'console/dashboard') {
+        return currentPath.includes(`/console/dashboard`);
+      }
+      return currentPath.includes(`/${path}`);
+    };
+
+    // Create style class based on collapsed state and active route
+    const getStyleClass = (path: string): string => {
+      const isCollapsed = this.isSidebarCollapsed()
+        ? 'sidebar-item-collapsed'
+        : '';
+      const isActive = isRouteActive(path) ? 'sidebar-item-active' : '';
+      return `${isCollapsed} ${isActive}`.trim();
+    };
+
+    // Create menu items with expanded style options and active route highlight
     this.items.set([
       {
         label: 'Dashboard',
         icon: 'pi pi-fw pi-home',
         command: () => this.navigateTo(`console/dashboard`),
+        styleClass: getStyleClass('console/dashboard'),
       },
       {
         label: 'Branding',
         icon: 'pi pi-fw pi-palette',
         command: () => this.navigateTo(`console/branding`),
+        styleClass: getStyleClass('console/branding'),
       },
       {
         label: 'Planing',
         icon: 'pi pi-fw pi-calendar',
         command: () => this.navigateTo(`console/planing`),
+        styleClass: getStyleClass('console/planing'),
       },
       {
         label: 'Diagrams',
         icon: 'pi pi-fw pi-chart-line',
         command: () => this.navigateTo(`console/diagrams`),
+        styleClass: getStyleClass('console/diagrams'),
       },
       {
         label: 'Developement',
         icon: 'pi pi-fw pi-code',
         command: () => this.navigateTo(`console/developement`),
+        styleClass: getStyleClass('console/developement'),
       },
       {
         label: 'Tests',
         icon: 'pi pi-fw pi-check-square',
         command: () => this.navigateTo(`console/tests`),
+        styleClass: getStyleClass('console/tests'),
       },
       {
         label: 'Deployment',
         icon: 'pi pi-fw pi-globe',
         command: () => this.navigateTo(`/console/deployments`),
+        styleClass: getStyleClass('console/deployments'),
       },
     ]);
   }
@@ -307,5 +392,18 @@ export class SidebarDashboard implements OnInit {
     if (this.isDropdownOpen() && !dropdownButton && !dropdownMenu) {
       this.isDropdownOpen.set(false);
     }
+  }
+
+  /**
+   * Toggles the sidebar between expanded and collapsed states
+   */
+  toggleSidebar() {
+    this.isSidebarCollapsed.update((collapsed) => !collapsed);
+    // Update menu items to reflect the new state
+    this.updateSidebarRoutes();
+    // Save state to localStorage
+    localStorage.setItem('sidebarCollapsed', String(this.isSidebarCollapsed()));
+    // Emit event to parent component
+    this.sidebarCollapsedChange.emit(this.isSidebarCollapsed());
   }
 }

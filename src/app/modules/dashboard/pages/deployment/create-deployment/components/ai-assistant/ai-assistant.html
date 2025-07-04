@@ -3,10 +3,10 @@
 >
   <!-- Decorative glass elements -->
   <div
-    class="absolute -top-20 -right-20 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl"
+    class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl"
   ></div>
   <div
-    class="absolute -bottom-20 -left-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"
+    class="absolute -bottom-20 -left-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl"
   ></div>
 
   <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -23,37 +23,37 @@
         >
           @if (message.sender === 'ai') {
           <div
-            class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-teal-500/20"
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-primary/20"
           >
             <i class="pi pi-sparkles"></i>
           </div>
           }
           <div
             class="max-w-xl p-4 rounded-xl shadow-md"
-            [class]="message.sender === 'ai' ? 'bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-teal-500/20' : 'bg-gradient-to-r from-teal-500 to-teal-600 text-white'"
+            [class]="message.sender === 'ai' ? 'bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-primary/20' : 'bg-gradient-to-r from-primary to-primary-glow text-white'"
           >
             @if (message.sender === 'ai') {
-              <markdown 
-                [data]="message.text" 
-                class="markdown-content backdrop-blur-md bg-gray-900/40 border border-gray-800/50 rounded-lg p-2 my-2 shadow-lg"
-                [lineNumbers]="true"
-                [lineHighlight]="true"
-                [clipboard]="true"
-              ></markdown>
+            <markdown
+              [data]="message.text"
+              class="markdown-content backdrop-blur-md bg-gray-900/40 border border-gray-800/50 rounded-lg p-2 my-2 shadow-lg"
+              [lineNumbers]="true"
+              [lineHighlight]="true"
+              [clipboard]="true"
+            ></markdown>
             } @else {
-              <p class="whitespace-pre-wrap">{{ message.text }}</p>
+            <p class="whitespace-pre-wrap">{{ message.text }}</p>
             }
           </div>
         </div>
         } @if (aiIsThinking()) {
         <div class="flex gap-4 animate-fade-in">
           <div
-            class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-teal-500/20"
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-primary/20"
           >
             <i class="pi pi-sparkles"></i>
           </div>
           <div
-            class="max-w-xl p-4 rounded-xl bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-teal-500/20 flex items-center gap-3 shadow-md"
+            class="max-w-xl p-4 rounded-xl bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-primary/20 flex items-center gap-3 shadow-md"
           >
             <i class="pi pi-spin pi-spinner"></i>
             <span>Thinking...</span>
@@ -70,11 +70,11 @@
           (keyup.enter)="sendAiPrompt()"
           type="text"
           placeholder="Describe your infrastructure needs..."
-          class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-teal-500 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all placeholder-gray-500"
+          class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
         />
         <button
           (click)="sendAiPrompt()"
-          class="px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-teal-500/20 transition-all"
+          class="px-6 py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
           [disabled]="!aiPrompt() || aiIsThinking()"
         >
           <i class="pi pi-send"></i>
@@ -88,7 +88,7 @@
       class="backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-6 shadow-lg"
     >
       <h3 class="text-xl font-semibold mb-6 text-white flex items-center gap-2">
-        <i class="pi pi-cog text-teal-400"></i> Deployment Configuration
+        <i class="pi pi-cog text-primary"></i> Deployment Configuration
       </h3>
 
       <form [formGroup]="deploymentConfigForm" class="space-y-6">
@@ -104,7 +104,7 @@
             id="name"
             formControlName="name"
             placeholder="My AI-Generated App"
-            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-teal-500 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all placeholder-gray-500"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
           />
         </div>
 
@@ -118,7 +118,7 @@
           <select
             id="environment"
             formControlName="environment"
-            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-teal-500 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all"
           >
             <option value="development">Development</option>
             <option value="staging">Staging</option>
@@ -127,10 +127,10 @@
         </div>
 
         <div
-          class="p-4 backdrop-blur-md bg-teal-500/5 rounded-lg border border-teal-500/20"
+          class="p-4 backdrop-blur-md bg-primary/5 rounded-lg border border-primary/20"
         >
           <h4
-            class="text-sm font-medium text-teal-300 mb-4 flex items-center gap-2"
+            class="text-sm font-medium text-primary-300 mb-4 flex items-center gap-2"
           >
             <i class="pi pi-code"></i> Git Repository (Optional)
           </h4>
@@ -147,7 +147,7 @@
                 type="text"
                 formControlName="repoUrl"
                 placeholder="https://github.com/user/repo.git"
-                class="w-full backdrop-blur-md bg-gray-800/60 border border-gray-700/50 focus:border-teal-500 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all text-sm"
+                class="w-full backdrop-blur-md bg-gray-800/60 border border-gray-700/50 focus:border-primary/20 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all text-sm"
               />
             </div>
 
@@ -162,7 +162,7 @@
                 type="text"
                 formControlName="branch"
                 placeholder="main"
-                class="w-full backdrop-blur-md bg-gray-800/60 border border-gray-700/50 focus:border-teal-500 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-all text-sm"
+                class="w-full backdrop-blur-md bg-gray-800/60 border border-gray-700/50 focus:border-primary/20 text-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all text-sm"
               />
             </div>
           </div>
@@ -195,7 +195,7 @@
             type="button"
             (click)="createDeployment()"
             [disabled]="deploymentConfigForm.invalid || validationErrors().length > 0 || loadingDeployment()"
-            class="px-8 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-teal-500/20 transition-all"
+            class="px-8 py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
           >
             @if (loadingDeployment()) {
             <i class="pi pi-spinner animate-spin"></i> Deploying... } @else {

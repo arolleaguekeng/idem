@@ -89,7 +89,7 @@
       <div class="flex items-center md:hidden">
         <button
           (click)="toggleMenu()"
-          class="inline-flex items-center justify-center p-2 rounded-md hover:text-primary focus:outline-none transition duration-300"
+          class="inline-flex items-center justify-center p-2 rounded-md hover:text-primary z-50 focus:outline-none transition duration-300"
         >
           <svg
             class="h-6 w-6"
@@ -162,7 +162,31 @@
   }
 </nav>
 <div
-  class="p-4 pt-[80px] h-screen fixed bg-gray-950 w-[260px] border-r-1 border-gray-800"
+  [@sidebarExpand]="sidebarState()"
+  class="p-4 pt-[80px] h-screen fixed border-r-1 border-gray-800 shadow-lg shadow-primary/10 overflow-y-auto overflow-x-hidden transition-all duration-300 sidebar-glass-effect"
+  [ngClass]="{'sidebar-collapsed': isSidebarCollapsed()}"
 >
+  <!-- Decorative particles for ultra-modern effect -->
+  <div
+    class="sidebar-particle absolute top-[15%] left-[10%] animate-pulse"
+  ></div>
+  <div
+    class="sidebar-particle absolute bottom-[35%] right-[15%] opacity-10 animate-pulse"
+    style="animation-delay: 2s"
+  ></div>
+  <div
+    class="sidebar-particle absolute top-[65%] left-[20%] opacity-5 animate-pulse"
+    style="animation-delay: 1s"
+  ></div>
+  <!-- Toggle Button -->
+  <button
+    (click)="toggleSidebar()"
+    class="sidebar-toggle-btn absolute -right-3 top-24 bg-gradient-to-r from-gray-800/90 to-gray-700/90 hover:from-primary hover:to-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10 transition-all duration-300 border border-gray-700/50"
+  >
+    <i
+      class="pi"
+      [ngClass]="isSidebarCollapsed() ? 'pi-chevron-right' : 'pi-chevron-left'"
+    ></i>
+  </button>
   <p-panelMenu [model]="items()" [style]="{ width: '100%' }"></p-panelMenu>
 </div>

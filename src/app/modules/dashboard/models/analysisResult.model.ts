@@ -1,4 +1,3 @@
-import { ArchitectureModel } from './architecture.model';
 import { BrandIdentityModel } from './brand-identity.model';
 import { DiagramModel } from './diagram.model';
 import { LandingModel } from './landing.model';
@@ -7,7 +6,6 @@ import { WebContainerModel } from './webcontainer.model';
 
 export interface AnalysisResultModel {
   id?: string;
-  architectures: ArchitectureModel[];
   businessPlan?: BusinessPlanModel;
   design: DiagramModel;
   development: WebContainerModel;

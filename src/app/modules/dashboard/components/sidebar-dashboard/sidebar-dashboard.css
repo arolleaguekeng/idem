@@ -1,3 +1,159 @@
+/* Ultra-modern sidebar with glass effect and animations */
 :host {
+  --sidebar-bg-from: rgba(17, 24, 39, 0.85);
+  --sidebar-bg-to: rgba(31, 41, 55, 0.75);
+  --sidebar-border: rgba(75, 85, 99, 0.2);
+  --accent-glow: rgba(59, 130, 246, 0.6);
+  --accent-color: rgb(59, 130, 246);
+  --hover-bg: rgba(59, 130, 246, 0.15);
+  --active-bg-from: rgba(59, 130, 246, 0.2);
+  --active-bg-to: rgba(37, 99, 235, 0.3);
   display: block;
+}
+
+/* Ultra-modern glass effect for the sidebar */
+:host ::ng-deep .sidebar-glass-effect {
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-bg-from),
+    var(--sidebar-bg-to)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px var(--accent-glow);
+}
+
+/* Styles for panel menu in collapsed mode */
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-link {
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+}
+
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-text,
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-submenu-list,
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-text {
+  display: none;
+}
+
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-icon {
+  margin-right: 0;
+  font-size: 1.25rem;
+}
+
+/* Hover effects for menu items */
+:host ::ng-deep .p-panelmenu .p-panelmenu-header-link:hover {
+  background: var(--hover-bg);
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 0 4px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* Active route highlight with glow effect */
+:host ::ng-deep .p-panelmenu .sidebar-item-active a.p-panelmenu-header-link {
+  background: linear-gradient(
+    135deg,
+    var(--active-bg-from),
+    var(--active-bg-to)
+  );
+  border-radius: 0.75rem;
+  box-shadow: 0 0 15px var(--accent-glow), inset 0 0 6px var(--accent-glow);
+  border-left: 3px solid var(--accent-color);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Active item reflection effect */
+:host
+  ::ng-deep
+  .p-panelmenu
+  .sidebar-item-active
+  a.p-panelmenu-header-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+}
+
+/* Icon glow for active items */
+:host ::ng-deep .sidebar-item-active .p-menuitem-icon {
+  text-shadow: 0 0 8px var(--accent-color);
+  color: white;
+}
+
+/* Menu item text style */
+:host ::ng-deep .p-panelmenu .p-menuitem-text {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Better styling for panel menu */
+:host ::ng-deep .p-panelmenu {
+  background: transparent;
+}
+
+:host ::ng-deep .p-panelmenu .p-panelmenu-header-link {
+  border-radius: 0.75rem;
+  margin-bottom: 4px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Toggle button glow effect */
+.sidebar-toggle-btn {
+  box-shadow: 0 0 10px var(--accent-glow);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.sidebar-toggle-btn:hover {
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 8px rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* Expanded/Collapsed transition smoothing */
+:host ::ng-deep .p-panelmenu .p-panelmenu-header {
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar for sidebar */
+:host ::ng-deep .sidebar-glass-effect::-webkit-scrollbar {
+  width: 4px;
+}
+
+:host ::ng-deep .sidebar-glass-effect::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 4px;
+}
+
+:host ::ng-deep .sidebar-glass-effect::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 4px;
+}
+
+:host ::ng-deep .sidebar-glass-effect::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* Add particle blur effects */
+.sidebar-particle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
 }

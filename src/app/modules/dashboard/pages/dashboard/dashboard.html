@@ -1,16 +1,16 @@
-@if(isLoading()){ 
-  <div class="flex justify-center items-center h-[90vh] flex-col ">
-    <app-loader />
-    <p class="text-gray-400 text-xl">Loading project dashboard...</p>
-  </div>
-} @else if(error()){ 
-  <div
-    class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
-    role="alert"
-  >
-    <p class="font-bold">Error</p>
-    <p>{{ error() }}</p>
-  </div>
+@if(isLoading()){
+<div class="flex justify-center items-center h-[90vh] flex-col">
+  <app-loader />
+  <p class="text-gray-400 text-xl">Loading project dashboard...</p>
+</div>
+} @else if(error()){
+<div
+  class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
+  role="alert"
+>
+  <p class="font-bold">Error</p>
+  <p>{{ error() }}</p>
+</div>
 } @else {
 <div class="p-4 md:p-8 text-gray-300 min-h-screen">
   @if (project(); as currentProject) {
@@ -157,22 +157,6 @@
               View Design Diagrams &rarr;
             </a>
             }
-          </div>
-        </div>
-
-        <!-- Architecture -->
-        <div>
-          <h3 class="text-xl font-medium text-purple-400 mb-2">Architecture</h3>
-          <div class="pl-4 border-l-2 border-purple-600 space-y-3">
-            <p class="text-sm text-gray-400">
-              <span class="font-semibold">Defined Architectures:</span>
-              @if (architectureNamesList(); as archList) {
-              <span class="ml-1">{{ archList }}</span>
-              } @else {
-              <span class="ml-1 text-gray-500">Details not available.</span>
-              }
-            </p>
-            <!-- Link to detailed architecture view if applicable -->
           </div>
         </div>
 
