@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   signal,
+  computed,
   OnInit,
   AfterViewInit,
 } from '@angular/core';
@@ -17,6 +18,8 @@ import { Router } from '@angular/router';
 import {
   AiAssistantDeploymentModel,
   ChatMessage,
+  ArchitectureComponent,
+  FormOption,
 } from '../../../../../models/deployment.model';
 import {
   DeploymentFormData,
@@ -43,11 +46,24 @@ export class AiAssistant implements OnInit, AfterViewInit {
   protected readonly chatMessages = signal<ChatMessage[]>([]);
   protected readonly aiPrompt = signal<string>('');
   protected readonly aiIsThinking = signal<boolean>(false);
+  protected readonly showDeploymentForm = signal<boolean>(true);
   protected readonly loadingDeployment = signal<boolean>(false);
   protected readonly projectId = signal<string | null>(null);
   protected readonly errorMessages = signal<string[]>([]);
   protected readonly validationErrors = signal<string[]>([]);
   protected readonly generatedArchitecture = signal<boolean>(false);
+
+  // Architecture proposal signals
+  protected readonly activeProposedComponent =
+    signal<ArchitectureComponent | null>(null);
+  protected readonly configurationDialogVisible = signal<boolean>(false);
+  protected readonly currentProposalMessage = signal<ChatMessage | null>(null);
+  protected readonly configuredComponents = signal<Set<string>>(
+    new Set<string>()
+  );
+
+  // Architecture component forms
+  private readonly componentForms = new Map<string, FormGroup>();
 
   // Form controls
   protected deploymentConfigForm: FormGroup;
@@ -108,6 +124,161 @@ export class AiAssistant implements OnInit, AfterViewInit {
 
   protected updatePrompt(prompt: string): void {
     this.aiPrompt.set(prompt);
+  }
+
+  /**
+   * Toggles the visibility of the deployment form section
+   */
+  protected toggleDeploymentForm(): void {
+    this.showDeploymentForm.update((value) => !value);
+  }
+
+  // --- ARCHITECTURE PROPOSAL METHODS ---
+
+  /**
+   * Selects a component from the proposed architecture for configuration
+   */
+  protected selectProposedComponent(
+    component: ArchitectureComponent,
+    message: ChatMessage
+  ): void {
+    this.activeProposedComponent.set(component);
+    this.currentProposalMessage.set(message);
+    this.configurationDialogVisible.set(true);
+
+    // Create a form for this component if it doesn't exist already
+    if (!this.componentForms.has(component.instanceId)) {
+      this.createComponentForm(component);
+    }
+  }
+
+  /**
+   * Creates a form group for component configuration
+   */
+  private createComponentForm(component: ArchitectureComponent): void {
+    if (!component.options || component.options.length === 0) {
+      // If no options, create an empty form group
+      this.componentForms.set(component.instanceId, this.formBuilder.group({}));
+      return;
+    }
+
+    const formGroup = this.formBuilder.group({});
+
+    // Add form controls for each option
+    component.options.forEach((option) => {
+      const validators = option.required ? [Validators.required] : [];
+      formGroup.addControl(
+        option.name,
+        this.formBuilder.control(option.defaultValue || '', validators)
+      );
+    });
+
+    this.componentForms.set(component.instanceId, formGroup);
+  }
+
+  /**
+   * Saves the component configuration
+   */
+  protected saveComponentConfiguration(): void {
+    const component = this.activeProposedComponent();
+    const message = this.currentProposalMessage();
+
+    if (!component || !message) return;
+
+    // Get form values
+    const form = this.componentForms.get(component.instanceId);
+    if (!form) return;
+
+    // Update component configuration
+    const components = message.proposedComponents?.map((c) => {
+      if (c.instanceId === component.instanceId) {
+        return {
+          ...c,
+          configuration: form.value,
+        };
+      }
+      return c;
+    });
+
+    // Update message with configured component
+    if (message.proposedComponents && components) {
+      message.proposedComponents = components;
+
+      // Mark as configured
+      this.configuredComponents.update((set) => {
+        const newSet = new Set(set);
+        newSet.add(component.instanceId);
+        return newSet;
+      });
+    }
+
+    this.configurationDialogVisible.set(false);
+  }
+
+  /**
+   * Checks if a component has been configured
+   */
+  protected isComponentConfigured(instanceId: string): boolean {
+    return this.configuredComponents().has(instanceId);
+  }
+
+  /**
+   * Gets the form group for the active component
+   */
+  protected getActiveComponentForm(): FormGroup | null {
+    const component = this.activeProposedComponent();
+    if (!component) return null;
+
+    return this.componentForms.get(component.instanceId) || null;
+  }
+
+  /**
+   * Gets the options for the active component
+   */
+  protected getActiveComponentOptions(): FormOption[] {
+    const component = this.activeProposedComponent();
+    if (!component) return [];
+
+    return component.options || [];
+  }
+
+  /**
+   * Accepts the proposed architecture and adds it to the deployment
+   */
+  protected acceptProposedArchitecture(message: ChatMessage): void {
+    if (!message.proposedComponents) return;
+
+    // Check if all components are configured
+    const allConfigured = message.proposedComponents.every((component) =>
+      this.isComponentConfigured(component.instanceId)
+    );
+
+    if (!allConfigured) {
+      const unconfiguredCount = message.proposedComponents.filter(
+        (c) => !this.isComponentConfigured(c.instanceId)
+      ).length;
+
+      this.errorMessages.set([
+        `Please configure all ${unconfiguredCount} component(s) before accepting the architecture`,
+      ]);
+      return;
+    }
+
+    // Set generated architecture flag
+    this.generatedArchitecture.set(true);
+
+    // Add a confirmation message from AI
+    this.chatMessages.update((messages) => [
+      ...messages,
+      {
+        sender: 'ai',
+        text: 'Great! The architecture has been accepted. You can now create the deployment with these components.',
+        timestamp: new Date(),
+      },
+    ]);
+
+    // Clear error messages
+    this.errorMessages.set([]);
   }
 
   ngAfterViewInit(): void {
@@ -189,6 +360,17 @@ export class AiAssistant implements OnInit, AfterViewInit {
   private getFormData(): DeploymentFormData {
     const formValue = this.deploymentConfigForm.value;
 
+    // Find the proposal message with architecture components
+    const proposalMessage = this.chatMessages().find(
+      (msg) =>
+        msg.isProposingArchitecture &&
+        msg.proposedComponents &&
+        msg.proposedComponents.length > 0
+    );
+
+    // Get configured components from the proposal
+    const components = proposalMessage?.proposedComponents || [];
+
     return {
       mode: 'ai-assistant',
       name: formValue.name,
@@ -200,6 +382,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
         .join('\n'),
       chatMessages: this.chatMessages(),
       aiGeneratedArchitecture: this.generatedArchitecture(),
+      customComponents: components,
     };
   }
 
@@ -261,6 +444,17 @@ export class AiAssistant implements OnInit, AfterViewInit {
     // Get form data
     const formData = this.getFormData();
 
+    // Find proposal with architecture components
+    const proposalMessage = this.chatMessages().find(
+      (msg) =>
+        msg.isProposingArchitecture &&
+        msg.proposedComponents &&
+        msg.proposedComponents.length > 0
+    );
+
+    // Get configured components with their configurations
+    const proposedComponents = proposalMessage?.proposedComponents || [];
+
     // Use DeploymentMapper to create the deployment object
     const deploymentData: AiAssistantDeploymentModel = {
       mode: 'ai-assistant',
@@ -273,6 +467,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
       status: 'configuring',
       createdAt: new Date(),
       updatedAt: new Date(),
+      generatedComponents: proposedComponents,
     };
 
     // Log the payload for debugging

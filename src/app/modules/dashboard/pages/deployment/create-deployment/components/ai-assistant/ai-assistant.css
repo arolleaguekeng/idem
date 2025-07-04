@@ -35,6 +35,36 @@
   }
 }
 
+.animate-fade-slide-in {
+  animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Markdown Content Styles */
 .markdown-content {
   font-size: 0.95rem;
@@ -103,7 +133,7 @@
 
 /* Blockquotes */
 .markdown-content blockquote {
-  border-left: 4px solid var(--color-accent-glow);
+  /* border-left: 4px solid var(--color-accent-glow); */
   padding: 0.5em 1em;
   margin: 1em 0;
   background: var(--glass-bg);

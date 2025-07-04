@@ -1,5 +1,5 @@
 <div
-  class="backdrop-blur-xl bg-gray-900/30 rounded-xl border border-gray-700/30 p-6 shadow-2xl animate-fade-in relative overflow-hidden"
+  class="backdrop-blur-xl bg-gray-900/30 rounded-xl border border-gray-700/30 p-4 sm:p-5 md:p-6 shadow-2xl animate-fade-in relative overflow-hidden"
 >
   <!-- Decorative glass elements -->
   <div
@@ -9,13 +9,39 @@
     class="absolute -bottom-20 -left-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl"
   ></div>
 
-  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div
+    class="relative z-10 grid grid-cols-1 md:grid-cols-1 gap-4 sm:gap-6 md:gap-8 transition-all duration-500 ease-out"
+    [class.lg:grid-cols-2]="showDeploymentForm()"
+    [class.opacity-100]="!showDeploymentForm() || !loadingDeployment()"
+    [class.opacity-90]="showDeploymentForm() && loadingDeployment()"
+  >
     <!-- Chat Interface -->
     <div
-      class="backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-6 flex flex-col h-[70vh] shadow-lg"
+      class="backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 sm:p-4 md:p-6 flex flex-col h-[60vh] sm:h-[65vh] md:h-[70vh] relative will-change-transform will-change-opacity transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+      [class.shadow-lg]="showDeploymentForm()"
+      [class.shadow-2xl]="!showDeploymentForm()"
+      [class.lg:col-span-full]="!showDeploymentForm()"
+      [class.scale-100]="showDeploymentForm()"
+      [class.scale-[1.01]]="!showDeploymentForm()"
     >
+      <!-- Toggle Button for Deployment Form -->
+      <button
+        (click)="toggleDeploymentForm()"
+        class="absolute top-3 right-3 backdrop-blur-sm hover:backdrop-blur-md bg-gray-800/40 hover:bg-primary/40 border border-transparent hover:border-primary/30 rounded-full p-2 z-20 will-change-transform will-change-filter transition-all duration-300 ease-out text-gray-300 hover:text-white shadow-lg hover:shadow-primary/30 transform hover:scale-110"
+        title="{{showDeploymentForm() ? 'Hide deployment form' : 'Show deployment form'}}"
+      >
+        <i
+          class="pi transition-all duration-700 transform text-sm"
+          [class.pi-chevron-right]="showDeploymentForm()"
+          [class.pi-chevron-left]="!showDeploymentForm()"
+          [class.rotate-0]="showDeploymentForm()"
+          [class.rotate-180]="!showDeploymentForm()"
+        ></i>
+      </button>
       <!-- Chat Messages Display -->
-      <div class="flex-grow overflow-y-auto pr-4 space-y-6 custom-scrollbar">
+      <div
+        class="flex-grow overflow-y-auto pr-2 sm:pr-4 space-y-4 sm:space-y-6 custom-scrollbar"
+      >
         @for (message of chatMessages(); track $index) {
         <div
           class="flex gap-4 animate-fade-in"
@@ -31,16 +57,89 @@
           <div
             class="max-w-xl p-4 rounded-xl shadow-md"
             [class]="message.sender === 'ai' ? 'bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-primary/20' : 'bg-gradient-to-r from-primary to-primary-glow text-white'"
+            [class.max-w-full]="message.sender === 'ai' && message.isProposingArchitecture"
           >
             @if (message.sender === 'ai') {
+            <!-- Regular AI message content -->
             <markdown
               [data]="message.text"
-              class="markdown-content backdrop-blur-md bg-gray-900/40 border border-gray-800/50 rounded-lg p-2 my-2 shadow-lg"
+              class="markdown-content backdrop-blur-md rounded-lg shadow-lg"
               [lineNumbers]="true"
               [lineHighlight]="true"
               [clipboard]="true"
             ></markdown>
-            } @else {
+
+            <!-- Architecture proposal section -->
+            @if (message.isProposingArchitecture && message.proposedComponents
+            && message.proposedComponents.length > 0) {
+            <div class="mt-4 animate-fade-in">
+              <div class="flex items-center gap-2 mb-3 text-primary">
+                <i class="pi pi-sitemap"></i>
+                <h4 class="font-medium">Proposed Architecture</h4>
+              </div>
+
+              <!-- Architecture components grid -->
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mt-3"
+              >
+                @for (component of message.proposedComponents; track
+                component.instanceId) {
+                <div
+                  class="bg-gray-800/90 backdrop-blur-md p-4 rounded-lg border border-gray-700/50 hover:border-primary/30 transition-all cursor-pointer"
+                  [class.border-primary]="activeProposedComponent()?.instanceId === component.instanceId"
+                  (click)="selectProposedComponent(component, message)"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-primary"
+                      >
+                        <i class="{{component.icon}}"></i>
+                      </div>
+                      <div>
+                        <h5
+                          class="font-medium text-sm sm:text-base text-gray-200"
+                        >
+                          {{ component.name }}
+                        </h5>
+                        <p class="text-xs text-gray-400">
+                          {{ component.provider | uppercase }} | {{
+                          component.type }}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      @if (isComponentConfigured(component.instanceId)) {
+                      <span
+                        class="text-xs text-green-400 bg-green-900/30 px-2 py-0.5 rounded-full flex items-center gap-1"
+                      >
+                        <i class="pi pi-check-circle text-xs"></i> Configured
+                      </span>
+                      } @else {
+                      <span
+                        class="text-xs text-yellow-400 bg-yellow-900/30 px-2 py-0.5 rounded-full flex items-center gap-1"
+                      >
+                        <i class="pi pi-exclamation-triangle text-xs"></i>
+                        Configure
+                      </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+
+              <div class="flex justify-end mt-4">
+                <button
+                  (click)="acceptProposedArchitecture(message)"
+                  class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white text-sm sm:text-base font-medium flex items-center gap-2 shadow-lg shadow-primary/20 transition-all"
+                >
+                  <i class="pi pi-check"></i>
+                  <span>Accept Architecture</span>
+                </button>
+              </div>
+            </div>
+            } } @else {
             <p class="whitespace-pre-wrap">{{ message.text }}</p>
             }
           </div>
@@ -53,7 +152,7 @@
             <i class="pi pi-sparkles"></i>
           </div>
           <div
-            class="max-w-xl p-4 rounded-xl bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-primary/20 flex items-center gap-3 shadow-md"
+            class="max-w-xl p-3 sm:p-4 rounded-xl bg-gray-800/80 backdrop-blur-sm text-gray-300 border border-primary/20 flex items-center gap-2 sm:gap-3 shadow-md text-sm sm:text-base"
           >
             <i class="pi pi-spin pi-spinner"></i>
             <span>Thinking...</span>
@@ -63,18 +162,20 @@
       </div>
 
       <!-- Input Area -->
-      <div class="mt-6 flex gap-4 border-t border-gray-700/50 pt-4">
+      <div
+        class="mt-4 sm:mt-6 flex gap-2 sm:gap-4 border-t border-gray-700/50 pt-3 sm:pt-4"
+      >
         <input
           [value]="aiPrompt()"
           (input)="updatePrompt($any($event.target).value)"
           (keyup.enter)="sendAiPrompt()"
           type="text"
           placeholder="Describe your infrastructure needs..."
-          class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
+          class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
         />
         <button
           (click)="sendAiPrompt()"
-          class="px-6 py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
+          class="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all ease-out duration-1000"
           [disabled]="!aiPrompt() || aiIsThinking()"
         >
           <i class="pi pi-send"></i>
@@ -84,14 +185,17 @@
     </div>
 
     <!-- Deployment Form -->
+    @if (showDeploymentForm()) {
     <div
-      class="backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-6 shadow-lg"
+      class="backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-700/30 hover:border-gray-600/40 p-4 sm:p-5 md:p-6 shadow-lg mt-4 lg:mt-0 animate-fade-slide-in will-change-transform will-change-opacity transition-all duration-1000 ease-in-out"
     >
-      <h3 class="text-xl font-semibold mb-6 text-white flex items-center gap-2">
+      <h3
+        class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-white flex items-center gap-2"
+      >
         <i class="pi pi-cog text-primary"></i> Deployment Configuration
       </h3>
 
-      <form [formGroup]="deploymentConfigForm" class="space-y-6">
+      <form [formGroup]="deploymentConfigForm" class="space-y-4 sm:space-y-6">
         <div>
           <label
             for="name"
@@ -127,19 +231,19 @@
         </div>
 
         <div
-          class="p-4 backdrop-blur-md bg-primary/5 rounded-lg border border-primary/20"
+          class="p-3 sm:p-4 backdrop-blur-md bg-primary/5 rounded-lg border border-primary/20"
         >
           <h4
-            class="text-sm font-medium text-primary-300 mb-4 flex items-center gap-2"
+            class="text-xs sm:text-sm font-medium text-primary-300 mb-3 sm:mb-4 flex items-center gap-2"
           >
             <i class="pi pi-code"></i> Git Repository (Optional)
           </h4>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label
                 for="repoUrl"
-                class="block text-xs font-medium text-gray-300 mb-1"
+                class="block font-medium text-gray-300 mb-1 text-xs sm:text-sm"
                 >Repository URL</label
               >
               <input
@@ -154,7 +258,7 @@
             <div>
               <label
                 for="branch"
-                class="block text-xs font-medium text-gray-300 mb-1"
+                class="block font-medium text-gray-300 mb-1 text-xs sm:text-sm"
                 >Branch</label
               >
               <input
@@ -181,8 +285,10 @@
 
         <!-- API errors -->
         @if (errorMessages().length > 0) {
-        <div class="p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-          <ul class="list-disc list-inside text-sm text-red-200">
+        <div
+          class="p-2 sm:p-3 bg-red-500/20 border border-red-500/30 rounded-lg"
+        >
+          <ul class="list-disc list-inside text-xs sm:text-sm text-red-200">
             @for (error of errorMessages(); track error) {
             <li>{{ error }}</li>
             }
@@ -190,12 +296,12 @@
         </div>
         }
 
-        <div class="flex justify-end pt-6 border-t border-gray-700/30">
+        <div class="flex justify-end pt-4 sm:pt-6 border-t border-gray-700/30">
           <button
             type="button"
             (click)="createDeployment()"
             [disabled]="deploymentConfigForm.invalid || validationErrors().length > 0 || loadingDeployment()"
-            class="px-8 py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
+            class="px-6 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
           >
             @if (loadingDeployment()) {
             <i class="pi pi-spinner animate-spin"></i> Deploying... } @else {
@@ -204,5 +310,112 @@
         </div>
       </form>
     </div>
+    }
   </div>
 </div>
+
+<!-- Component Configuration Modal -->
+@if (activeProposedComponent() && configurationDialogVisible()) {
+<div
+  class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50"
+>
+  <div
+    class="bg-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl animate-scale-in"
+  >
+    <div
+      class="flex justify-between items-center border-b border-gray-700/50 pb-4 mb-4"
+    >
+      <h3 class="text-xl font-semibold text-white flex items-center gap-3">
+        <i class="{{activeProposedComponent()?.icon}}"></i>
+        Configure {{activeProposedComponent()?.name}}
+      </h3>
+      <button
+        (click)="configurationDialogVisible.set(false)"
+        class="text-gray-400 hover:text-white rounded-full p-2 hover:bg-gray-800/50"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="overflow-y-auto flex-grow custom-scrollbar p-2">
+      <div [formGroup]="getActiveComponentForm()!">
+        @for (option of getActiveComponentOptions(); track option.name) {
+        <div class="mb-6">
+          <label
+            [for]="option.name"
+            class="text-sm font-medium mb-2 flex items-center gap-2 text-gray-200"
+          >
+            {{ option.label }} @if (option.required) {<span class="text-red-400"
+              >*</span
+            >} @if (option.description) {
+            <i
+              class="pi pi-info-circle text-gray-500"
+              [title]="option.description"
+            ></i>
+            }
+          </label>
+
+          @switch (option.type) { @case ('text') {
+          <input
+            [id]="option.name"
+            type="text"
+            [formControlName]="option.name"
+            [placeholder]="option.placeholder || ''"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
+          />
+          } @case ('number') {
+          <input
+            [id]="option.name"
+            type="number"
+            [formControlName]="option.name"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder-gray-500"
+          />
+          } @case ('select') {
+          <select
+            [id]="option.name"
+            [formControlName]="option.name"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-primary/20 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all"
+          >
+            @for (opt of option.options; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+          } @case ('toggle') {
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              [formControlName]="option.name"
+              class="sr-only peer"
+            />
+            <div
+              class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+            ></div>
+          </label>
+          } } @if (getActiveComponentForm()?.get(option.name)?.invalid &&
+          getActiveComponentForm()?.get(option.name)?.touched) {
+          <p class="text-red-400 text-sm mt-1">This field is required.</p>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-700/50">
+      <button
+        (click)="configurationDialogVisible.set(false)"
+        class="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-white font-medium transition-all"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="saveComponentConfiguration()"
+        class="px-6 py-2.5 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-primary/20 transition-all"
+        [disabled]="getActiveComponentForm()?.invalid"
+      >
+        <i class="pi pi-check"></i>
+        <span>Save Configuration</span>
+      </button>
+    </div>
+  </div>
+</div>
+}

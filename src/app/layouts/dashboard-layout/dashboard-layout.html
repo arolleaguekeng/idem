@@ -1,4 +1,4 @@
-<div class="fixed left-0">
+<div class="fixed left-0 z-50">
   <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
 </div>
 
@@ -6,7 +6,7 @@
   [@contentExpand]="isSidebarCollapsed() ? 'collapsed' : 'expanded'"
   class="transition-all duration-300 mt-[80px] p-8 min-h-screen bg-opacity-95"
 >
-  <div class="backdrop-blur-sm bg-gray-900/30 p-6 rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30">
+  <div class="backdrop-blur-sm bg-gray-900/30 p-6 rounded-xl shadow-xl shadow-primary/5 z-50 border border-gray-800/30">
     <router-outlet></router-outlet>
   </div>
 </div>

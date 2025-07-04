@@ -13,11 +13,7 @@
 
 /* Ultra-modern glass effect for the sidebar */
 :host ::ng-deep .sidebar-glass-effect {
-  background: linear-gradient(
-    135deg,
-    var(--sidebar-bg-from),
-    var(--sidebar-bg-to)
-  );
+  background: linear-gradient(135deg, var(--sidebar-bg-from), var(--sidebar-bg-to));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-right: 1px solid var(--sidebar-border);
@@ -27,7 +23,6 @@
 /* Styles for panel menu in collapsed mode */
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-link {
   justify-content: center;
-  padding: 0.75rem 0.5rem;
 }
 
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-text,
@@ -52,36 +47,20 @@
 
 /* Active route highlight with glow effect */
 :host ::ng-deep .p-panelmenu .sidebar-item-active a.p-panelmenu-header-link {
-  background: linear-gradient(
-    135deg,
-    var(--active-bg-from),
-    var(--active-bg-to)
-  );
-  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--active-bg-from), var(--active-bg-to));
   box-shadow: 0 0 15px var(--accent-glow), inset 0 0 6px var(--accent-glow);
-  border-left: 3px solid var(--accent-color);
-  position: relative;
-  overflow: hidden;
+  border-left: 4px solid var(--accent-color);
 }
 
 /* Active item reflection effect */
-:host
-  ::ng-deep
-  .p-panelmenu
-  .sidebar-item-active
-  a.p-panelmenu-header-link::before {
-  content: "";
+:host ::ng-deep .p-panelmenu .sidebar-item-active a.p-panelmenu-header-link::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 /* Icon glow for active items */
@@ -102,9 +81,7 @@
 }
 
 :host ::ng-deep .p-panelmenu .p-panelmenu-header-link {
-  border-radius: 0.75rem;
   margin-bottom: 4px;
-  padding: 0.75rem 1rem;
   transition: all 0.3s ease;
 }
 

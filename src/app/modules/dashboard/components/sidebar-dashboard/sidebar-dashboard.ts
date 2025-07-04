@@ -309,43 +309,43 @@ export class SidebarDashboard implements OnInit {
     // Create menu items with expanded style options and active route highlight
     this.items.set([
       {
-        label: 'Dashboard',
+        label: this.isSidebarCollapsed() ? '' : 'Dashboard',
         icon: 'pi pi-fw pi-home',
         command: () => this.navigateTo(`console/dashboard`),
         styleClass: getStyleClass('console/dashboard'),
       },
       {
-        label: 'Branding',
+        label: this.isSidebarCollapsed() ? '' : 'Branding',
         icon: 'pi pi-fw pi-palette',
         command: () => this.navigateTo(`console/branding`),
         styleClass: getStyleClass('console/branding'),
       },
       {
-        label: 'Planing',
+        label: this.isSidebarCollapsed() ? '' : 'Planing',
         icon: 'pi pi-fw pi-calendar',
         command: () => this.navigateTo(`console/planing`),
         styleClass: getStyleClass('console/planing'),
       },
       {
-        label: 'Diagrams',
+        label: this.isSidebarCollapsed() ? '' : 'Diagrams',
         icon: 'pi pi-fw pi-chart-line',
         command: () => this.navigateTo(`console/diagrams`),
         styleClass: getStyleClass('console/diagrams'),
       },
       {
-        label: 'Developement',
+        label: this.isSidebarCollapsed() ? '' : 'Developement',
         icon: 'pi pi-fw pi-code',
         command: () => this.navigateTo(`console/developement`),
         styleClass: getStyleClass('console/developement'),
       },
       {
-        label: 'Tests',
+        label: this.isSidebarCollapsed() ? '' : 'Tests',
         icon: 'pi pi-fw pi-check-square',
         command: () => this.navigateTo(`console/tests`),
         styleClass: getStyleClass('console/tests'),
       },
       {
-        label: 'Deployment',
+        label: this.isSidebarCollapsed() ? '' : 'Deployment',
         icon: 'pi pi-fw pi-globe',
         command: () => this.navigateTo(`/console/deployments`),
         styleClass: getStyleClass('console/deployments'),
