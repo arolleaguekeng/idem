@@ -148,7 +148,7 @@ export class DeploymentService {
     return this.getAuthHeaders().pipe(
       switchMap((headers) =>
         this.http.get<DeploymentModel[]>(
-          `${this.apiUrl}/projects/${projectId}/deployments`,
+          `${this.apiUrl}/deployments/${projectId}`,
           { headers }
         )
       ),
@@ -172,7 +172,7 @@ export class DeploymentService {
     return this.getAuthHeaders().pipe(
       switchMap((headers) =>
         this.http.get<DeploymentModel>(
-          `${this.apiUrl}/projects/${projectId}/deployments/${deploymentId}`,
+          `${this.apiUrl}/deployments/${projectId}/${deploymentId}`,
           { headers }
         )
       ),

@@ -16,9 +16,7 @@
   <!-- Loading state -->
   @if (loading()) {
   <div class="loading-state">
-    <div class="spinner">
-      <i class="pi pi-spin pi-spinner"></i>
-    </div>
+    <app-loader />
     <p>Loading deployments...</p>
   </div>
   }
@@ -76,7 +74,9 @@
       </thead>
       <tbody>
         @for (deployment of deployments(); track deployment.id) {
-        <tr>
+        <tr 
+          (click)="viewDeploymentDetails(deployment.id, $event)" 
+          class="cursor-pointer hover:bg-gray-700/50 transition-colors">
           <td class="name-cell">
             <div class="deployment-name">{{ deployment.name }}</div>
             <div class="deployment-id">ID: {{ deployment.id }}</div>

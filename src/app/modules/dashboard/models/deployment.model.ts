@@ -41,7 +41,7 @@ export interface CostEstimation {
 }
 
 export interface ChatMessage {
-  sender: "user" | "ai";
+  sender: 'user' | 'ai';
   text: string;
   timestamp?: Date;
   isRequestingDetails?: boolean;
@@ -124,12 +124,12 @@ export interface BaseDeploymentModel {
   environmentVariables?: EnvironmentVariable[];
 
   // Monitoring of the pipeline
-  pipeline?: {
+  pipelines?: {
     currentStage: string;
     steps: PipelineStep[];
     startedAt?: Date;
     estimatedCompletionTime?: Date;
-  };
+  }[];
 
   // Security and analysis
   staticCodeAnalysis?: {
@@ -144,7 +144,11 @@ export interface BaseDeploymentModel {
   version?: string; // ex: commit hash or semantic version
   logs?: string; // Link to the deployment logs
   deployedAt?: Date; // Timestamp of the end of the deployment
-
+  generatedTerraformFiles?: {
+    main: string;
+    variables: string;
+    variablesMap: string;
+  };
   // Rollback management
   rollbackVersions?: string[]; // Previous versions for rollback
   lastSuccessfulDeployment?: string; // ID of the last successful deployment

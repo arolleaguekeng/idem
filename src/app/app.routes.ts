@@ -86,6 +86,22 @@ export const routes: Routes = [
     data: { layout: 'dashboard' },
   },
   {
+    path: 'console/deployments/:id',
+    loadComponent: () =>
+      import(
+        './modules/dashboard/pages/deployment/deployment-details/deployment-details'
+      ).then((m) => m.DeploymentDetails),
+    data: { layout: 'dashboard' },
+  },
+  {
+    path: 'console/dashboard/:projectId/deployment/:deploymentId',
+    loadComponent: () =>
+      import(
+        './modules/dashboard/pages/deployment/deployment-details/deployment-details'
+      ).then((m) => m.DeploymentDetails),
+    data: { layout: 'dashboard' },
+  },
+  {
     path: 'console',
     loadComponent: () =>
       import('./modules/dashboard/pages/projects-list/projects-list').then(
