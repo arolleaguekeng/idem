@@ -52,6 +52,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
   protected readonly errorMessages = signal<string[]>([]);
   protected readonly validationErrors = signal<string[]>([]);
   protected readonly generatedArchitecture = signal<boolean>(false);
+  protected readonly generatedComponents = signal<ArchitectureComponent[] | null>(null);
 
   // Architecture proposal signals
   protected readonly activeProposedComponent =
@@ -64,6 +65,15 @@ export class AiAssistant implements OnInit, AfterViewInit {
 
   // Architecture component forms
   private readonly componentForms = new Map<string, FormGroup>();
+
+  // Computed values
+  protected readonly hasUnacceptedArchitecture = computed(() => {
+    return this.chatMessages().some(msg => 
+      msg.isProposingArchitecture && 
+      msg.proposedComponents && 
+      msg.proposedComponents.length > 0
+    ) && !this.generatedArchitecture();
+  });
 
   // Form controls
   protected deploymentConfigForm: FormGroup;
@@ -85,6 +95,10 @@ export class AiAssistant implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Reset the architecture state at initialization
+    this.generatedArchitecture.set(false);
+    this.generatedComponents.set(null);
+    
     // Initialize project ID from cookie
     const projectId = this.cookieService.get('projectId');
     if (!projectId) {
@@ -266,6 +280,12 @@ export class AiAssistant implements OnInit, AfterViewInit {
 
     // Set generated architecture flag
     this.generatedArchitecture.set(true);
+    
+    // Store the configured components
+    this.generatedComponents.set([...message.proposedComponents]);
+    
+    // Log the accepted architecture
+    console.log('Architecture accepted:', this.generatedComponents());
 
     // Add a confirmation message from AI
     this.chatMessages.update((messages) => [
@@ -360,16 +380,8 @@ export class AiAssistant implements OnInit, AfterViewInit {
   private getFormData(): DeploymentFormData {
     const formValue = this.deploymentConfigForm.value;
 
-    // Find the proposal message with architecture components
-    const proposalMessage = this.chatMessages().find(
-      (msg) =>
-        msg.isProposingArchitecture &&
-        msg.proposedComponents &&
-        msg.proposedComponents.length > 0
-    );
-
-    // Get configured components from the proposal
-    const components = proposalMessage?.proposedComponents || [];
+    // Use the stored generatedComponents instead of searching through chat messages
+    const components = this.generatedComponents() || [];
 
     return {
       mode: 'ai-assistant',
@@ -444,16 +456,8 @@ export class AiAssistant implements OnInit, AfterViewInit {
     // Get form data
     const formData = this.getFormData();
 
-    // Find proposal with architecture components
-    const proposalMessage = this.chatMessages().find(
-      (msg) =>
-        msg.isProposingArchitecture &&
-        msg.proposedComponents &&
-        msg.proposedComponents.length > 0
-    );
-
-    // Get configured components with their configurations
-    const proposedComponents = proposalMessage?.proposedComponents || [];
+    // Use stored generatedComponents
+    const proposedComponents = this.generatedComponents() || [];
 
     // Use DeploymentMapper to create the deployment object
     const deploymentData: AiAssistantDeploymentModel = {
@@ -486,7 +490,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
             deployment
           );
           this.loadingDeployment.set(false);
-          this.router.navigate(['/console/dashboard/deployments']);
+          this.router.navigate(['/console/deployments']);
         },
         error: (error) => {
           console.error('Error creating AI assistant deployment:', error);

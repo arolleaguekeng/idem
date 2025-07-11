@@ -296,11 +296,19 @@
         </div>
         }
 
+        <!-- Architecture acceptance info -->
+        @if (hasUnacceptedArchitecture()) {
+        <div class="p-3 mb-4 bg-primary/10 backdrop-blur-sm border border-primary/30 rounded-lg flex items-center gap-3">
+          <i class="pi pi-info-circle text-primary"></i>
+          <p class="text-sm text-primary-300">Veuillez accepter l'architecture proposée avant de créer le déploiement.</p>
+        </div>
+        }
+        
         <div class="flex justify-end pt-4 sm:pt-6 border-t border-gray-700/30">
           <button
             type="button"
             (click)="createDeployment()"
-            [disabled]="deploymentConfigForm.invalid || validationErrors().length > 0 || loadingDeployment()"
+            [disabled]="deploymentConfigForm.invalid || validationErrors().length > 0 || loadingDeployment() || !generatedArchitecture()"
             class="px-6 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all"
           >
             @if (loadingDeployment()) {
